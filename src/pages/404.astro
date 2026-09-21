@@ -1,0 +1,19 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import { t } from '../i18n';
+const copy = t('es');
+---
+
+<SiteLayout locale="es" page="home" title="404 — Página no encontrada" noindex>
+  <section class="container not-found">
+    <p class="eyebrow">ERROR 404</p>
+    <h1>{copy.notFound.title}</h1>
+    <p>{copy.notFound.text}</p>
+    <a href="/" class="button">
+      {copy.notFound.back} <span aria-hidden="true">↗</span>
+    </a>
+    <a href="/en/" class="text-link" lang="en">
+      Go to English home <span aria-hidden="true">↗</span>
+    </a>
+  </section>
+</SiteLayout>

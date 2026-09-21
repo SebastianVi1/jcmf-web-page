@@ -1,0 +1,35 @@
+---
+import { route, type Locale } from '../i18n/routes';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<a class="brand" href={route(locale, 'home')} aria-label="JCMF Constructora">
+  <svg
+    class="brand-mark"
+    width="39"
+    height="43"
+    viewBox="0 0 39 43"
+    fill="none"
+    aria-hidden="true"
+  >
+    <path
+      d="M2 40V14L19.5 3 37 14v26H26V21l-6.5-4-6.5 4v19H2Z"
+      stroke="currentColor"
+      stroke-width="2.5"
+    />
+    <path
+      d="M19.5 3v14M2 14l11 7m24-7-11 7"
+      stroke="currentColor"
+      stroke-width="2"
+    />
+  </svg>
+  <span>
+    <strong>
+      JCMF<span class="brand-dot">.</span>
+    </strong>
+    <span class="brand-caption">CONSTRUCTORA</span>
+  </span>
+</a>

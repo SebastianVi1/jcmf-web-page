@@ -1,0 +1,50 @@
+---
+import { t } from '../i18n';
+import { route, type Locale } from '../i18n/routes';
+import ContactForm from '../features/contact/ContactForm';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = t(locale);
+---
+
+<section class="container page-intro">
+  <p class="eyebrow hero-enter">{copy.contact.eyebrow}</p>
+  <h1 class="multiline hero-enter">{copy.contact.title}</h1>
+  <p class="lead hero-enter">{copy.contact.intro}</p>
+</section>
+<section
+  class="container contact-grid section-bottom"
+  aria-label={copy.nav.contact}
+>
+  <aside class="contact-aside">
+    <h2>{copy.contact.asideTitle}</h2>
+    <p>{copy.contact.asideText}</p>
+    <dl>
+      {copy.contact.details.map(([label, value]) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
+    </dl>
+    <a class="text-link" href={route(locale, 'privacy')}>
+      {copy.ui.privacy}
+      <span aria-hidden="true">↗</span>
+    </a>
+  </aside>
+  <div>
+    <div class="demo-notice">
+      <span class="status-dot"></span>
+      <div>
+        <h2>{copy.contact.demoTitle}</h2>
+        <p>{copy.contact.demoText}</p>
+      </div>
+    </div>
+    <ContactForm copy={copy.contact} client:load />
+    <noscript>
+      <p class="demo-notice">{copy.contact.noJs}</p>
+    </noscript>
+  </div>
+</section>

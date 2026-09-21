@@ -1,0 +1,36 @@
+---
+import Architecture from './Architecture.astro';
+import Icon from './Icon.astro';
+import { projectRoute, type Locale } from '../i18n/routes';
+import type { Project } from '../data/projects';
+import { t } from '../i18n';
+interface Props {
+  project: Project;
+  locale: Locale;
+}
+const { project, locale } = Astro.props;
+const copy = t(locale);
+---
+
+<article class="project-card" data-category={project.category} data-reveal>
+  <a
+    class="project-image"
+    href={projectRoute(locale, project.slug)}
+    aria-label={copy.ui.view + ': ' + project.content[locale].title}
+  >
+    <span class="project-badge">{copy.ui.demo}</span>
+    <Architecture variant={project.visual} />
+    <span class="project-image-arrow">
+      <Icon name="diagonal" />
+    </span>
+  </a>
+  <div class="project-meta">
+    <span>{copy.projects.categories[project.category]}</span>
+    <span>JCMF / {copy.ui.demo}</span>
+  </div>
+  <h3>
+    <a href={projectRoute(locale, project.slug)}>
+      {project.content[locale].title}
+    </a>
+  </h3>
+</article>

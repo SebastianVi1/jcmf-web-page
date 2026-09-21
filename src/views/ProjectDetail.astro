@@ -1,0 +1,61 @@
+---
+import { t } from '../i18n';
+import { route, type Locale } from '../i18n/routes';
+import type { Project } from '../data/projects';
+import Architecture from '../components/Architecture.astro';
+import CallToAction from '../components/CallToAction.astro';
+import Icon from '../components/Icon.astro';
+interface Props {
+  locale: Locale;
+  project: Project;
+}
+const { locale, project } = Astro.props;
+const copy = t(locale);
+const content = project.content[locale];
+---
+
+<article class="container project-detail">
+  <a class="text-link back-link" href={route(locale, 'projects')}>
+    <span aria-hidden="true">←</span>
+    {copy.ui.back}
+  </a>
+  <header class="page-intro">
+    <p class="eyebrow">
+      {copy.projects.categories[project.category]} / {copy.ui.demo}
+    </p>
+    <h1>{content.title}</h1>
+  </header>
+  <figure class="detail-visual">
+    <Architecture variant={project.visual} />
+    <figcaption class="image-caption">{copy.ui.image}</figcaption>
+  </figure>
+  <div class="detail-grid section">
+    <div data-reveal>
+      <p class="eyebrow">{copy.projects.overview}</p>
+      <h2>{content.title}</h2>
+      <p class="large-copy">{content.description}</p>
+    </div>
+    <div data-reveal>
+      <dl class="project-facts">
+        <div>
+          <dt>{copy.projects.location}</dt>
+          <dd>{copy.projects.locationValue}</dd>
+        </div>
+        <div>
+          <dt>{copy.projects.status}</dt>
+          <dd>{copy.projects.statusValue}</dd>
+        </div>
+      </dl>
+      <h3>{copy.projects.scope}</h3>
+      <ul class="scope-list">
+        {content.scope.map((item) => (
+          <li>
+            <Icon name="plus" size={15} />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</article>
+<CallToAction locale={locale} />

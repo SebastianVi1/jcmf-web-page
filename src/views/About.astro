@@ -1,0 +1,73 @@
+---
+import { t } from '../i18n';
+import type { Locale } from '../i18n/routes';
+import Architecture from '../components/Architecture.astro';
+import CallToAction from '../components/CallToAction.astro';
+import Icon from '../components/Icon.astro';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = t(locale);
+---
+
+<section class="container page-intro">
+  <p class="eyebrow hero-enter">{copy.about.eyebrow}</p>
+  <h1 class="multiline hero-enter">{copy.about.title}</h1>
+  <p class="lead hero-enter">{copy.about.intro}</p>
+</section>
+<section class="container about-story section-bottom">
+  <figure class="about-visual" data-reveal>
+    <Architecture variant="tower" />
+    <figcaption class="image-caption">{copy.ui.image}</figcaption>
+  </figure>
+  <div data-reveal>
+    <p class="eyebrow">JCMF CONSTRUCTORA</p>
+    <h2 class="multiline">{copy.about.storyTitle}</h2>
+    <p class="large-copy">{copy.about.story}</p>
+  </div>
+</section>
+<section class="section services-section">
+  <div class="container values-grid">
+    <article data-reveal>
+      <Icon name="civil" size={36} />
+      <h2>{copy.about.mission}</h2>
+      <p>{copy.about.missionText}</p>
+    </article>
+    <article data-reveal>
+      <Icon name="building" size={36} />
+      <h2>{copy.about.vision}</h2>
+      <p>{copy.about.visionText}</p>
+    </article>
+  </div>
+</section>
+<section class="section container">
+  <div class="section-heading" data-reveal>
+    <h2 class="multiline">{copy.about.teamTitle}</h2>
+    <p>{copy.about.teamNote}</p>
+  </div>
+  <div class="team-grid">
+    {copy.about.team.map((role, i) => (
+      <article data-reveal>
+        <div class="team-placeholder">
+          <svg
+            width="90"
+            height="105"
+            viewBox="0 0 90 105"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle cx="45" cy="30" r="19" stroke="currentColor" />
+            <path
+              d="M10 100V82a35 35 0 0 1 70 0v18M0 100h90"
+              stroke="currentColor"
+            />
+          </svg>
+          <span>JCMF / 0{i + 1}</span>
+        </div>
+        <h3>{role}</h3>
+      </article>
+    ))}
+  </div>
+</section>
+<CallToAction locale={locale} />
