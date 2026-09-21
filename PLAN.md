@@ -1,5 +1,22 @@
 # JCMF Constructora — plan detallado
 
+## Variante design_minimal
+
+La versión original está preservada en modern_design mediante seis commits por responsabilidad. Esta rama nace de 0b8e2e0 por solicitud del usuario.
+
+- [x] Crear rama design_minimal después de guardar la versión original.
+- [x] Definir paleta marfil/carbón/oliva y tema oscuro salvia.
+- [x] Reemplazar hero dividido por composición editorial y pabellón panorámico.
+- [x] Incorporar heroes interiores con trazos de volumen, capas y pórtico.
+- [x] Convertir servicios en filas, escalonar proyectos y suavizar el cierre.
+- [x] Introducir renglones animados, líneas SVG, aparición de materiales, máscaras de imagen y revelados de bordes.
+- [x] Mantener formularios, rutas, idiomas, SEO y navegación accesible.
+- [x] Actualizar DESIGN.md, favicon, tema del navegador y generación de tarjeta social.
+- [x] Verificar tipos, compilación, pruebas, contraste y móvil de la nueva variante.
+- [x] Revisar capturas y guardar los cambios terminados en commits de la nueva rama.
+
+Verificación de la variante: Astro sin errores, advertencias ni sugerencias; compilación de 17 páginas; 8 pruebas unitarias aprobadas y 11 pruebas de navegador aprobadas entre la ejecución inicial y la repetición de los 3 casos corregidos. Se comprobó contraste en ambos temas, navegación, formulario de demostración, idiomas, ausencia de desbordamiento móvil, animaciones finitas y respeto a movimiento reducido. Auditoría estática de diseño sin hallazgos; capturas de escritorio y móvil revisadas. El formulario sigue sin enviar ni almacenar datos y la publicación permanece fuera del alcance.
+
 ## Objetivo y alcance
 
 Crear una web corporativa semántica en Astro con React como complemento, diseño arquitectónico moderno, dos temas, español/inglés, navegación animada y placeholders fáciles de reemplazar. Esta fase no publica el sitio ni envía datos personales. Las casillas completadas describen trabajo implementado; la evidencia de verificación aparece al final.

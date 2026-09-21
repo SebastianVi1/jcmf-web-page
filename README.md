@@ -1,5 +1,7 @@
 # JCMF Constructora
 
+Ramas de diseño: modern_design conserva la propuesta original azul/isométrica; design_minimal contiene la alternativa marfil/oliva con hero panorámico y animaciones de trazos. Ambas comparten funcionalidad e idiomas. Cambiar de rama con Git permite comparar las propuestas; esta rama no publica cambios.
+
 Sitio corporativo en Astro + React + TypeScript con placeholders. Incluye inicio, nosotros, catálogo, fichas de proyecto, contacto y privacidad en español e inglés. La identidad y sus reglas están en [DESIGN.md](DESIGN.md); el plan detallado y los pendientes de lanzamiento en [PLAN.md](PLAN.md).
 
 ## Desarrollo

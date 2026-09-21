@@ -25,7 +25,9 @@ await page.screenshot({
   fullPage: true,
 });
 await page.goto('http://localhost:4321/en/contact/');
-await page.waitForFunction(() => !document.querySelector('.form-submit')?.disabled);
+await page.waitForFunction(
+  () => !document.querySelector('.form-submit')?.disabled,
+);
 await page.screenshot({
   path: 'test-results/screenshots/contact-mobile.png',
   fullPage: true,
@@ -33,12 +35,23 @@ await page.screenshot({
 await page.locator('#type').click();
 await page.screenshot({ path: 'test-results/screenshots/select-mobile.png' });
 await page.keyboard.press('Escape');
+await page.setViewportSize({ width: 1440, height: 1000 });
+await page.goto('http://localhost:4321/nosotros/');
+await page.screenshot({
+  path: 'test-results/screenshots/about-desktop.png',
+  fullPage: true,
+});
+await page.goto('http://localhost:4321/proyectos/');
+await page.screenshot({
+  path: 'test-results/screenshots/projects-desktop.png',
+  fullPage: true,
+});
 await page.setViewportSize({ width: 1200, height: 630 });
 await page.goto('http://localhost:4321/');
 await page.addStyleTag({
   content:
-    '.site-header{position:static}.header-inner{min-height:75px}.desktop-nav,.header-actions,.hero-bottom,.sector-strip,.hero-buttons,body>main>section:not(.hero),.site-footer{display:none!important}.hero{padding-top:25px}.hero-title{font-size:84px}.hero-copy{padding-top:5px}.hero-description{font-size:15px}.architecture-hero svg{max-height:485px}.hero-visual{height:475px}',
+    '.site-header{position:static}.header-inner{min-height:65px}.desktop-nav,.header-actions,.hero-bottom,.sector-strip,body>main>section:not(.hero),.site-footer{display:none!important}.hero{padding-top:20px}.hero-heading-row{margin-top:15px;gap:35px;grid-template-columns:1fr 275px}.hero-title{font-size:61px}.hero-summary .text-link{display:none}.hero-description{font-size:13px}.hero-visual{margin-top:20px}.architecture-hero svg{max-height:290px}.hero-visual figcaption{padding-block:12px}',
 });
 await page.screenshot({ path: 'public/social-card.png' });
 await browser.close();
-console.log('Screenshots and social card generated.');
+console.log('Minimal design screenshots and social card generated.');

@@ -1,5 +1,78 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+
+test('minimal hero linework and scroll reveals complete without continuous motion', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  await expect(page.locator('.hero-title .line-mask')).toHaveCount(2);
+  await expect
+    .poll(() =>
+      page
+        .locator('.hero-title .line-mask > span')
+        .first()
+        .evaluate((el) => getComputedStyle(el).opacity),
+    )
+    .toBe('1');
+  await expect
+    .poll(() =>
+      page
+        .locator('.architecture-hero .drawing-lines path')
+        .first()
+        .evaluate((el) => getComputedStyle(el).strokeDashoffset),
+    )
+    .toBe('0px');
+  const service = page.locator('.service-card').first();
+  await service.scrollIntoViewIfNeeded();
+  await expect(service).not.toHaveClass(/reveal-pending/);
+  await expect
+    .poll(() => service.evaluate((el) => getComputedStyle(el).opacity))
+    .toBe('1');
+  expect(
+    await page
+      .locator('.scene-mass')
+      .first()
+      .evaluate((el) => getComputedStyle(el).animationIterationCount),
+  ).toBe('1');
+  await page
+    .locator('.desktop-nav')
+    .getByRole('link', { name: 'Nosotros' })
+    .click();
+  await expect(page.locator('.hero-mark-about')).toBeVisible();
+  await expect
+    .poll(() =>
+      page
+        .locator('.hero-mark .drawing-lines path')
+        .first()
+        .evaluate((el) => getComputedStyle(el).strokeDashoffset),
+    )
+    .toBe('0px');
+});
+test('minimal decorative motion is fully disabled on request', async ({
+  page,
+}) => {
+  await page.goto('/');
+  for (const selector of [
+    '.hero-title .line-mask > span',
+    '.architecture-hero .scene-mass',
+    '.architecture-hero .drawing-lines path',
+  ]) {
+    expect(
+      await page
+        .locator(selector)
+        .first()
+        .evaluate((el) => getComputedStyle(el).animationName),
+    ).toBe('none');
+  }
+  await page.goto('/en/contact/');
+  expect(
+    await page
+      .locator('.hero-rule')
+      .evaluate((el) => getComputedStyle(el).animationName),
+  ).toBe('none');
+});
+
 const routes = [
   '/',
   '/nosotros/',
