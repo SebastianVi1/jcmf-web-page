@@ -20,6 +20,13 @@ export const en: Dictionary = {
     view: 'Explore project',
     all: 'View all projects',
     demo: 'Concept project',
+    photo: 'Photographic reference',
+    visualReference: 'Reference image',
+    referenceCaption:
+      'Supplied material · visual representation awaiting confirmation',
+    photoCaption: 'Supplied image · project details under review',
+    imageError:
+      'The photograph could not be loaded. You can still read the project details.',
     image: 'Concept visualization · placeholder image',
     scroll: 'Discover what we do',
     filter: 'Filter projects',
@@ -40,7 +47,7 @@ export const en: Dictionary = {
     ],
     projects: [
       'Projects',
-      'Explore JCMF Constructora’s concept portfolio: residential, industrial and infrastructure projects.',
+      'Explore photographic references and concept projects from JCMF Constructora: buildings, industry and infrastructure.',
     ],
     contact: [
       'Let’s talk about your project',
@@ -95,7 +102,7 @@ export const en: Dictionary = {
     projectsEyebrow: 'SPACES WITH PURPOSE',
     projectsTitle: 'Today’s ideas.\nTomorrow’s landmarks.',
     projectsNote:
-      'A first look at our portfolio. Concept projects and images, to be replaced with completed work.',
+      'A first look at our portfolio: photographic references under review and concept proposals.',
     processEyebrow: 'HOW WE WORK',
     processTitle: 'With you, from start to finish.',
     process: [
@@ -142,18 +149,37 @@ export const en: Dictionary = {
     ],
   },
   projects: {
-    eyebrow: 'CONCEPT PORTFOLIO',
+    eyebrow: 'PORTFOLIO / FIRST LOOK',
     title: 'Every space,\na new possibility.',
     intro:
-      'Explore how we imagine different construction challenges. These entries are sample content, not projects completed by JCMF.',
+      'Architecture, scale and detail. Explore a selection of projects and references, with context and scope for each intervention.',
     categories: {
       all: 'All',
+      building: 'Buildings',
+      hospitality: 'Hospitality',
+      healthcare: 'Healthcare',
       residential: 'Residential',
       industrial: 'Industrial',
       infrastructure: 'Infrastructure',
     },
-    scope: 'Proposed scope',
-    overview: 'About the concept',
+    scope: 'Scope',
+    overview: 'About the project',
+    photoStatus: 'Details under review',
+    facts: 'Project facts',
+    sector: 'Sector',
+    material: 'Visual material',
+    fullImage: 'View full image ↗ new tab',
+    verificationNote:
+      'Public information describes the building or company. JCMF’s involvement is documented separately.',
+    providedScope: 'SUPPLIED INFORMATION',
+    intervention: 'Our involvement',
+    toDocument: 'To be documented',
+    scopeNote:
+      'Scope supplied for this entry. Dates, quantities and execution evidence are still to be completed.',
+    research: 'DOCUMENTED CONTEXT',
+    contextTitle: 'Behind the project.',
+    noSource: 'Identification and public source awaiting confirmation.',
+    moreProjects: 'Other perspectives.',
     location: 'Location',
     status: 'Status',
     locationValue: 'To be defined',

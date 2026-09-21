@@ -74,6 +74,8 @@ test('minimal decorative motion is fully disabled on request', async ({
 });
 
 const routes = [
+  '/proyectos/terre-vista-centro/',
+  '/en/projects/terre-vista-centro/',
   '/',
   '/nosotros/',
   '/proyectos/',
@@ -84,11 +86,19 @@ const routes = [
   '/en/projects/',
   '/en/contact/',
   '/en/privacy/',
-  '/proyectos/horizonte/',
-  '/proyectos/nexo/',
+  '/proyectos/safi-hotel/',
+  '/proyectos/idei/',
+  '/proyectos/hospital-muguerza-obispado/',
+  '/proyectos/dosax-city-doers/',
+  '/proyectos/one-development-group/',
+  '/proyectos/imobilem/',
   '/proyectos/conexion/',
-  '/en/projects/horizonte/',
-  '/en/projects/nexo/',
+  '/en/projects/safi-hotel/',
+  '/en/projects/idei/',
+  '/en/projects/hospital-muguerza-obispado/',
+  '/en/projects/dosax-city-doers/',
+  '/en/projects/one-development-group/',
+  '/en/projects/imobilem/',
   '/en/projects/conexion/',
 ];
 test('all routes render semantic localized pages without broken internal links', async ({
@@ -133,11 +143,14 @@ test('theme and locale survive client navigation and preserve project', async ({
   await expect(page).toHaveURL(/\/proyectos\//);
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page
-    .getByRole('link', { name: 'Explorar proyecto: Horizonte residencial' })
+    .getByRole('link', {
+      name: 'Explorar proyecto: Terre Vista Centro (TOTUS)',
+    })
     .click();
+  await expect(page).toHaveURL(/\/proyectos\/terre-vista-centro\//);
   await page.getByRole('link', { name: 'Switch to English' }).click();
-  await expect(page).toHaveURL(/\/en\/projects\/horizonte\//);
-  await expect(page.locator('h1')).toHaveText('Horizonte residences');
+  await expect(page).toHaveURL(/\/en\/projects\/terre-vista-centro\//);
+  await expect(page.locator('h1')).toHaveText('Terre Vista Centro (TOTUS)');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.getByRole('button', { name: 'Switch to light theme' }).click();
@@ -151,14 +164,14 @@ test('filters work after client navigation and restore all projects', async ({
     .locator('.desktop-nav')
     .getByRole('link', { name: 'Proyectos' })
     .click();
-  await page.getByRole('button', { name: 'Industrial', exact: true }).click();
+  await page.getByRole('button', { name: 'Hotelería', exact: true }).click();
   await expect(page.locator('.project-card:visible')).toHaveCount(1);
   await expect(page.locator('[data-project-count]')).toHaveText('1');
   await expect(page.locator('.project-card:visible h3')).toHaveText(
-    'Nexo industrial',
+    'Hotel SAFI Metropolitan',
   );
   await page.getByRole('button', { name: 'Todos', exact: true }).click();
-  await expect(page.locator('.project-card:visible')).toHaveCount(3);
+  await expect(page.locator('.project-card:visible')).toHaveCount(7);
 });
 test('form errors focus first field and valid demo never sends a request', async ({
   page,
@@ -239,7 +252,7 @@ test('content and navigation are available without JavaScript', async ({
   await expect(page.locator('h1')).toBeVisible();
   await expect(page.locator('.desktop-nav')).toBeVisible();
   await page.goto('http://localhost:4321/proyectos/');
-  await expect(page.locator('.project-card:visible')).toHaveCount(3);
+  await expect(page.locator('.project-card:visible')).toHaveCount(7);
   await page.goto('http://localhost:4321/contacto/');
   await expect(page.locator('noscript p')).toContainText('Activa JavaScript');
   await context.close();

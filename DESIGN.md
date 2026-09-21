@@ -36,7 +36,7 @@ components:
 
 Variante solicitada en una rama independiente de `modern_design`. Público: clientes y responsables de obra que necesitan entender capacidades, ver referencias y contactar. Registro corporativo de marca; español/inglés; contexto mexicano según el CV, con proyectos y contactos explícitamente provisionales.
 
-Dirección: una monografía arquitectónica de espacios habitables. Un pabellón horizontal, una cubierta delgada, celosías y vegetación abstracta muestran luz, proporción y materia. El hero editorial de dos renglones precede una escena panorámica. Mismo contenido y navegación, otra lectura visual.
+Dirección: una monografía arquitectónica de espacios habitables. Fotografías e imágenes proporcionadas tienen el papel principal; el pabellón y los trazos animados acompañan como estudios conceptuales. El hero editorial combina fotografía y estructura, conservando una expresión sobria y documental.
 
 Se descartó un mero cambio de colores: se rediseñan composición del inicio, cabeceras interiores, servicios en filas, portafolio escalonado y cierre. La expresión se concentra en la escena y los trazos; no se añaden métricas ni decoraciones sin significado.
 
@@ -56,7 +56,7 @@ Los renglones de hero están agrupados para entradas suaves, sin dividir caracte
 
 ## Layout
 
-Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: titular a izquierda, resumen a derecha y escena panorámica debajo. Proyectos destacados en dos columnas con segundo proyecto desplazado 94 px; móvil vuelve al flujo natural.
+Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: titular a izquierda, resumen a derecha, fotografía dominante y estructura conceptual debajo. Portafolio: una obra destacada horizontal y seis tarjetas verticales en dos columnas. Móvil vuelve a una columna. La variante destacada es explícita mediante data-featured, no depende de first-child dentro de las islas React.
 
 Nosotros: hero con símbolo de volumen; proyectos: capas de un plano; contacto: pórtico abierto. PageHero comparte semántica y espaciado; HeroMark concentra las variantes. Servicios como filas con icono/título/descripción/enlace, adaptados a móvil.
 
@@ -68,9 +68,13 @@ Sin sombras decorativas ni tarjetas flotantes. Espacio, superficies suaves y sep
 
 ## Shapes
 
-Controles casi rectos, radio 2 px. Círculos para acciones compactas y CTA. Iconos de trazo fino con nombres accesibles en sus botones. Tarjetas sin borde exterior; imágenes con marco definido por su propia superficie.
+Controles casi rectos, radio 2 px. Círculos para acciones compactas y CTA. Iconos de trazo fino con nombres accesibles en sus botones. Tarjetas sin borde exterior ni recuadro interior al hacer hover; se conserva el foco visible de teclado.
 
 ## Components
+
+Portafolio: `src/lib/project-media.ts` concentra la optimización local. `ProjectCard.astro` adapta los datos a `WorkCard.tsx`; `ProjectCaseStudy.tsx` compone el detalle y ambos reutilizan `ProjectPhoto.tsx`. El HTML se genera en compilación y React hidrata cuando es visible. Datos y fuentes en src/data/projects.ts; referencias de investigación en PORTFOLIO.md. No se infiere autoría de una imagen ni se presenta una visualización como fotografía de obra concluida.
+
+Tarjetas 4:5 con encuadre por imagen; destacada 16:9 y tarjetas del inicio/relacionadas 4:3. Blanco y negro en reposo, color con hover o foco; 900 ms de filtro y 1200 ms de zoom 1.025 con --ease. En táctil se presentan a color. Detalle: grid de 12 columnas, imagen completa sin recorte en 8 columnas y ficha en 4; contexto y alcance debajo. En móvil todo sigue el orden natural. El detalle muestra color constante, sin zoom. Espacio reservado y mensaje localizado de error sin perder navegación.
 
 Conservar navegación, formulario React/Zod, filtros, 404, SEO, idiomas y dos temas. Select explícitamente nativo. Formulario síncrono de demostración sin almacenamiento o envío; botón inactivo hasta hidratar; errores vinculados y foco al primer inválido.
 

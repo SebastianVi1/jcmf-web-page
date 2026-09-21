@@ -2,7 +2,7 @@
 import { t } from '../i18n';
 import PageHero from '../components/PageHero.astro';
 import type { Locale } from '../i18n/routes';
-import { projects } from '../data/projects';
+import { portfolioProjects as projects } from '../data/projects';
 import ProjectCard from '../components/ProjectCard.astro';
 import CallToAction from '../components/CallToAction.astro';
 interface Props {
@@ -25,19 +25,25 @@ const copy = t(locale);
 >
   <div class="filter-bar">
     <div class="filters js-only" role="group" aria-label={copy.ui.filter}>
-      {Object.entries(copy.projects.categories).map(([key, label]) => (
-        <button type="button" data-filter={key} aria-pressed={key === 'all'}>
-          {label}
-        </button>
-      ))}
+      {Object.entries(copy.projects.categories)
+        .filter(
+          ([key]) =>
+            key === 'all' ||
+            projects.some((project) => project.category === key),
+        )
+        .map(([key, label]) => (
+          <button type="button" data-filter={key} aria-pressed={key === 'all'}>
+            {label}
+          </button>
+        ))}
     </div>
     <p class="caption" aria-live="polite" aria-atomic="true">
       <span data-project-count>{projects.length}</span> {copy.ui.results}
     </p>
   </div>
-  <div class="project-grid">
-    {projects.map((project) => (
-      <ProjectCard project={project} locale={locale} />
+  <div class="project-grid portfolio-grid">
+    {projects.map((project, index) => (
+      <ProjectCard project={project} locale={locale} featured={index === 0} />
     ))}
   </div>
 </section>

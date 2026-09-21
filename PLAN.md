@@ -1,5 +1,18 @@
 # JCMF Constructora — plan detallado
 
+## Portafolio fotográfico de ejemplo
+
+- [x] Revisar los siete archivos locales y conservar las ediciones de alcance del usuario.
+- [x] Añadir contexto básico bilingüe y referencias; evitar cifras o identidades no confirmadas.
+- [x] Crear WorkCard y ProjectCaseStudy en React sobre ProjectPhoto reutilizable.
+- [x] Centralizar optimización de imágenes y encuadres individuales.
+- [x] Combinar fotografía y estructura animada en portada.
+- [x] Diseñar una galería destacada y detalle en grid responsivo, sin recortar los originales.
+- [x] Mantener blanco y negro/color, foco de teclado, táctil y movimiento reducido.
+- [x] Documentar fuentes y reutilización en PORTFOLIO.md.
+- [x] Completar revisión final de pruebas y capturas: 8 pruebas unitarias, 16 de navegador, revisión de tipos sin errores y compilación de 27 páginas.
+- [ ] Incorporar equipo cuando se retome esa parte; fuera de esta entrega por decisión del usuario.
+
 ## Variante design_minimal
 
 La versión original está preservada en modern_design mediante seis commits por responsabilidad. Esta rama nace de 0b8e2e0 por solicitud del usuario.

@@ -44,7 +44,12 @@ test('all generated routes are unique and localized', () => {
     ...Object.values(routeMap).map((r) => r[locale]),
     ...projects.map((p) => projectRoute(locale, p.slug)),
   ]);
-  assert.equal(routes.length, 16);
+  assert.equal(routes.length, 26);
+  assert.ok(
+    projects.every((project) =>
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(project.slug),
+    ),
+  );
   assert.equal(new Set(routes).size, routes.length);
   assert.ok(routes.every((route) => route.endsWith('/')));
 });

@@ -2,10 +2,11 @@
 import { t } from '../i18n';
 import { route, type Locale } from '../i18n/routes';
 import Architecture from '../components/Architecture.astro';
+import ProjectMedia from '../components/ProjectMedia.astro';
 import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import CallToAction from '../components/CallToAction.astro';
-import { projects } from '../data/projects';
+import { portfolioProjects as projects } from '../data/projects';
 interface Props {
   locale: Locale;
 }
@@ -37,13 +38,24 @@ const copy = t(locale);
       </a>
     </div>
   </div>
-  <figure class="hero-visual">
-    <Architecture hero />
-    <figcaption>
-      <span>{copy.home.visualNote}</span>
-      <span>{copy.ui.demo}</span>
-    </figcaption>
-  </figure>
+  <div class="hero-showcase">
+    <figure class="hero-real-photo hero-enter">
+      <a href={route(locale, 'projects')} aria-label={copy.home.primary}>
+        <ProjectMedia project={projects[0]} locale={locale} priority />
+      </a>
+      <figcaption>
+        <span>{projects[0].content[locale].title}</span>
+        <span>{copy.ui.photo}</span>
+      </figcaption>
+    </figure>
+    <figure class="hero-visual hero-structure">
+      <Architecture hero />
+      <figcaption>
+        <span>{copy.home.visualNote}</span>
+        <span>{copy.ui.demo}</span>
+      </figcaption>
+    </figure>
+  </div>
   <div class="hero-bottom">
     <a class="scroll-link" href="#capacidades">
       <span class="scroll-icon">

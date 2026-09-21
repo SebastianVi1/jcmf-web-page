@@ -19,6 +19,13 @@ export const es = {
     view: 'Explorar proyecto',
     all: 'Ver todos los proyectos',
     demo: 'Proyecto conceptual',
+    photo: 'Referencia fotográfica',
+    visualReference: 'Imagen de referencia',
+    referenceCaption:
+      'Material proporcionado · representación visual por confirmar',
+    photoCaption: 'Fotografía proporcionada · ficha de proyecto en revisión',
+    imageError:
+      'No se pudo cargar la fotografía. Puedes seguir consultando la ficha del proyecto.',
     image: 'Visualización conceptual · imagen provisional',
     scroll: 'Descubre lo que hacemos',
     filter: 'Filtrar proyectos',
@@ -39,7 +46,7 @@ export const es = {
     ],
     projects: [
       'Proyectos',
-      'Explora el portafolio conceptual de JCMF Constructora: proyectos residenciales, industriales y de infraestructura.',
+      'Explora referencias fotográficas y proyectos conceptuales de JCMF Constructora: edificación, industria e infraestructura.',
     ],
     contact: [
       'Hablemos de tu proyecto',
@@ -94,7 +101,7 @@ export const es = {
     projectsEyebrow: 'ESPACIOS CON PROPÓSITO',
     projectsTitle: 'Ideas de hoy.\nReferentes de mañana.',
     projectsNote:
-      'Una primera mirada a nuestro portafolio. Proyectos e imágenes conceptuales, pendientes de sustituir por obra real.',
+      'Una primera mirada a nuestro portafolio: referencias fotográficas en revisión y propuestas conceptuales.',
     processEyebrow: 'NUESTRA FORMA DE TRABAJAR',
     processTitle: 'Contigo, de principio a fin.',
     process: [
@@ -137,25 +144,49 @@ export const es = {
     teamNote:
       'Estructura de equipo de referencia. Perfiles, nombres y fotografías pendientes de confirmar.',
     team: [
+      'Director General',
       'Dirección de proyectos',
+      'Gerente General',
+      'Recursos Humanos',
+      'Gerente de Compras',
       'Residencia de obra',
       'Ingeniería e instalaciones',
       'Costos y presupuestos',
+      '',
     ],
   },
   projects: {
-    eyebrow: 'PORTAFOLIO CONCEPTUAL',
+    eyebrow: 'PORTAFOLIO / PRIMERA MIRADA',
     title: 'Cada espacio,\nuna nueva posibilidad.',
     intro:
-      'Explora cómo imaginamos distintos retos constructivos. Estas fichas son ejemplos de contenido, no obras ejecutadas por JCMF.',
+      'Arquitectura, escala y detalle. Explora una selección de obras y referencias, con el contexto y alcance de cada intervención.',
     categories: {
       all: 'Todos',
+      building: 'Edificación',
+      hospitality: 'Hotelería',
+      healthcare: 'Salud',
       residential: 'Residencial',
       industrial: 'Industrial',
       infrastructure: 'Infraestructura',
     },
-    scope: 'Alcance propuesto',
-    overview: 'Sobre el concepto',
+    scope: 'Alcance',
+    overview: 'Sobre el proyecto',
+    photoStatus: 'Ficha en revisión',
+    facts: 'Ficha del proyecto',
+    sector: 'Sector',
+    material: 'Material visual',
+    fullImage: 'Ver imagen completa ↗ nueva pestaña',
+    verificationNote:
+      'La información pública describe el edificio o la empresa. La participación de JCMF se documenta por separado.',
+    providedScope: 'INFORMACIÓN PROPORCIONADA',
+    intervention: 'Nuestra intervención',
+    toDocument: 'Por documentar',
+    scopeNote:
+      'Alcance proporcionado para esta ficha. Fechas, cantidades y evidencia de ejecución pendientes de completar.',
+    research: 'CONTEXTO DOCUMENTADO',
+    contextTitle: 'Detrás del proyecto.',
+    noSource: 'Identificación y fuente pública pendientes de confirmar.',
+    moreProjects: 'Otras miradas.',
     location: 'Ubicación',
     status: 'Estado',
     locationValue: 'Por definir',
