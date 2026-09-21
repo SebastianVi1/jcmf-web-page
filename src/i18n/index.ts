@@ -1,6 +1,8 @@
 import { es } from './es';
 import { en } from './en';
 import type { Locale } from './routes';
+// Español define la estructura del diccionario, pero no los textos literales
+// permitidos: Widen permite traducirlos manteniendo las mismas claves.
 type Widen<T> = T extends string
   ? string
   : T extends readonly (infer U)[]

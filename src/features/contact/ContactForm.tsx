@@ -2,7 +2,9 @@ import { useEffect, useState, type SyntheticEvent } from 'react';
 import type { Dictionary } from '../../i18n';
 import { contactSchema, projectTypes } from './schema';
 type Field = 'name' | 'email' | 'company' | 'type' | 'message' | 'consent';
+/** Isla React de demostración: valida en memoria, sin peticiones ni persistencia. */
 export default function ContactForm({ copy }: { copy: Dictionary['contact'] }) {
+  // Impide el envío nativo antes de que React hidrate el formulario.
   const [ready, setReady] = useState(false);
   useEffect(() => setReady(true), []);
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
@@ -17,6 +19,7 @@ export default function ContactForm({ copy }: { copy: Dictionary['contact'] }) {
     });
     if (!result.success) {
       const next: Partial<Record<Field, string>> = {};
+      // Mostrar el primer error por campo y llevar el foco al primero inválido.
       for (const issue of result.error.issues)
         next[issue.path[0] as Field] ??= issue.message;
       setErrors(next);
@@ -26,6 +29,7 @@ export default function ContactForm({ copy }: { copy: Dictionary['contact'] }) {
       return;
     }
     setErrors({});
+    // «valid» solo confirma la validación local; no representa un mensaje enviado.
     setStatus('valid');
   }
   function described(field: Field) {

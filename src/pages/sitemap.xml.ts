@@ -15,6 +15,8 @@ export const GET: APIRoute = () => {
       en: projectRoute('en', project.slug),
     })),
   ];
+  // La demo entrega un sitemap vacío; producción incluye las variantes de idioma
+  // y usa español como destino x-default, igual que el layout compartido.
   const urls = canIndex
     ? entries
         .flatMap((entry) =>

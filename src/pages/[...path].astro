@@ -15,6 +15,8 @@ import {
   type PageKey,
 } from '../i18n/routes';
 import { projects, type Project } from '../data/projects';
+// Generar páginas desde las mismas constantes que usa la navegación evita
+// divergencias entre idiomas. index.astro ya es dueño de la portada española.
 export const getStaticPaths = (() => [
   ...locales.flatMap((locale) =>
     (Object.keys(routeMap) as PageKey[])

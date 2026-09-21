@@ -27,9 +27,12 @@ const copy = t(locale);
 const pageTitle = (title || copy.meta[page][0]) + ' | ' + site.name;
 const pageDescription = description || copy.meta[page][1];
 const path = slug ? projectRoute(locale, slug) : route(locale, page);
+// Sin dominio confirmado no se inventan URLs públicas. noindex también omite
+// canonical y alternates para páginas especiales como la de error 404.
 const canonical =
   site.origin && !noindex ? new URL(path, site.origin).href : undefined;
 const indexable = canIndex && !noindex;
+// Incluir solo datos corporativos disponibles; no inventar dirección o reseñas.
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -105,6 +108,7 @@ const schema = {
     )}
     <script is:inline>
       (() => {
+        // Ejecutar antes del primer pintado; site.ts gestiona cambios posteriores.
         let theme;
         try {
           theme = localStorage.getItem('jcmf-theme');

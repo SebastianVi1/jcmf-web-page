@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { site, canIndex } from '../config/site';
+// Complementa el meta robots, pero no sustituye autenticación ni control de acceso.
 export const GET: APIRoute = () =>
   new Response(
     canIndex

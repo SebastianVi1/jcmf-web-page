@@ -1,11 +1,17 @@
 import { z } from 'zod';
 import type { Dictionary } from '../../i18n';
+// Identificadores estables; copy.types contiene las etiquetas en este mismo orden.
 export const projectTypes = [
   'civil',
   'building',
   'installations',
   'other',
 ] as const;
+/**
+ * Crea la validación con mensajes del idioma activo, sin acoplarla a React.
+ * Al conectar un servicio real, validar también en el servidor: esta comprobación
+ * del navegador mejora la experiencia, pero no es una barrera de seguridad.
+ */
 export function contactSchema(errors: Dictionary['contact']['errors']) {
   return z.object({
     name: z.string().trim().min(2, errors.name).max(100, errors.name),

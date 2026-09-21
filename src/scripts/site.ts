@@ -1,9 +1,12 @@
+// ClientRouter conserva este módulo entre páginas: cada inicialización debe
+// retirar los eventos y observadores asociados al documento anterior.
 let cleanup: (() => void) | undefined;
 function init() {
   cleanup?.();
   const controller = new AbortController();
   const { signal } = controller;
   const systemTheme = matchMedia('(prefers-color-scheme: dark)');
+  // El almacenamiento puede estar bloqueado; el tema del sistema es el respaldo.
   function storedTheme() {
     try {
       return localStorage.getItem('jcmf-theme');
@@ -97,6 +100,8 @@ function init() {
     () => setMenu(false),
     { signal },
   );
+  // Mejora progresiva: el contenido permanece visible sin JS o sin observador.
+  // Solo se oculta lo que está bajo el viewport y cada revelado ocurre una vez.
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let observer: IntersectionObserver | undefined;
   if (!reduced.matches && 'IntersectionObserver' in window) {
@@ -117,6 +122,7 @@ function init() {
       }
     });
   }
+  // Cambiar la preferencia de movimiento nunca debe dejar contenido oculto.
   const showAll = () => {
     observer?.disconnect();
     document
@@ -144,6 +150,7 @@ function init() {
                 category !== 'all' && category !== el.dataset.category;
               if (!el.hidden) {
                 count++;
+                // Un resultado recién filtrado debe ser visible inmediatamente.
                 el.classList.remove('reveal-pending');
               }
             });
@@ -160,6 +167,7 @@ function init() {
 }
 document.addEventListener('astro:page-load', init);
 document.addEventListener('astro:before-swap', (event) => {
+  // Transferir el tema antes del intercambio evita destellos entre páginas.
   const next = (event as Event & { newDocument: Document }).newDocument;
   next.documentElement.dataset.theme = document.documentElement.dataset.theme;
   next.documentElement.classList.add('js');
