@@ -53,13 +53,13 @@ export const en: Dictionary = {
   },
   home: {
     eyebrow: 'VISION TAKES SHAPE',
-    title: ['Building', 'what comes', 'next.'],
+    title: ['Spaces that', 'endure.'],
     intro:
       'Turning ideas into spaces that endure. Civil works, buildings and infrastructure with precision in every detail.',
     primary: 'Explore projects',
     secondary: 'Meet JCMF',
     visualLabel: 'FROM VISION TO STRUCTURE',
-    visualNote: 'Volumetric study / JCMF',
+    visualNote: 'Pavilion / a study of light and material',
     sectors: ['Civil works', 'Buildings', 'Infrastructure', 'Installations'],
     aboutEyebrow: 'THE VALUE OF BUILDING WELL',
     aboutTitle: 'Clear vision.\nSolid foundations.',

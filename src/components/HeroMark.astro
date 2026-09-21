@@ -1,0 +1,52 @@
+---
+interface Props {
+  kind: 'about' | 'projects' | 'contact';
+}
+const { kind } = Astro.props;
+---
+
+<svg
+  class:list={['hero-mark', 'hero-mark-' + kind]}
+  viewBox="0 0 300 230"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  {kind === 'about' && (
+    <>
+      <circle cx="150" cy="115" r="88" fill="var(--surface)" />
+      <g class="drawing-lines" stroke="var(--accent)" stroke-width="1.1">
+        <path pathLength="1" d="M88 178V88l62-36 62 36v90l-62 35-62-35Z" />
+        <path
+          pathLength="1"
+          d="m88 88 62 36 62-36m-62 36v89M111 164v-60l39-23 39 23v60l-39 23-39-23Z"
+        />
+        <path pathLength="1" d="M150 8v31m0 170v15M39 115h30m162 0h30" />
+      </g>
+    </>
+  )}
+  {kind === 'projects' && (
+    <>
+      <path d="m38 124 111-64 111 64-111 64Z" fill="var(--surface)" />
+      <g class="drawing-lines" stroke="var(--accent)" stroke-width="1.1">
+        <path
+          pathLength="1"
+          d="m38 97 111-64 111 64-111 64-111-64Zm0 30 111 64 111-64m-222 30 111 64 111-64"
+        />
+        <path pathLength="1" d="M149 33v128M93 65l111 64M204 65 93 129" />
+      </g>
+    </>
+  )}
+  {kind === 'contact' && (
+    <>
+      <path d="M77 207V80a73 73 0 0 1 146 0v127Z" fill="var(--surface)" />
+      <g class="drawing-lines" stroke="var(--accent)" stroke-width="1.1">
+        <path
+          pathLength="1"
+          d="M77 207V80a73 73 0 0 1 146 0v127M105 207V94a45 45 0 0 1 90 0v113M59 207h182"
+        />
+        <path pathLength="1" d="M150 20v24m0 155v21m-96-97h35m120 0h35" />
+      </g>
+    </>
+  )}
+</svg>

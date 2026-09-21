@@ -22,7 +22,12 @@ function init() {
     }
     document
       .querySelector('meta[name="theme-color"]')
-      ?.setAttribute('content', theme === 'dark' ? '#101b27' : '#f3f4f2');
+      ?.setAttribute(
+        'content',
+        getComputedStyle(document.documentElement)
+          .getPropertyValue('--bg')
+          .trim(),
+      );
   }
   const stored = storedTheme();
   applyTheme(

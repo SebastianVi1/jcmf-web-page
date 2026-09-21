@@ -12,7 +12,11 @@ const { project, locale } = Astro.props;
 const copy = t(locale);
 ---
 
-<article class="project-card" data-category={project.category} data-reveal>
+<article
+  class="project-card"
+  data-category={project.category}
+  data-reveal="image"
+>
   <a
     class="project-image"
     href={projectRoute(locale, project.slug)}

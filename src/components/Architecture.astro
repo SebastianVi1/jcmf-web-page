@@ -4,7 +4,7 @@ interface Props {
   hero?: boolean;
 }
 const { variant = 'tower', hero = false } = Astro.props;
-const uid = 'arch-' + Math.random().toString(36).slice(2, 10);
+const id = 'study-' + Math.random().toString(36).slice(2, 9);
 ---
 
 <div
@@ -15,223 +15,196 @@ const uid = 'arch-' + Math.random().toString(36).slice(2, 10);
   ]}
   aria-hidden="true"
 >
-  <svg viewBox="0 0 720 670" fill="none" focusable="false">
+  <svg
+    viewBox={hero ? '0 0 1200 440' : '160 0 870 660'}
+    fill="none"
+    focusable="false"
+  >
     <defs>
       <linearGradient
-        id={uid + '-front'}
-        x1="220"
-        y1="160"
-        x2="510"
-        y2="590"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stop-color="#e1e5e5" />
-        <stop offset="1" stop-color="#a7b0b6" />
-      </linearGradient>
-      <linearGradient
-        id={uid + '-side'}
-        x1="430"
-        y1="200"
-        x2="625"
-        y2="450"
-        gradientUnits="userSpaceOnUse"
-      >
-        <stop stop-color="#6e7e8e" />
-        <stop offset="1" stop-color="#a6b1b9" />
-      </linearGradient>
-      <linearGradient
-        id={uid + '-glass'}
+        id={id}
         x1="200"
-        y1="180"
-        x2="510"
-        y2="590"
+        y1="100"
+        x2="900"
+        y2="550"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#445b71" />
-        <stop offset="1" stop-color="#182d43" />
+        <stop stop-color="var(--model-top)" />
+        <stop offset="1" stop-color="var(--model-front)" />
       </linearGradient>
       <pattern
-        id={uid + '-grid'}
-        width="50"
-        height="50"
+        id={id + '-slats'}
+        width="18"
+        height="18"
         patternUnits="userSpaceOnUse"
       >
-        <path
-          d="M50 0H0v50"
-          stroke="currentColor"
-          stroke-opacity=".07"
-          stroke-width=".6"
-        />
+        <path d="M2 0v18" stroke="var(--model-slat)" stroke-width="3" />
       </pattern>
     </defs>
-    <path
-      d="M80 530 365 366 689 551 402 716Z"
-      fill="currentColor"
-      opacity=".035"
-    />
-    <path
-      d="m24 526 337-195 351 202M90 601l336-194M184 655l334-194M117 419l351 203M220 359l351 203"
-      stroke="currentColor"
-      stroke-opacity=".13"
-      stroke-width=".6"
-    />
-    {variant === 'tower' && (
-      <>
-        <g class="model-back">
-          <path d="m379 131 111-63 102 60-111 63Z" fill="#eef0ee" />
-          <path d="M379 131v330l102 60V191Z" fill={'url(#' + uid + '-front)'} />
-          <path
-            d="m481 191 111-63v330l-111 63Z"
-            fill={'url(#' + uid + '-side)'}
-          />
-          {Array.from({ length: 10 }, (_, i) => (
+    <g transform={hero ? 'translate(100,-75) scale(.83)' : undefined}>
+      <path
+        class="scene-ground"
+        d="m124 440 491-188 475 216-489 169Z"
+        fill="var(--model-ground)"
+      />
+      <path
+        d="m224 481 385-148 340 153-386 149Z"
+        fill="var(--model-shadow)"
+        opacity=".25"
+      />
+      {(hero || variant === 'tower') && (
+        <>
+          <g class="scene-mass scene-mass-back">
             <path
-              d={'m389 ' + (156 + i * 29) + ' 82 47v12l-82-47Z'}
-              fill="#70818e"
-              opacity=".7"
+              d="m389 221 273-102 264 121-273 102Z"
+              fill="var(--model-top)"
             />
-          ))}
-          {Array.from({ length: 10 }, (_, i) => (
-            <path
-              d={'m490 ' + (209 + i * 29) + ' 92-53v12l-92 53Z'}
-              fill="#314a62"
-              opacity=".8"
-            />
-          ))}
-        </g>
-        <g class="model-main">
-          <path d="m183 225 175-101 155 90-175 101Z" fill="#e9edeb" />
-          <path d="M183 225v307l155 90V315Z" fill={'url(#' + uid + '-front)'} />
-          <path
-            d="m338 315 175-101v307L338 622Z"
-            fill={'url(#' + uid + '-glass)'}
-          />
-          {Array.from({ length: 9 }, (_, i) => (
-            <g>
+            <path d="M389 221v167l264 121V342Z" fill={'url(#' + id + ')'} />
+            <path d="m653 342 273-102v167L653 509Z" fill="var(--model-side)" />
+            <path d="m407 261 225 103v118L407 379Z" fill="var(--model-glass)" />
+            <path d="m669 371 236-88v101l-236 88Z" fill="var(--model-glass)" />
+            {Array.from({ length: 12 }, (_, i) => (
               <path
-                d={'m194 ' + (252 + i * 31) + ' 132 76v15l-132-76Z'}
-                fill="#85949e"
-                opacity=".65"
+                d={'M' + (681 + i * 19) + ' ' + (367 - i * 7.1) + 'v102'}
+                stroke="var(--model-slat)"
+                stroke-width="5"
               />
-              <path
-                d={
-                  'm338 ' +
-                  (339 + i * 31) +
-                  ' 175-101v7L338 ' +
-                  (346 + i * 31) +
-                  'Z'
-                }
-                fill="#b9c3c8"
-              />
-            </g>
-          ))}
-          {Array.from({ length: 7 }, (_, i) => (
+            ))}
             <path
-              d={'M' + (355 + i * 23) + ' ' + (305 - i * 13.28) + 'v294'}
-              stroke="#afbbc4"
-              stroke-width="3"
-            />
-          ))}
-          <path
-            d="M183 225v307l155 90V315Z"
-            stroke="#eff1ef"
-            stroke-opacity=".4"
-          />
-          <path
-            d="m181 220 177-102 158 92v14L338 327l-157-91Z"
-            fill="#d4dbdc"
-          />
-          <path d="m181 220 157 91 178-101-158-92Z" fill="#eef1ed" />
-          <path d="m235 221 122-70 103 59-122 71Z" fill="#7d8d99" />
-          <path d="m252 221 105-61 86 50-105 61Z" fill="#b6c0c2" />
-          <path
-            d="m179 525 159 93 177-103v17L338 635l-159-93Z"
-            fill="#85939d"
-          />
-        </g>
-        <g class="model-accent">
-          <path d="m108 431 133-77 83 48-133 77Z" fill="#507ae0" />
-          <path d="M108 431v106l83 48V479Z" fill="#244fc0" />
-          <path d="m191 479 133-77v106l-133 77Z" fill="#183978" />
-          {Array.from({ length: 5 }, (_, i) => (
-            <path
-              d={'m' + (204 + i * 23) + ' ' + (481 - i * 13.2) + 'v80'}
-              stroke="#91acde"
-              stroke-width="4"
-            />
-          ))}
-          <path d="m108 431 83 48 133-77" stroke="#93afe5" stroke-width="2" />
-        </g>
-        <path
-          class="model-guide"
-          d="M357 41v62m-12-48h24M634 126v379m-6-375h12m-12 370h12M128 240v-90h142"
-          stroke="currentColor"
-          stroke-opacity=".28"
-          stroke-width="1"
-          stroke-dasharray="3 5"
-        />
-      </>
-    )}
-    {variant === 'hall' && (
-      <g class="model-main">
-        <path d="m96 340 324-187 229 133-324 187Z" fill="#e5e9e7" />
-        <path d="M96 340v186l229 133V473Z" fill={'url(#' + uid + '-front)'} />
-        <path
-          d="m325 473 324-187v186L325 659Z"
-          fill={'url(#' + uid + '-side)'}
-        />
-        {Array.from({ length: 7 }, (_, i) => (
-          <g>
-            <path
-              d={'m' + (121 + i * 44) + ' ' + (326 - i * 25.4) + ' 226 131'}
-              stroke="#a5b2ba"
-              stroke-width="7"
-            />
-            <path
-              d={'M' + (347 + i * 44) + ' ' + (463 - i * 25.4) + 'v161'}
-              stroke="#e2e7e6"
-              stroke-width="9"
+              d="m389 221 264 121 273-102v17L653 359 389 238Z"
+              fill="var(--model-rim)"
             />
           </g>
-        ))}
-        <path d="m126 393 157 91v111l-157-91Z" fill="#294363" />
-        <path d="m126 393 157 91v17l-157-91Z" fill="#3c6cd8" />
-        <path
-          d="m370 475 85-49v124l-85 49Zm127-74 84-48v124l-84 49Z"
-          fill="#344e63"
-        />
-      </g>
-    )}
-    {variant === 'bridge' && (
-      <g class="model-main">
-        <path d="m76 417 439-253 111 65-439 253Z" fill="#dce1df" />
-        <path d="m76 417 111 65v26L76 443Z" fill="#8698a3" />
-        <path d="m187 482 439-253v26L187 508Z" fill="#5d748a" />
-        <path
-          d="m217 464 33-19v116l-33 19-35-20V445Zm236-137 33-19v117l-33 19-35-20V307Z"
-          fill="#aebbc1"
-        />
-        <path d="m184 373 307-177v14L184 387Z" fill="#315ebd" />
-        <path
-          d="m103 419 439-253M166 460l440-254"
-          stroke="#f5f5ed"
-          stroke-width="4"
-        />
-        {Array.from({ length: 12 }, (_, i) => (
-          <path
-            d={'m' + (158 + i * 35) + ' ' + (445 - i * 20) + ' 19-11'}
-            stroke="#f5f5ed"
-            stroke-width="2"
-          />
-        ))}
-        {Array.from({ length: 10 }, (_, i) => (
-          <path
-            d={'M' + (202 + i * 32) + ' ' + (469 - i * 18.5) + 'v-66'}
-            stroke="#6683b4"
-            stroke-width="3"
-          />
-        ))}
-      </g>
-    )}
+          <g class="scene-mass scene-mass-front">
+            <path
+              d="m230 358 295-111 160 74-295 111Z"
+              fill="var(--model-top)"
+            />
+            <path d="M230 358v110l160 74V432Z" fill="var(--model-front)" />
+            <path d="m390 432 295-111v110L390 542Z" fill="var(--model-side)" />
+            <path d="m247 388 126 58v71l-126-58Z" fill="var(--model-glass)" />
+            <path d="m407 447 256-96v62l-256 96Z" fill="var(--model-glass)" />
+            {Array.from({ length: 12 }, (_, i) => (
+              <path
+                d={'M' + (419 + i * 21) + ' ' + (442 - i * 7.9) + 'v62'}
+                stroke="var(--model-slat)"
+                stroke-width="3"
+              />
+            ))}
+            <path
+              d="m215 350 310-116 178 81-311 117Z"
+              fill="var(--model-top)"
+            />
+            <path
+              d="m215 350 177 82 311-117v12L392 444l-177-82Z"
+              fill="var(--model-rim)"
+            />
+            <path
+              d="m252 364 272-102 139 63-272 102Z"
+              fill="var(--model-inset)"
+              opacity=".32"
+            />
+          </g>
+          <g class="scene-mass scene-landscape" fill="var(--model-tree)">
+            <path d="m792 446 43-16 59 27-43 16Z" fill="var(--model-rim)" />
+            <path
+              d="M846 440v-80"
+              stroke="var(--model-tree)"
+              stroke-width="5"
+            />
+            <ellipse cx="846" cy="342" rx="27" ry="46" />
+            <ellipse cx="827" cy="359" rx="22" ry="31" />
+            <ellipse cx="866" cy="361" rx="20" ry="30" />
+            <path
+              d="M199 408v-47"
+              stroke="var(--model-tree)"
+              stroke-width="4"
+            />
+            <ellipse cx="199" cy="344" rx="19" ry="35" />
+          </g>
+          <g
+            class="drawing-lines"
+            stroke="var(--model-line)"
+            stroke-width=".85"
+            opacity=".65"
+          >
+            <path
+              pathLength="1"
+              d="m189 350 336-126 201 92-335 126-202-92v130l202 94 335-126V316"
+            />
+            <path
+              pathLength="1"
+              d="m368 215 294-111 284 130-294 111-284-130v174m284-44v188m294-299v185"
+            />
+            <path
+              pathLength="1"
+              d="M600 77v-38m-9 19h18M986 264v167m-6-167h12m-12 167h12M177 498l214 99 327-123"
+            />
+          </g>
+        </>
+      )}
+      {!hero && variant === 'hall' && (
+        <>
+          <g class="scene-mass">
+            <path
+              d="m223 342 362-136 370 169-363 136Z"
+              fill="var(--model-top)"
+            />
+            <path d="M223 342v164l369 169V511Z" fill="var(--model-front)" />
+            <path d="m592 511 363-136v164L592 675Z" fill="var(--model-side)" />
+            <path d="m247 386 316 145v98L247 484Z" fill="var(--model-glass)" />
+            {Array.from({ length: 8 }, (_, i) => (
+              <path
+                d={'m' + (249 + i * 43) + ' ' + (333 - i * 16) + ' 362 166v151'}
+                stroke="var(--model-rim)"
+                stroke-width="13"
+              />
+            ))}
+            <path
+              d="m634 516 93-35v101l-93 35Zm130-49 149-56v101l-149 56Z"
+              fill="var(--model-glass)"
+            />
+            <path
+              d="m222 337 372 170 363-136"
+              stroke="var(--model-top)"
+              stroke-width="8"
+            />
+          </g>
+        </>
+      )}
+      {!hero && variant === 'bridge' && (
+        <>
+          <g class="scene-mass">
+            <path
+              d="m219 442 480-209 188 86-480 209Z"
+              fill="var(--model-top)"
+            />
+            <path d="m219 442 188 86v25l-188-86Z" fill="var(--model-front)" />
+            <path d="m407 528 480-209v25L407 553Z" fill="var(--model-side)" />
+            <path
+              d="m332 442 29-13v160l-29 13-30-14V429Zm317-138 29-13v160l-29 13-30-14V291Z"
+              fill="var(--model-rim)"
+            />
+            <path
+              d="m262 437 446-194M385 493l446-194"
+              stroke="var(--model-side)"
+              stroke-width="3"
+            />
+            {Array.from({ length: 12 }, (_, i) => (
+              <path
+                d={'M' + (407 + i * 40) + ' ' + (511 - i * 17.4) + 'v-70'}
+                stroke="var(--model-tree)"
+                stroke-width="3"
+              />
+            ))}
+            <path
+              d="m407 441 443-193"
+              stroke="var(--model-tree)"
+              stroke-width="3"
+            />
+          </g>
+        </>
+      )}
+    </g>
   </svg>
 </div>

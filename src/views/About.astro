@@ -1,5 +1,6 @@
 ---
 import { t } from '../i18n';
+import PageHero from '../components/PageHero.astro';
 import type { Locale } from '../i18n/routes';
 import Architecture from '../components/Architecture.astro';
 import CallToAction from '../components/CallToAction.astro';
@@ -11,11 +12,12 @@ const { locale } = Astro.props;
 const copy = t(locale);
 ---
 
-<section class="container page-intro">
-  <p class="eyebrow hero-enter">{copy.about.eyebrow}</p>
-  <h1 class="multiline hero-enter">{copy.about.title}</h1>
-  <p class="lead hero-enter">{copy.about.intro}</p>
-</section>
+<PageHero
+  eyebrow={copy.about.eyebrow}
+  title={copy.about.title}
+  intro={copy.about.intro}
+  kind="about"
+/>
 <section class="container about-story section-bottom">
   <figure class="about-visual" data-reveal>
     <Architecture variant="tower" />

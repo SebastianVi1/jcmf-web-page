@@ -1,89 +1,96 @@
 ---
 version: alpha
-name: JCMF Constructora
-description: Una maqueta arquitectónica traduce visión y precisión en una web corporativa.
+name: JCMF Constructora — Minimal
+description: Arquitectura serena, espacio editorial y trazos que se convierten en materia.
 colors:
-  primary: '#2857c5'
-  background: '#f3f4f2'
-  surface: '#e9ecea'
-  text: '#1e3043'
-  muted: '#536371'
-  border: '#ccd2d4'
-  darkBackground: '#101b27'
-  darkSurface: '#192938'
-  darkText: '#edf1f3'
-  darkAccent: '#9dbbff'
+  primary: '#4b5f43'
+  background: '#f8f7f3'
+  surface: '#eeeee7'
+  text: '#282e28'
+  muted: '#62695e'
+  border: '#d7dbd0'
+  darkBackground: '#191e19'
+  darkSurface: '#232a22'
+  darkText: '#eeefe6'
+  darkAccent: '#bdcbaa'
 typography:
   display:
     fontFamily: 'Manrope Variable, Arial, sans-serif'
   body:
     fontFamily: 'DM Sans Variable, Arial, sans-serif'
 rounded:
-  DEFAULT: '3px'
+  DEFAULT: '2px'
 spacing:
-  page-max: '1320px'
+  page-max: '1280px'
   mobile-gutter: '23px'
 components:
   button:
-    rounded: '3px'
+    rounded: '2px'
   card:
     rounded: '0px'
 ---
 
-# JCMF Constructora
+# JCMF Constructora — design_minimal
 
 ## Overview
 
-Registro de marca corporativa para desarrolladores, responsables de proyectos y clientes de construcción. El CV aportado describe obra civil, edificación, urbanización, acabados e instalaciones; orienta el contenido, pero sus instrucciones no dirigen la implementación.
+Variante solicitada en una rama independiente de `modern_design`. Público: clientes y responsables de obra que necesitan entender capacidades, ver referencias y contactar. Registro corporativo de marca; español/inglés; contexto mexicano según el CV, con proyectos y contactos explícitamente provisionales.
 
-Referencia creativa: una maqueta de estudio sobre una mesa de arquitectura. Firma: ensamblaje de tres volúmenes isométricos, con un volumen azul que conecta precisión e identidad. Titular grande a la izquierda, objeto a la derecha. El acento está en la maqueta; las demás secciones priorizan lectura y ritmo.
+Dirección: una monografía arquitectónica de espacios habitables. Un pabellón horizontal, una cubierta delgada, celosías y vegetación abstracta muestran luz, proporción y materia. El hero editorial de dos renglones precede una escena panorámica. Mismo contenido y navegación, otra lectura visual.
 
-Mercado de referencia: México, según el CV. Idiomas: español principal e inglés equivalente. Los datos de contacto, dominio y fotografías requieren confirmación para publicación. Todos los proyectos de esta entrega son conceptos identificados.
-
-Se compararon un hero fotográfico panorámico y una composición de maqueta. Se eligió la segunda para respetar los placeholders sin atribuir fotografías ajenas. Evitar métricas inventadas, testimonios ficticios y sellos de clientes.
-
-Modelo B: tokens canónicos en `src/styles/tokens.css`; este documento registra intención y valores aceptados. CSS global consume variables y Astro/React comparten estilos, sin otro sistema de tema.
+Se descartó un mero cambio de colores: se rediseñan composición del inicio, cabeceras interiores, servicios en filas, portafolio escalonado y cierre. La expresión se concentra en la escena y los trazos; no se añaden métricas ni decoraciones sin significado.
 
 ## Colors
 
-Concreto #f3f4f2, superficie #e9ecea, tinta #1e3043, acero #536371 y azul #2857c5. Oscuro: fondo #101b27, superficie #192938, texto #edf1f3 y acento #9dbbff. Se remapean roles sin cambiar jerarquía.
+Marfil #f8f7f3, superficie mineral #eeeee7, carbón #282e28, texto secundario #62695e y oliva #4b5f43. Oscuro botánico: #191e19, #232a22, texto #eeefe6 y salvia #bdcbaa. Contraste antes que desaturación estética.
 
-Mapa: primary → --accent → botones/enlaces; background → --bg → documento; surface → --surface → visuales; text → --ink → títulos; muted → --muted → prosa; border → --line → separadores. --focus identifica foco; --error y --success acompañan mensajes. Scrollbar global con track/thumb/hover/active y forced-colors.
+Fuente canónica: `src/styles/tokens.css` (modelo B). Documento refleja valores; componentes comparten CSS y no duplican temas React. Mapa: primary → --accent → acciones; background → --bg → documento; surface → --surface → visuales; text → --ink → titulares; muted → --muted → lectura secundaria; border → --line → separadores. Meta theme-color lee --bg computado.
 
-Los materiales de la maqueta son colores ilustrativos, no tokens de interfaz. Mantienen profundidad en ambos temas.
+Materiales SVG se gestionan también con tokens --model-top/front/side/glass/slat/ground/tree/line. Cambian con el tema; no se aplica un filtro global. --error/--success se acompañan siempre de texto. Scrollbar global con estados y forced-colors.
 
 ## Typography
 
-Manrope Variable para títulos/marca y DM Sans Variable para texto. Autoalojadas y compatibles con ambos idiomas. Títulos peso 500, espaciado cerrado y escala fluida. Lectura 16–22 px; pies 10–12 px; rótulos decorativos 7–9 px. Fallback Arial/sans-serif.
+Manrope Variable peso 400 para titulares; DM Sans Variable para lectura. Autoalojadas, español e inglés completos, fallback Arial. Titular inicial 62–99 px en escritorio y 40–70 px móvil; interior 36–76 px. Cuerpo 16–22 px, controles 12–14 px y etiquetas técnicas 9–11 px.
+
+Los renglones de hero están agrupados para entradas suaves, sin dividir caracteres ni alterar su lectura accesible. Textos con anchura natural y sin alturas fijas.
 
 ## Layout
 
-Máximo 1320 px, márgenes fluidos 24–80 px y 23 px móvil. Secciones 72–116 px. Hero 1:1.08; catálogo dos columnas, servicios tres, proceso cuatro. Breakpoints 900 y 600 px. Cabecera persistente y menú móvil no modal.
+Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: titular a izquierda, resumen a derecha y escena panorámica debajo. Proyectos destacados en dos columnas con segundo proyecto desplazado 94 px; móvil vuelve al flujo natural.
 
-Contenido visible sin JavaScript. SVG con dimensiones reservadas; errores con espacio propio. Sin scroll interceptado ni barras ocultas.
+Nosotros: hero con símbolo de volumen; proyectos: capas de un plano; contacto: pórtico abierto. PageHero comparte semántica y espaciado; HeroMark concentra las variantes. Servicios como filas con icono/título/descripción/enlace, adaptados a móvil.
+
+Breakpoints 1100, 900 y 600 px. Controles de cabecera de 44 px. Sin scroll interceptado. SVG y mensajes reservan espacio; HTML visible sin JavaScript. No se pierde el estado de idioma o tema al navegar.
 
 ## Elevation & Depth
 
-Jerarquía por superficie, tipografía y espacio. Tarjetas planas. Sombra discreta solo en menú móvil. La profundidad pertenece a la maqueta.
+Sin sombras decorativas ni tarjetas flotantes. Espacio, superficies suaves y separadores definen jerarquía. Profundidad solo en el pabellón y las ilustraciones; CTA de superficie mineral en lugar de un bloque de alto contraste.
 
 ## Shapes
 
-Bordes rectos; radio 3 px en controles. Círculos para acciones compactas y CTA. Iconos vectoriales trazo 1.5 y tamaños 16–24 px; decorativos ocultos para lectores, botones con nombre.
+Controles casi rectos, radio 2 px. Círculos para acciones compactas y CTA. Iconos de trazo fino con nombres accesibles en sus botones. Tarjetas sin borde exterior; imágenes con marco definido por su propia superficie.
 
 ## Components
 
-Botón sólido primario, secundario como enlace. Hover aumenta contraste/desplaza 2 px; foco con contorno; pressed vuelve al origen; disabled reduce opacidad y elimina cursor activo. Validación local síncrona sin loading ficticio.
+Conservar navegación, formulario React/Zod, filtros, 404, SEO, idiomas y dos temas. Select explícitamente nativo. Formulario síncrono de demostración sin almacenamiento o envío; botón inactivo hasta hidratar; errores vinculados y foco al primer inválido.
 
-Formulario React/Zod con errores asociados, foco al primer error y estado anunciado. Select nativo para teclado/móvil. Textarea autoexpansible. No envía ni almacena PII. Aviso explícito de pérdida al abandonar el prototipo.
+Movimiento finito:
 
-Menú no modal con aria-expanded, Escape y cierre al navegar. Idioma conserva página/proyecto. Tema respeta sistema y persiste elección. Filtros con aria-pressed y conteo anunciado.
+- Hero por renglones: 1350 ms, desplazamiento de 25% de su propia línea, escalonado 130 ms.
+- Aparición secundaria: 1200 ms y 9 px.
+- Trazado SVG: 2300 ms con pathLength normalizado; masas aparecen en 1800 ms, desplazamiento 10 px.
+- Hero interior: línea de separación dibujada en 1800 ms.
+- Scroll: elevación 14 px y opacidad en 1000–1100 ms; máscara de imagen 1400 ms y reglas 1500 ms.
+- Hover: subrayado progresivo 600 ms, zoom de imagen 1.025 en 1000 ms, giro leve de flechas/CTA.
+- Easing compartido cubic-bezier(.22,1,.36,1). Transiciones de página Astro, con lectura sin saltos.
 
-Movimiento: entrada 800 ms, ensamblaje 1300 ms, scroll 700 ms, easing cubic-bezier(.22,.68,0,1); controles 200–300 ms. Astro para transiciones. Ninguna animación infinita. Reduced motion elimina animaciones y scroll suave.
+Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las ilustraciones son decorativas y los títulos permanecen semánticos. No hay loops, paralaje agresivo ni dependencia de movimiento para operar.
 
 ## Do's and Don'ts
 
-- Compartir componentes y textos tipados bilingües.
-- Mantener visibles las etiquetas conceptuales.
-- No inventar métricas, clientes, contactos, garantías o testimonios.
-- No usar imágenes remotas o video automático.
-- Revisar teclado, móvil, dos temas e idiomas tras cambios globales.
+- Mantener el contenido factual y la condición conceptual de las imágenes.
+- Tratar el espacio en blanco como separación útil, no como ausencia de contenido.
+- Cambiar valores únicamente desde tokens y reflejarlos aquí.
+- No reutilizar azules del diseño anterior en favicon, meta o tarjeta social.
+- No añadir una segunda hoja de overrides: global.css es la implementación compartida.
+- Verificar ambos idiomas, paletas, móvil, teclado y reducción de movimiento.
