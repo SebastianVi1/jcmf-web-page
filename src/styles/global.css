@@ -1217,6 +1217,68 @@ svg {
   margin-top: 33px;
   max-width: 620px;
 }
+/* Editorial gallery reuses ProjectMedia, including its reserved error surface. */
+.visual-section {
+  background: var(--surface);
+}
+.visual-gallery {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: var(--visual-gap);
+  align-items: start;
+}
+.visual-panel {
+  min-width: 0;
+}
+.visual-panel:nth-child(2) {
+  margin-top: var(--visual-offset);
+}
+.visual-photo {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: clip;
+  background: var(--paper);
+}
+.visual-panel:nth-child(2) .visual-photo {
+  aspect-ratio: 4 / 5;
+}
+.visual-panel figcaption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding-top: 20px;
+}
+.visual-panel h3 {
+  margin-top: 7px;
+  font-size: clamp(24px, 2.3vw, 34px);
+}
+.visual-link {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.visual-link:hover {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+.visual-link:active {
+  transform: translateY(2px);
+}
+@media (max-width: 600px) {
+  .visual-gallery {
+    grid-template-columns: 1fr;
+  }
+  .visual-panel:nth-child(2) {
+    margin-top: 0;
+  }
+  .visual-panel:nth-child(2) .visual-photo {
+    aspect-ratio: 4 / 3;
+  }
+}
 .process-section {
   border-top: 1px solid var(--line);
 }

@@ -103,6 +103,10 @@ export const en: Dictionary = {
     projectsTitle: 'Today’s ideas.\nTomorrow’s landmarks.',
     projectsNote:
       'A first look at our portfolio: photographic references under review and concept proposals.',
+    visualEyebrow: 'ARCHITECTURE IN PERSPECTIVE',
+    visualTitle: 'From structure\nto detail.',
+    visualIntro:
+      'Volumes, materials and spaces worth a closer look. Another perspective on our visual references.',
     processEyebrow: 'HOW WE WORK',
     processTitle: 'With you, from start to finish.',
     process: [

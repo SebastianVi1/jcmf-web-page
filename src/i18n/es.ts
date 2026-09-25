@@ -102,6 +102,10 @@ export const es = {
     projectsTitle: 'Ideas de hoy.\nReferentes de mañana.',
     projectsNote:
       'Una primera mirada a nuestro portafolio: referencias fotográficas en revisión y propuestas conceptuales.',
+    visualEyebrow: 'ARQUITECTURA EN PERSPECTIVA',
+    visualTitle: 'De la estructura\nal detalle.',
+    visualIntro:
+      'Volúmenes, materiales y espacios que invitan a mirar de cerca. Otra perspectiva de nuestras referencias visuales.',
     processEyebrow: 'NUESTRA FORMA DE TRABAJAR',
     processTitle: 'Contigo, de principio a fin.',
     process: [

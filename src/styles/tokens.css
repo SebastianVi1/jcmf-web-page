@@ -38,6 +38,8 @@
   --hero-line: #ffffff70;
   --hero-button-ink: #122333;
   --hero-button-hover: #dceaf5;
+  --visual-gap: clamp(28px, 5vw, 72px);
+  --visual-offset: 96px;
   --hero-height: 740px;
   --hero-space: clamp(36px, 5vw, 76px);
   --hero-title-size: clamp(72px, 10.8vw, 156px);

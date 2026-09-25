@@ -115,3 +115,12 @@ El tema claro evoluciona también a azul por solicitud del usuario: fondos de co
 acento técnico, materiales SVG y scrollbars coherentes. Favicon y meta theme-color inicial
 reflejan --accent y --bg; el script de tema actualiza el meta desde CSS computado.
 README describe la identidad actual; el historial de PLAN conserva las propuestas anteriores.
+
+## Galería editorial inferior
+
+HomeShowcase añade dos perspectivas en color, elegidas por slug estable desde projects.ts
+(Hospital Muguerza y ONE), después del portafolio. Reutiliza ProjectMedia y su tratamiento
+de error, dimensiones y WebP; no añade fuentes externas ni datos de autoría.
+Composición 1.35:1, fotos 4:3 y 4:5; una columna en móvil.
+--visual-gap clamp(28px, 5vw, 72px) y --visual-offset 96px pertenecen a tokens.css.
+Los enlaces son nativos con foco visible, descripciones localizadas y etiquetas de referencia.

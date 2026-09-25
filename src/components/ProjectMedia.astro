@@ -9,8 +9,10 @@ interface Props {
   project: Project;
   locale: Locale;
   priority?: boolean;
+  /** Editorial images stay in color; portfolio cards retain their reveal behavior. */
+  mode?: 'reveal' | 'color';
 }
-const { project, locale, priority = false } = Astro.props;
+const { project, locale, priority = false, mode = 'reveal' } = Astro.props;
 const photo = await getProjectPhoto(project, priority);
 ---
 
@@ -18,6 +20,7 @@ const photo = await getProjectPhoto(project, priority);
   <ProjectPhoto
     client:visible
     {...photo}
+    mode={mode}
     alt={project.content[locale].imageAlt || project.content[locale].title}
     errorLabel={t(locale).ui.imageError}
   />
