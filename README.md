@@ -1,46 +1,88 @@
-# Astro Starter Kit: Basics
+# JCMF Constructora
+
+Ramas de diseño: modern_design conserva la propuesta original azul/isométrica; design_minimal contiene la evolución azul técnico/concreto y azul noche con portada fotográfica, Oswald y animaciones finitas. Ambas comparten funcionalidad e idiomas. Cambiar de rama con Git permite comparar las propuestas; esta rama no publica cambios.
+
+Sitio corporativo en Astro + React + TypeScript con placeholders. Incluye inicio, nosotros, catálogo, fichas de proyecto, contacto y privacidad en español e inglés. La identidad y sus reglas están en [DESIGN.md](DESIGN.md); el plan detallado y los pendientes de lanzamiento en [PLAN.md](PLAN.md).
+
+## Desarrollo
+
+Requiere Node >=22.12 y Bun. Ejecutar dentro de Ubuntu/WSL:
 
 ```sh
-bun create astro@latest -- --template basics
+bun install
+bun run dev -- --background
+bun run astro dev status
+bun run astro dev logs
+bun run astro dev stop
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+La URL local aparece en el estado del servidor. Se usa background según AGENTS.md.
 
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
+```sh
+bun run check
+bun run build
+bun run test
+bun run test:e2e
 ```
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+Las pruebas E2E esperan el servidor local en http://localhost:4321. Instalar Chromium de Playwright con `bunx playwright install chromium` si no existe.
 
-## 🧞 Commands
+## Arquitectura
 
-All commands are run from the root of the project, from a terminal:
+- `src/config/site.ts`: marca y configuración SEO.
+- `src/i18n/`: diccionarios tipados español/inglés y mapa de rutas.
+- `src/data/projects.ts`: proyectos conceptuales y alcance por idioma.
+- `src/components/`: navegación, marca, iconos, visuales SVG y CTA.
+- `src/features/contact/`: única isla React, formulario y esquema Zod reutilizable.
+- `src/layouts/SiteLayout.astro`: HTML, metadatos, tema y transiciones.
+- `src/views/`: composición semántica de cada página.
+- `src/pages/`: inicio, generación de rutas estáticas, 404, robots y sitemap.
+- `src/styles/`: tokens canónicos y estilos compartidos.
+- `src/scripts/site.ts`: menú, tema, filtros y revelados con limpieza de eventos.
+- `tests/`: validación y pruebas de navegación/accesibilidad.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `bun install`             | Installs dependencies                            |
-| `bun dev`             | Starts local dev server at `localhost:4321`      |
-| `bun build`           | Build your production site to `./dist/`          |
-| `bun preview`         | Preview your build locally, before deploying     |
-| `bun astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `bun astro -- --help` | Get help using the Astro CLI                     |
+Astro genera HTML completo. React se hidrata solamente en contacto. Fuentes autoalojadas mediante Fontsource, sin imágenes ni servicios remotos.
 
-## 👀 Want to learn more?
+## Contenido y traducción
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Modificar los textos en `src/i18n/es.ts` y `en.ts`. TypeScript comprueba la misma estructura de claves. Añadir proyectos en `src/data/projects.ts`; sus rutas se generan automáticamente en ambos idiomas. El selector conserva página y proyecto.
+
+Las ilustraciones son placeholders vectoriales propios, no fotografías de obras. Los roles de equipo son referencias; no se publican identidades ni estadísticas sin aprobación. El documento fuente es el CV empresarial aportado por el usuario, fechado 14 de abril de 2026.
+
+## Formulario
+
+La demostración valida en el navegador con Zod, conserva los campos ante errores y enfoca el primero incorrecto. No hace peticiones, no envía correo y no guarda datos. El estado válido nunca implica un mensaje enviado. El tema es la única preferencia persistida en localStorage.
+
+Para producción: implementar endpoint y validar de nuevo en servidor, antispam/rate limit, proveedor de correo, estados de envío/error y aviso de privacidad aprobado. Nunca colocar secretos en variables PUBLIC_.
+
+## SEO y publicación
+
+Copiar `.env.example` a `.env` y configurar el dominio real solo cuando esté aprobado:
+
+```dotenv
+PUBLIC_SITE_URL=https://dominio-confirmado.example
+PUBLIC_INDEXABLE=false
+```
+
+El ejemplo de dominio no es un dominio atribuido a JCMF. Dejar PUBLIC_INDEXABLE=false mientras existan placeholders. Sin dominio se omiten canonical y hreflang absolutos; robots y metadatos bloquean indexación. Noindex es una directiva para buscadores, no control de acceso.
+
+Una vez aprobado el contenido y el dominio, activar PUBLIC_INDEXABLE=true y reconstruir. Se generan canonical, alternates, Open Graph, datos estructurados de organización, sitemap bilingüe y robots indexable. No se inventan LocalBusiness, direcciones, reseñas ni métricas.
+
+Desplegar `dist/` en un hosting estático que sirva `404.html` con estado HTTP 404. Este trabajo no publica ni configura servicios externos.
+
+## Verificación
+
+El plan registra los resultados de compilación, tipos y revisión del navegador. Pruebas E2E cubren rutas, cambio de idioma/tema, móvil, formulario, filtros, contenido sin JavaScript y accesibilidad automatizada. Una revisión manual final de contenido y accesibilidad sigue siendo necesaria antes de publicar.
+
+## Personalizar el diseño actual
+
+- Paletas y escalas: editar `src/styles/tokens.css` y reflejar las decisiones en `DESIGN.md`.
+- Portada: `src/views/Home.astro` reutiliza el adaptador WebP y muestra texto de `home` en los dos diccionarios.
+- Galería inferior: `HomeShowcase.astro` selecciona slugs existentes; la procedencia sigue en `PORTFOLIO.md`.
+- Cifras de diseño: `home.metrics` contiene ejemplos ficticios con etiquetas explícitas. Reemplazarlos por cifras aprobadas o retirar `HomeMetrics` antes de publicar.
+- Equipo: cada registro de `about.team` tiene `role` y `name`. Sustituir los nombres por confirmar en ambos idiomas cuando estén aprobados.
+- Animación: duraciones `--motion-*` en tokens; reglas en `global.css`. Movimiento reducido elimina los efectos.
+- Capturas y tarjeta social: `node scripts/capture.mjs`; pruebas de la nueva portada en `tests/browser/home-design.spec.ts`.
+
+Si Vite muestra `504 Outdated Optimize Dep` después de instalar fuentes o ejecutar comprobaciones,
+reiniciar con `bun run astro dev stop` y `bun run dev -- --background` antes de probar el navegador.

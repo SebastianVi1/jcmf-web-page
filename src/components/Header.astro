@@ -1,0 +1,97 @@
+---
+import Brand from './Brand.astro';
+import Icon from './Icon.astro';
+import { t } from '../i18n';
+import { route, projectRoute, type Locale, type PageKey } from '../i18n/routes';
+interface Props {
+  locale: Locale;
+  page: PageKey;
+  slug?: string;
+}
+const { locale, page, slug } = Astro.props;
+const copy = t(locale);
+const other = locale === 'es' ? 'en' : 'es';
+const alternate = slug ? projectRoute(other, slug) : route(other, page);
+---
+
+<header class="site-header" transition:name="site-header">
+  <div class="container header-inner">
+    <Brand locale={locale} />
+    <nav class="desktop-nav" aria-label={copy.ui.navigation}>
+      {(['home', 'about', 'projects'] as const).map((key) => (
+        <a
+          href={route(locale, key)}
+          aria-current={page === key ? 'page' : undefined}
+        >
+          {copy.nav[key]}
+        </a>
+      ))}
+    </nav>
+    <div class="header-actions">
+      <a
+        class="language-switch"
+        href={alternate}
+        hreflang={other}
+        lang={other}
+        aria-label={copy.ui.language}
+      >
+        {other.toUpperCase()} <span aria-hidden="true">↗</span>
+      </a>
+      <button
+        class="icon-button theme-toggle js-only"
+        type="button"
+        aria-label={copy.ui.theme}
+        data-dark-label={copy.ui.dark}
+        data-light-label={copy.ui.light}
+        title={copy.ui.theme}
+      >
+        <span class="sun-icon">
+          <Icon name="sun" size={19} />
+        </span>
+        <span class="moon-icon">
+          <Icon name="moon" size={19} />
+        </span>
+      </button>
+      <a
+        class="button button-small header-contact"
+        href={route(locale, 'contact')}
+        aria-current={page === 'contact' ? 'page' : undefined}
+      >
+        {copy.nav.contact}
+        <Icon name="diagonal" size={16} />
+      </a>
+      <button
+        class="icon-button menu-toggle js-only"
+        type="button"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+        aria-label={copy.ui.menu}
+        data-open-label={copy.ui.menu}
+        data-close-label={copy.ui.close}
+      >
+        <span class="menu-icon">
+          <Icon name="menu" />
+        </span>
+        <span class="close-icon">
+          <Icon name="close" />
+        </span>
+      </button>
+    </div>
+  </div>
+  <nav
+    id="mobile-nav"
+    class="mobile-nav"
+    aria-label={copy.ui.navigation}
+    hidden
+  >
+    {(['home', 'about', 'projects', 'contact'] as const).map((key) => (
+      <a
+        href={route(locale, key)}
+        aria-current={page === key ? 'page' : undefined}
+      >
+        {copy.nav[key]}
+        <Icon name="diagonal" />
+      </a>
+    ))}
+  </nav>
+</header>

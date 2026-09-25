@@ -1,0 +1,26 @@
+---
+import HeroMark from './HeroMark.astro';
+interface Props {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  kind: 'about' | 'projects' | 'contact';
+}
+const { eyebrow, title, intro, kind } = Astro.props;
+---
+
+<section class:list={['container page-intro page-hero', 'page-hero-' + kind]}>
+  <div class="page-hero-content">
+    <p class="eyebrow hero-enter">{eyebrow}</p>
+    <h1 class="hero-title-inner">
+      {title.split('\n').map((line, i) => (
+        <span class="line-mask">
+          <span style={'--line-delay:' + i * 100 + 'ms'}>{line}</span>
+        </span>
+      ))}
+    </h1>
+    <p class="lead hero-enter">{intro}</p>
+  </div>
+  <HeroMark kind={kind} />
+  <span class="hero-rule" aria-hidden="true"></span>
+</section>

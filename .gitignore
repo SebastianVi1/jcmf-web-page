@@ -22,3 +22,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+# Local verification outputs
+test-results/
+playwright-report/
+premium-ui.audit.json
+premium-audit.json

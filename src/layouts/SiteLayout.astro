@@ -1,0 +1,140 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '@fontsource-variable/oswald';
+import '@fontsource-variable/dm-sans';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { t } from '../i18n';
+import {
+  route,
+  projectRoute,
+  locales,
+  type Locale,
+  type PageKey,
+} from '../i18n/routes';
+import { site, canIndex } from '../config/site';
+interface Props {
+  locale: Locale;
+  page: PageKey;
+  title?: string;
+  description?: string;
+  slug?: string;
+  noindex?: boolean;
+}
+const { locale, page, title, description, slug, noindex = false } = Astro.props;
+const copy = t(locale);
+const pageTitle = (title || copy.meta[page][0]) + ' | ' + site.name;
+const pageDescription = description || copy.meta[page][1];
+const path = slug ? projectRoute(locale, slug) : route(locale, page);
+// Sin dominio confirmado no se inventan URLs públicas. noindex también omite
+// canonical y alternates para páginas especiales como la de error 404.
+const canonical =
+  site.origin && !noindex ? new URL(path, site.origin).href : undefined;
+const indexable = canIndex && !noindex;
+// Incluir solo datos corporativos disponibles; no inventar dirección o reseñas.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  url: site.origin,
+  description: pageDescription,
+};
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta
+      name="robots"
+      content={indexable ? 'index, follow' : 'noindex, nofollow'}
+    />
+    <meta name="theme-color" content="#f4f7fa" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {canonical && (
+      <>
+        <link rel="canonical" href={canonical} />
+        {locales.map((lang) => (
+          <link
+            rel="alternate"
+            hreflang={lang}
+            href={
+              new URL(
+                slug ? projectRoute(lang, slug) : route(lang, page),
+                site.origin,
+              ).href
+            }
+          />
+        ))}
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={
+            new URL(
+              slug ? projectRoute('es', slug) : route('es', page),
+              site.origin,
+            ).href
+          }
+        />
+      </>
+    )}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:locale" content={locale === 'es' ? 'es_MX' : 'en_US'} />
+    {canonical && (
+      <>
+        <meta property="og:url" content={canonical} />
+        <meta
+          property="og:image"
+          content={new URL('/social-card.png', site.origin).href}
+        />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="JCMF Constructora" />
+      </>
+    )}
+    <meta name="twitter:card" content="summary_large_image" />
+    {indexable && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(schema).replace(/</g, '\\u003c')}
+      ></script>
+    )}
+    <script is:inline>
+      (() => {
+        // Ejecutar antes del primer pintado; site.ts gestiona cambios posteriores.
+        let theme;
+        try {
+          theme = localStorage.getItem('jcmf-theme');
+        } catch {}
+        document.documentElement.dataset.theme =
+          theme === 'dark' || theme === 'light'
+            ? theme
+            : matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.classList.add('js');
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">
+      {copy.ui.skip}
+    </a>
+    <Header locale={locale} page={page} slug={slug} />
+    <main id="main-content" tabindex="-1" transition:animate="fade">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>

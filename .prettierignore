@@ -1,0 +1,9 @@
+node_modules
+dist
+.astro
+bun.lock
+test-results
+playwright-report
+premium-audit.json
+AGENTS.md
+CLAUDE.md

@@ -1,0 +1,39 @@
+---
+import type { Project } from '../data/projects';
+import { projectRoute, type Locale } from '../i18n/routes';
+import { t } from '../i18n';
+import { getProjectPhoto } from '../lib/project-media';
+import WorkCard from './WorkCard';
+interface Props {
+  project: Project;
+  locale: Locale;
+  /** Posición en el índice del portafolio; sin número en inicio y relacionadas. */
+  index?: number;
+  /** Cada cuadrícula declara su propio reparto de ancho para descargar lo justo. */
+  sizes?: string;
+}
+const { project, locale, index, sizes } = Astro.props;
+const copy = t(locale);
+const photo = await getProjectPhoto(project);
+---
+
+{photo && (
+  <WorkCard
+    client:visible
+    index={index}
+    href={projectRoute(locale, project.slug)}
+    title={project.content[locale].title}
+    category={copy.projects.categories[project.category]}
+    categoryKey={project.category}
+    mediaLabel={
+      project.mediaType === 'photo' ? copy.ui.photo : copy.ui.visualReference
+    }
+    viewLabel={copy.ui.view}
+    photo={{
+      ...photo,
+      sizes: sizes ?? photo.sizes,
+      alt: project.content[locale].imageAlt || project.content[locale].title,
+      errorLabel: copy.ui.imageError,
+    }}
+  />
+)}

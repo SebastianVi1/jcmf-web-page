@@ -1,0 +1,66 @@
+---
+import type { GetStaticPaths } from 'astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Home from '../views/Home.astro';
+import About from '../views/About.astro';
+import Projects from '../views/Projects.astro';
+import Contact from '../views/Contact.astro';
+import Privacy from '../views/Privacy.astro';
+import ProjectDetail from '../views/ProjectDetail.astro';
+import {
+  locales,
+  routeMap,
+  projectRoute,
+  type Locale,
+  type PageKey,
+} from '../i18n/routes';
+import { projects, type Project } from '../data/projects';
+// Generar páginas desde las mismas constantes que usa la navegación evita
+// divergencias entre idiomas. index.astro ya es dueño de la portada española.
+export const getStaticPaths = (() => [
+  ...locales.flatMap((locale) =>
+    (Object.keys(routeMap) as PageKey[])
+      .filter((page) => !(page === 'home' && locale === 'es'))
+      .map((page) => ({
+        params: { path: routeMap[page][locale].replace(/^\/|\/$/g, '') },
+        props: { locale, page },
+      })),
+  ),
+  ...locales.flatMap((locale) =>
+    projects.map((project) => ({
+      params: {
+        path: projectRoute(locale, project.slug).replace(/^\/|\/$/g, ''),
+      },
+      props: { locale, page: 'projects' as PageKey, project },
+    })),
+  ),
+]) satisfies GetStaticPaths;
+interface Props {
+  locale: Locale;
+  page: PageKey;
+  project?: Project;
+}
+const { locale, page, project } = Astro.props;
+const views = {
+  home: Home,
+  about: About,
+  projects: Projects,
+  contact: Contact,
+  privacy: Privacy,
+};
+const View = views[page];
+---
+
+<SiteLayout
+  locale={locale}
+  page={page}
+  slug={project?.slug}
+  title={project?.content[locale].title}
+  description={project?.content[locale].description}
+>
+  {project ? (
+    <ProjectDetail locale={locale} project={project} />
+  ) : (
+    <View locale={locale} />
+  )}
+</SiteLayout>

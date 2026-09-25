@@ -1,0 +1,57 @@
+---
+import { t } from '../i18n';
+import { projectRoute, type Locale } from '../i18n/routes';
+import { portfolioProjects } from '../data/projects';
+import ProjectMedia from './ProjectMedia.astro';
+import Icon from './Icon.astro';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = t(locale);
+// Stable slugs select different portfolio images without copying image sources,
+// factual claims or photo metadata into a second content system.
+const images = ['hospital-muguerza-obispado', 'one-development-group']
+  .map((slug) => portfolioProjects.find((project) => project.slug === slug))
+  .filter((project) => project !== undefined);
+---
+
+<section class="section visual-section" aria-labelledby="visual-title">
+  <div class="container">
+    <div class="section-heading" data-reveal>
+      <div>
+        <p class="eyebrow">{copy.home.visualEyebrow}</p>
+        <h2 id="visual-title" class="multiline">
+          {copy.home.visualTitle}
+        </h2>
+      </div>
+      <p>{copy.home.visualIntro}</p>
+    </div>
+    <div class="visual-gallery">
+      {images.map((project) => (
+        <figure class="visual-panel" data-reveal="image">
+          <a
+            class="visual-photo"
+            href={projectRoute(locale, project.slug)}
+            aria-label={copy.ui.view + ': ' + project.content[locale].title}
+          >
+            <ProjectMedia project={project} locale={locale} mode="color" />
+          </a>
+          <figcaption>
+            <div>
+              <span class="caption">{copy.ui.visualReference}</span>
+              <h3>{project.content[locale].title}</h3>
+            </div>
+            <a
+              class="visual-link"
+              href={projectRoute(locale, project.slug)}
+              aria-label={copy.ui.view + ': ' + project.content[locale].title}
+            >
+              <Icon name="diagonal" size={24} />
+            </a>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

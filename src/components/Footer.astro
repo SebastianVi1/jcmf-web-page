@@ -1,0 +1,38 @@
+---
+import Brand from './Brand.astro';
+import { t } from '../i18n';
+import { route, type Locale } from '../i18n/routes';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = t(locale);
+---
+
+<footer class="site-footer">
+  <div class="container footer-top">
+    <div>
+      <Brand locale={locale} />
+      <p>{copy.ui.footer}</p>
+    </div>
+    <nav
+      aria-label={
+        locale === 'es' ? 'Enlaces del pie de página' : 'Footer links'
+      }
+    >
+      {(['home', 'about', 'projects', 'contact'] as const).map((key) => (
+        <a href={route(locale, key)}>{copy.nav[key]}</a>
+      ))}
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <small>
+      © {new Date().getFullYear()} {copy.ui.copyright}
+    </small>
+    <a href={route(locale, 'privacy')}>
+      {copy.ui.privacy}
+      <span aria-hidden="true"> ↗</span>
+    </a>
+  </div>
+  <div class="preview-note">{copy.ui.preview}</div>
+</footer>

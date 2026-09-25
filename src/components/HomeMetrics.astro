@@ -1,0 +1,32 @@
+---
+import { t } from '../i18n';
+import type { Locale } from '../i18n/routes';
+interface Props {
+  locale: Locale;
+}
+const copy = t(Astro.props.locale);
+---
+
+<!-- Design-only figures: keep the adjacent disclosure and per-item example labels.
+     Replace the whole dataset with approved evidence before any production launch. -->
+<section
+  class="section container metrics-section"
+  aria-labelledby="metrics-title"
+  aria-describedby="metrics-note"
+>
+  <div class="section-heading" data-reveal>
+    <div>
+      <p class="eyebrow">{copy.home.metricsEyebrow}</p>
+      <h2 id="metrics-title">{copy.home.metricsTitle}</h2>
+    </div>
+    <p id="metrics-note">{copy.home.metricsNote}</p>
+  </div>
+  <dl class="metrics-grid">
+    {copy.home.metrics.map(([value, label]) => (
+      <div data-reveal="line">
+        <dt>{label}</dt>
+        <dd>{value}</dd>
+      </div>
+    ))}
+  </dl>
+</section>

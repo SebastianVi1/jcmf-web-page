@@ -1,0 +1,273 @@
+export const es = {
+  nav: {
+    home: 'Inicio',
+    about: 'Nosotros',
+    projects: 'Proyectos',
+    contact: 'Hablemos',
+    privacy: 'Privacidad',
+  },
+  ui: {
+    skip: 'Saltar al contenido',
+    menu: 'Abrir menú',
+    close: 'Cerrar menú',
+    navigation: 'Navegación principal',
+    theme: 'Cambiar tema',
+    dark: 'Activar tema oscuro',
+    light: 'Activar tema claro',
+    language: 'Switch to English',
+    back: 'Volver a proyectos',
+    view: 'Explorar proyecto',
+    all: 'Ver todos los proyectos',
+    demo: 'Proyecto conceptual',
+    photo: 'Referencia fotográfica',
+    visualReference: 'Imagen de referencia',
+    referenceCaption:
+      'Material proporcionado · representación visual por confirmar',
+    photoCaption: 'Fotografía proporcionada · ficha de proyecto en revisión',
+    imageError:
+      'No se pudo cargar la fotografía. Puedes seguir consultando la ficha del proyecto.',
+    image: 'Visualización conceptual · imagen provisional',
+    scroll: 'Descubre lo que hacemos',
+    filter: 'Filtrar proyectos',
+    results: 'proyectos',
+    footer: 'Ingeniería con propósito. Construcción con carácter.',
+    copyright: 'JCMF Constructora. Todos los derechos reservados.',
+    preview: 'Vista previa · contenido e imágenes de referencia',
+    privacy: 'Privacidad del prototipo',
+  },
+  meta: {
+    home: [
+      'Construimos lo que sigue',
+      'JCMF Constructora. Obra civil, edificación e instalaciones con enfoque en calidad, planeación y ejecución. Conoce nuestra propuesta.',
+    ],
+    about: [
+      'Sobre nosotros',
+      'Conoce el enfoque de JCMF Constructora: experiencia técnica, colaboración y atención a cada etapa de la construcción.',
+    ],
+    projects: [
+      'Proyectos',
+      'Explora referencias fotográficas y proyectos conceptuales de JCMF Constructora: edificación, industria e infraestructura.',
+    ],
+    contact: [
+      'Hablemos de tu proyecto',
+      'Cuéntanos qué quieres construir. Formulario de demostración de JCMF Constructora para planear una futura colaboración.',
+    ],
+    privacy: [
+      'Privacidad del prototipo',
+      'Información sobre el funcionamiento y el tratamiento de datos en esta demostración de JCMF Constructora.',
+    ],
+  },
+  home: {
+    eyebrow: 'INGENIERÍA · CONSTRUCCIÓN · VISIÓN',
+    title: ['Construimos', 'lo que sigue.'],
+    intro:
+      'De la planeación a la ejecución. Obra civil, edificación e instalaciones para dar forma a tu próximo proyecto.',
+    primary: 'Explorar proyectos',
+    secondary: 'Conoce JCMF',
+    visualLabel: 'DE LA VISIÓN A LA ESTRUCTURA',
+    visualNote: 'Pabellón / estudio de luz y materia',
+    sectors: ['Obra civil', 'Edificación', 'Infraestructura', 'Instalaciones'],
+    aboutEyebrow: 'EL VALOR DE CONSTRUIR BIEN',
+    aboutTitle: 'Una visión clara.\nBases sólidas.',
+    aboutText:
+      'Somos una empresa especializada en construcción y desarrollo de obra civil. Integramos conocimiento técnico, planeación y ejecución para dar forma a proyectos residenciales, industriales y de infraestructura.',
+    aboutLink: 'Más sobre nosotros',
+    principles: [
+      ['Calidad', 'Atención a los detalles que hacen la diferencia.'],
+      ['Cumplimiento', 'Planeación y seguimiento en cada etapa.'],
+      ['Colaboración', 'Un mismo equipo, del primer trazo a la entrega.'],
+    ],
+    servicesEyebrow: 'NUESTRAS CAPACIDADES',
+    servicesTitle: 'Soluciones que\nconectan cada etapa.',
+    servicesIntro:
+      'Una perspectiva integral para resolver los retos de tu obra.',
+    services: [
+      [
+        'Obra civil e infraestructura',
+        'Cimentaciones, terracerías, pavimentación y redes hidráulicas. La base técnica de cada proyecto.',
+        'civil',
+      ],
+      [
+        'Edificación',
+        'Estructuras de concreto y acero para espacios residenciales, comerciales e industriales.',
+        'building',
+      ],
+      [
+        'Acabados e instalaciones',
+        'Obra blanca, instalaciones eléctricas, hidráulicas y especiales. Precisión hasta el último detalle.',
+        'detail',
+      ],
+    ],
+    projectsEyebrow: 'ESPACIOS CON PROPÓSITO',
+    projectsTitle: 'Ideas de hoy.\nReferentes de mañana.',
+    projectsNote:
+      'Una primera mirada a nuestro portafolio: referencias fotográficas en revisión y propuestas conceptuales.',
+    metricsEyebrow: 'CIFRAS ILUSTRATIVAS',
+    metricsTitle: 'Una visión en cifras.',
+    metricsNote:
+      'Datos ficticios para explorar el diseño. No representan la trayectoria ni los resultados de JCMF.',
+    metrics: [
+      ['25+', 'Proyectos · ejemplo'],
+      ['80,000 m²', 'Superficie construida · ejemplo'],
+      ['15', 'Años de experiencia · ejemplo'],
+    ],
+    visualEyebrow: 'ARQUITECTURA EN PERSPECTIVA',
+    visualTitle: 'De la estructura\nal detalle.',
+    visualIntro:
+      'Volúmenes, materiales y espacios que invitan a mirar de cerca. Otra perspectiva de nuestras referencias visuales.',
+    processEyebrow: 'NUESTRA FORMA DE TRABAJAR',
+    processTitle: 'Contigo, de principio a fin.',
+    process: [
+      [
+        'Entendemos',
+        'Escuchamos tu visión, las necesidades del espacio y los objetivos del proyecto.',
+      ],
+      ['Planeamos', 'Definimos alcance, recursos y una ruta de trabajo clara.'],
+      [
+        'Construimos',
+        'Coordinamos la ejecución con seguimiento técnico y control de calidad.',
+      ],
+      [
+        'Entregamos',
+        'Revisamos cada detalle y acompañamos el cierre del proyecto.',
+      ],
+    ],
+  },
+  cta: {
+    eyebrow: 'EL SIGUIENTE PROYECTO EMPIEZA CONTIGO',
+    title: 'Hagamos espacio\npara tu visión.',
+    button: 'Hablemos de tu proyecto',
+    note: 'Cada gran obra comienza con una conversación.',
+  },
+  about: {
+    eyebrow: 'SOBRE JCMF',
+    title: 'La confianza también\nse construye.',
+    intro:
+      'Detrás de cada estructura hay personas, decisiones y una visión compartida. Así entendemos la construcción.',
+    storyTitle: 'Conocimiento técnico.\nCompromiso humano.',
+    story:
+      'El currículum de JCMF reúne experiencia en proyectos de obra civil, edificación e infraestructura. Nuestra propuesta parte de una convicción: un buen resultado se construye desde la planeación, con comunicación y atención a la ejecución.',
+    mission: 'Nuestra misión',
+    missionText:
+      'Ejecutar proyectos con altos estándares técnicos, procesos eficientes y atención a tiempos, costos y especificaciones.',
+    vision: 'Nuestra visión',
+    visionText:
+      'Ser un referente regional por la confiabilidad en la ejecución y la adopción de soluciones constructivas innovadoras.',
+    teamTitle: 'Muchas especialidades.\nUna misma dirección.',
+    teamNote:
+      'Estructura de equipo de referencia. Perfiles, nombres y fotografías pendientes de confirmar.',
+    // Replace names only when approved; role/name pairs stay aligned across locales.
+    team: [
+      { role: 'Director General', name: 'Nombre por confirmar' },
+      { role: 'Dirección de proyectos', name: 'Nombre por confirmar' },
+      { role: 'Gerente General', name: 'Nombre por confirmar' },
+      { role: 'Recursos Humanos', name: 'Nombre por confirmar' },
+      { role: 'Gerente de Compras', name: 'Nombre por confirmar' },
+      { role: 'Residencia de obra', name: 'Nombre por confirmar' },
+      { role: 'Ingeniería e instalaciones', name: 'Nombre por confirmar' },
+      { role: 'Costos y presupuestos', name: 'Nombre por confirmar' },
+    ],
+  },
+  projects: {
+    eyebrow: 'PORTAFOLIO / PRIMERA MIRADA',
+    title: 'Cada espacio,\nuna nueva posibilidad.',
+    intro:
+      'Arquitectura, escala y detalle. Explora una selección de obras y referencias, con el contexto y alcance de cada intervención.',
+    categories: {
+      all: 'Todos',
+      building: 'Edificación',
+      hospitality: 'Hotelería',
+      healthcare: 'Salud',
+      residential: 'Residencial',
+      industrial: 'Industrial',
+      infrastructure: 'Infraestructura',
+    },
+    scope: 'Alcance',
+    overview: 'Sobre el proyecto',
+    photoStatus: 'Ficha en revisión',
+    facts: 'Ficha del proyecto',
+    sector: 'Sector',
+    material: 'Material visual',
+    fullImage: 'Ver imagen completa ↗ nueva pestaña',
+    verificationNote:
+      'La información pública describe el edificio o la empresa. La participación de JCMF se documenta por separado.',
+    providedScope: 'INFORMACIÓN PROPORCIONADA',
+    intervention: 'Nuestra intervención',
+    toDocument: 'Por documentar',
+    scopeNote:
+      'Alcance proporcionado para esta ficha. Fechas, cantidades y evidencia de ejecución pendientes de completar.',
+    research: 'CONTEXTO DOCUMENTADO',
+    contextTitle: 'Detrás del proyecto.',
+    noSource: 'Identificación y fuente pública pendientes de confirmar.',
+    moreProjects: 'Otras miradas.',
+    location: 'Ubicación',
+    status: 'Estado',
+    locationValue: 'Por definir',
+    statusValue: 'Conceptual / placeholder',
+    related: 'Tu visión podría ser la siguiente.',
+  },
+  contact: {
+    eyebrow: 'CONTACTO',
+    title: 'Las grandes ideas\nnecesitan una base.',
+    intro:
+      'Cuéntanos qué tienes en mente. El primer paso es entender lo que quieres construir.',
+    asideTitle: 'Conversemos sobre el siguiente paso.',
+    asideText:
+      'Comparte el tipo de proyecto, su ubicación y lo que esperas lograr.',
+    details: [
+      ['Correo de contacto', 'Pendiente de confirmar'],
+      ['Teléfono', 'Pendiente de confirmar'],
+      ['Atención', 'Horario por confirmar'],
+    ],
+    demoTitle: 'Formulario de demostración',
+    demoText:
+      'Puedes probar la validación. Tus datos no se envían ni se guardan; se perderán al salir de esta página.',
+    name: 'Nombre completo',
+    email: 'Correo electrónico',
+    company: 'Empresa',
+    optional: '(opcional)',
+    type: 'Tipo de proyecto',
+    message: 'Cuéntanos sobre tu proyecto',
+    consent:
+      'Entiendo que este formulario es una demostración y no envía información.',
+    namePlaceholder: 'Tu nombre',
+    emailPlaceholder: 'nombre@empresa.com',
+    companyPlaceholder: 'Nombre de tu empresa',
+    messagePlaceholder: 'Ubicación, alcance y lo que te gustaría construir…',
+    select: 'Selecciona una opción',
+    types: [
+      'Obra civil',
+      'Edificación',
+      'Instalaciones y acabados',
+      'Otro proyecto',
+    ],
+    submit: 'Validar mi proyecto',
+    success:
+      'Tu información es válida. Esta es una demostración: no se ha enviado ningún mensaje.',
+    invalid: 'Revisa los campos indicados para continuar.',
+    noJs: 'Activa JavaScript para probar la validación. Esta demostración no envía mensajes.',
+    errors: {
+      name: 'Escribe tu nombre (entre 2 y 100 caracteres).',
+      email: 'Escribe un correo electrónico válido.',
+      company: 'Usa un máximo de 150 caracteres.',
+      type: 'Selecciona un tipo de proyecto.',
+      message: 'Describe tu proyecto con entre 20 y 3000 caracteres.',
+      consent: 'Confirma que entiendes el funcionamiento de esta demostración.',
+    },
+  },
+  privacy: {
+    eyebrow: 'INFORMACIÓN DEL PROTOTIPO',
+    title: 'Tu información,\ncon claridad.',
+    paragraphs: [
+      'Este sitio es una demostración de diseño. El formulario valida los datos únicamente en tu navegador: no los envía a JCMF ni a terceros y no los guarda en una base de datos.',
+      'La preferencia de tema claro u oscuro se guarda localmente en tu navegador. No incorporamos herramientas de analítica ni rastreadores en este prototipo.',
+      'Antes de habilitar un formulario real, deberá publicarse un aviso de privacidad aprobado que identifique al responsable, las finalidades, los medios de contacto y los derechos aplicables.',
+      'Las imágenes, fichas de proyectos y datos de contacto señalados como provisionales son material de referencia y deberán confirmarse antes de publicar.',
+    ],
+  },
+  notFound: {
+    title: 'Esta página aún no tiene cimientos.',
+    text: 'La dirección no existe o cambió de lugar. Volvamos al inicio.',
+    back: 'Volver al inicio',
+  },
+};

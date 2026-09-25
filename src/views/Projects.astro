@@ -1,0 +1,55 @@
+---
+import { t } from '../i18n';
+import PageHero from '../components/PageHero.astro';
+import type { Locale } from '../i18n/routes';
+import { portfolioProjects as projects } from '../data/projects';
+import ProjectCard from '../components/ProjectCard.astro';
+import CallToAction from '../components/CallToAction.astro';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = t(locale);
+---
+
+<PageHero
+  eyebrow={copy.projects.eyebrow}
+  title={copy.projects.title}
+  intro={copy.projects.intro}
+  kind="projects"
+/>
+<section
+  class="container section-bottom"
+  aria-label={copy.nav.projects}
+  data-project-gallery
+>
+  <div class="filter-bar">
+    <div class="filters js-only" role="group" aria-label={copy.ui.filter}>
+      {Object.entries(copy.projects.categories)
+        .filter(
+          ([key]) =>
+            key === 'all' ||
+            projects.some((project) => project.category === key),
+        )
+        .map(([key, label]) => (
+          <button type="button" data-filter={key} aria-pressed={key === 'all'}>
+            {label}
+          </button>
+        ))}
+    </div>
+    <p class="caption" aria-live="polite" aria-atomic="true">
+      <span data-project-count>{projects.length}</span> {copy.ui.results}
+    </p>
+  </div>
+  <div class="project-grid portfolio-grid">
+    {projects.map((project, index) => (
+      <ProjectCard
+        project={project}
+        locale={locale}
+        index={index + 1}
+        sizes="(max-width: 600px) calc(100vw - 46px), (max-width: 1100px) 46vw, min(29vw, 410px)"
+      />
+    ))}
+  </div>
+</section>
+<CallToAction locale={locale} />
