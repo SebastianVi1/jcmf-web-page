@@ -50,8 +50,8 @@ await page.setViewportSize({ width: 1200, height: 630 });
 await page.goto('http://localhost:4321/');
 await page.addStyleTag({
   content:
-    '.site-header{position:static}.header-inner{min-height:65px}.desktop-nav,.header-actions,.hero-bottom,.sector-strip,body>main>section:not(.hero),.site-footer{display:none!important}.hero{padding-top:20px}.hero-heading-row{margin-top:15px;gap:35px;grid-template-columns:1fr 275px}.hero-title{font-size:61px}.hero-summary .text-link{display:none}.hero-description{font-size:13px}.hero-visual{margin-top:20px}.architecture-hero svg{max-height:290px}.hero-visual figcaption{padding-block:12px}',
+    '.site-header{position:static}.header-inner{min-height:65px}.desktop-nav,.header-actions,.hero-bottom,.sector-strip,body>main>section:not(.masthead),.site-footer{display:none!important}.masthead-content{min-height:565px;padding-block:30px}.masthead .hero-title{font-size:108px}.masthead-footer{margin-top:24px}.masthead-actions{margin-top:18px}',
 });
 await page.screenshot({ path: 'public/social-card.png' });
 await browser.close();
-console.log('Minimal design screenshots and social card generated.');
+console.log('Blue architectural design screenshots and social card generated.');
