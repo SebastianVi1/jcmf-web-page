@@ -36,7 +36,7 @@ components:
 
 Variante solicitada en una rama independiente de `modern_design`. Público: clientes y responsables de obra que necesitan entender capacidades, ver referencias y contactar. Registro corporativo de marca; español/inglés; contexto mexicano según el CV, con proyectos y contactos explícitamente provisionales.
 
-Dirección: una monografía arquitectónica de espacios habitables. Fotografías e imágenes proporcionadas tienen el papel principal; el pabellón y los trazos animados acompañan como estudios conceptuales. El hero editorial combina fotografía y estructura, conservando una expresión sobria y documental.
+Dirección: una monografía arquitectónica de espacios habitables. Fotografías e imágenes proporcionadas tienen el papel principal; el pabellón y los trazos animados acompañan como estudios conceptuales. El hero fotográfico combina tipografía condensada monumental y contraste cinematográfico; la estructura conceptual acompaña la introducción.
 
 Se descartó un mero cambio de colores: se rediseñan composición del inicio, cabeceras interiores, servicios en filas, portafolio escalonado y cierre. La expresión se concentra en la escena y los trazos; no se añaden métricas ni decoraciones sin significado.
 
@@ -50,13 +50,13 @@ Materiales SVG se gestionan también con tokens --model-top/front/side/glass/sla
 
 ## Typography
 
-Oswald Variable peso 500 para titulares, de proporción condensada y carácter estructural; DM Sans Variable para lectura. Autoalojadas, español e inglés completos, fallback Arial. Titular inicial 62–99 px en escritorio y 40–70 px móvil; interior 36–76 px. Cuerpo 16–22 px, controles 12–14 px y etiquetas técnicas 9–11 px.
+Oswald Variable peso 500 para titulares, de proporción condensada y carácter estructural; DM Sans Variable para lectura. Autoalojadas, español e inglés completos, fallback Arial. Titular inicial Oswald en mayúsculas, 72–156 px en escritorio y 48–76 px móvil; interior 36–76 px. Cuerpo 16–22 px, controles 12–14 px y etiquetas técnicas 9–11 px.
 
 Los renglones de hero están agrupados para entradas suaves, sin dividir caracteres ni alterar su lectura accesible. Textos con anchura natural y sin alturas fijas.
 
 ## Layout
 
-Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: titular a izquierda, resumen a derecha, fotografía dominante y estructura conceptual debajo. Portafolio: una obra destacada horizontal y seis tarjetas verticales en dos columnas. Móvil vuelve a una columna. La variante destacada es explícita mediante data-featured, no depende de first-child dentro de las islas React.
+Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: fotografía de fondo a todo el ancho, titular monumental alineado a izquierda, resumen y dos acciones debajo. Estudio conceptual junto a la introducción corporativa. Portafolio: una obra destacada horizontal y seis tarjetas verticales en dos columnas. Móvil vuelve a una columna. La variante destacada es explícita mediante data-featured, no depende de first-child dentro de las islas React.
 
 Nosotros: hero con símbolo de volumen; proyectos: capas de un plano; contacto: pórtico abierto. PageHero comparte semántica y espaciado; HeroMark concentra las variantes. Servicios como filas con icono/título/descripción/enlace, adaptados a móvil.
 
@@ -98,3 +98,15 @@ Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las
 - Modo oscuro azul noche/acero solicitado por el usuario; modo claro marfil/oliva. No importar la composición de modern_design.
 - No añadir una segunda hoja de overrides: global.css es la implementación compartida.
 - Verificar ambos idiomas, paletas, móvil, teclado y reducción de movimiento.
+
+## Evolución de portada — septiembre 2026
+
+Decisión solicitada: modo oscuro azul noche/acero, titulares más firmes y portada fotográfica.
+Tokens exclusivos de portada: --hero-bg #101d28, --hero-ink #ffffff, --hero-muted #e0e8ef,
+--hero-shade #07121ee0, --hero-shade-end #07121e55, --hero-line #ffffff70,
+--hero-button-ink #122333 y --hero-button-hover #dceaf5.
+Son constantes en ambos temas para mantener contraste sobre la imagen.
+Geometría: --hero-height 740px, --hero-space clamp(36px, 5vw, 76px),
+--hero-title-size clamp(72px, 10.8vw, 156px); móvil mínimo 680px con altura natural si el contenido crece.
+La fotografía reutiliza el adaptador WebP y usa sizes=100vw, carga prioritaria y dimensiones explícitas.
+Se presenta como referencia; no implica autoría ni obra ejecutada. El texto es ES/EN sin métricas inventadas.

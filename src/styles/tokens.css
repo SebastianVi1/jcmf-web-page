@@ -29,6 +29,17 @@
   --model-inset: #8f9b82;
   --font-display: 'Oswald Variable', 'Arial Narrow', sans-serif;
   --font-body: 'DM Sans Variable', Arial, sans-serif;
+  --hero-bg: #101d28;
+  --hero-ink: #ffffff;
+  --hero-muted: #e0e8ef;
+  --hero-shade: #07121ee0;
+  --hero-shade-end: #07121e55;
+  --hero-line: #ffffff70;
+  --hero-button-ink: #122333;
+  --hero-button-hover: #dceaf5;
+  --hero-height: 740px;
+  --hero-space: clamp(36px, 5vw, 76px);
+  --hero-title-size: clamp(72px, 10.8vw, 156px);
   --radius: 2px;
   --page-max: 1280px;
   --gutter: clamp(24px, 6vw, 96px);

@@ -58,10 +58,10 @@ export const es = {
     ],
   },
   home: {
-    eyebrow: 'VISIÓN QUE TOMA FORMA',
-    title: ['Espacios que', 'permanecen.'],
+    eyebrow: 'INGENIERÍA · CONSTRUCCIÓN · VISIÓN',
+    title: ['Construimos', 'lo que sigue.'],
     intro:
-      'Transformamos ideas en espacios que trascienden. Obra civil, edificación e infraestructura con precisión en cada detalle.',
+      'De la planeación a la ejecución. Obra civil, edificación e instalaciones para dar forma a tu próximo proyecto.',
     primary: 'Explorar proyectos',
     secondary: 'Conoce JCMF',
     visualLabel: 'DE LA VISIÓN A LA ESTRUCTURA',

@@ -2,7 +2,7 @@
 import { t } from '../i18n';
 import { route, type Locale } from '../i18n/routes';
 import Architecture from '../components/Architecture.astro';
-import ProjectMedia from '../components/ProjectMedia.astro';
+import { getProjectPhoto } from '../lib/project-media';
 import Icon from '../components/Icon.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import CallToAction from '../components/CallToAction.astro';
@@ -12,63 +12,70 @@ interface Props {
 }
 const { locale } = Astro.props;
 const copy = t(locale);
+// Reuse the portfolio source and build-time WebP adapter; the hero is decorative
+// and its visible reference caption must remain alongside the marketing copy.
+const heroProject = projects[0];
+const heroPhoto = await getProjectPhoto(heroProject, true);
 ---
 
-<section class="hero container" aria-labelledby="hero-title">
-  <div class="hero-kicker hero-enter">
-    <p class="eyebrow">
-      <span class="status-dot"></span>
-      {copy.home.eyebrow}
-    </p>
-    <span>{copy.home.visualLabel}</span>
-  </div>
-  <div class="hero-heading-row">
+<section class="masthead" aria-labelledby="hero-title">
+  {heroPhoto && (
+    <img
+      class="masthead-image"
+      src={heroPhoto.src}
+      srcset={heroPhoto.srcSet}
+      sizes="100vw"
+      width={heroPhoto.width}
+      height={heroPhoto.height}
+      alt=""
+      fetchpriority="high"
+      loading="eager"
+      decoding="async"
+    />
+  )}
+  <div class="masthead-content container">
+    <p class="eyebrow hero-enter">{copy.home.eyebrow}</p>
     <h1 id="hero-title" class="hero-title">
       {copy.home.title.map((line, i) => (
-        <span class:list={['line-mask', { 'accent-word': i === 1 }]}>
+        <span class="line-mask">
           <span style={'--line-delay:' + i * 130 + 'ms'}>{line}</span>
         </span>
       ))}
     </h1>
-    <div class="hero-summary hero-enter">
-      <p class="hero-description">{copy.home.intro}</p>
-      <a class="text-link" href={route(locale, 'projects')}>
-        {copy.home.primary}
-        <Icon name="diagonal" size={19} />
-      </a>
+    <div class="masthead-footer hero-enter">
+      <div>
+        <p class="masthead-description">{copy.home.intro}</p>
+        <div class="masthead-actions">
+          <a class="button masthead-primary" href={route(locale, 'projects')}>
+            {copy.home.primary}
+            <Icon name="diagonal" size={20} />
+          </a>
+          <a class="text-link" href={route(locale, 'contact')}>
+            {copy.nav.contact}
+            <Icon name="diagonal" size={18} />
+          </a>
+        </div>
+      </div>
+      <p class="masthead-caption">
+        {copy.ui.photo}
+        <br />
+        {heroProject.content[locale].title}
+      </p>
     </div>
   </div>
-  <div class="hero-showcase">
-    <figure class="hero-real-photo hero-enter">
-      <a href={route(locale, 'projects')} aria-label={copy.home.primary}>
-        <ProjectMedia project={projects[0]} locale={locale} priority />
-      </a>
-      <figcaption>
-        <span>{projects[0].content[locale].title}</span>
-        <span>{copy.ui.photo}</span>
-      </figcaption>
-    </figure>
-    <figure class="hero-visual hero-structure">
-      <Architecture hero />
-      <figcaption>
-        <span>{copy.home.visualNote}</span>
-        <span>{copy.ui.demo}</span>
-      </figcaption>
-    </figure>
-  </div>
-  <div class="hero-bottom">
-    <a class="scroll-link" href="#capacidades">
-      <span class="scroll-icon">
-        <Icon name="down" size={16} />
-      </span>
-      {copy.ui.scroll}
-    </a>
-    <a href={route(locale, 'about')} class="text-link">
-      {copy.home.secondary}
-      <Icon name="diagonal" size={16} />
-    </a>
-  </div>
 </section>
+<div class="hero-bottom container">
+  <a class="scroll-link" href="#capacidades">
+    <span class="scroll-icon">
+      <Icon name="down" size={16} />
+    </span>
+    {copy.ui.scroll}
+  </a>
+  <a href={route(locale, 'about')} class="text-link">
+    {copy.home.secondary}
+    <Icon name="diagonal" size={16} />
+  </a>
+</div>
 <div class="sector-strip">
   <div class="container">
     {copy.home.sectors.map((sector) => (
@@ -92,6 +99,12 @@ const copy = t(locale);
       {copy.home.aboutLink}
       <Icon name="diagonal" size={18} />
     </a>
+    <figure class="home-study">
+      <Architecture hero />
+      <figcaption>
+        {copy.home.visualNote} · {copy.ui.demo}
+      </figcaption>
+    </figure>
   </div>
   <div data-reveal>
     <p class="large-copy">{copy.home.aboutText}</p>
