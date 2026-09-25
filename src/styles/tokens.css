@@ -10,6 +10,7 @@
   --accent: #245c88;
   --accent-hover: #194667;
   --on-accent: #ffffff;
+  --brand-ink: #14283c;
   --error: #a82e2e;
   --success: #346242;
   --focus: #245c88;
@@ -66,6 +67,8 @@
   --accent: #9ac9ee;
   --accent-hover: #c6e4fa;
   --on-accent: #0c1724;
+  /* Azul marino de marca legible sobre el fondo nocturno (3.4:1). */
+  --brand-ink: #2f6ea8;
   --error: #ffb4ad;
   --success: #b3d8b6;
   --focus: #9ac9ee;

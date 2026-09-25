@@ -9,10 +9,12 @@ colors:
   text: '#14283c'
   muted: '#52677b'
   border: '#c7d5e1'
+  brandInk: '#14283c'
   darkBackground: '#0c1724'
   darkSurface: '#132438'
   darkText: '#f0f4f8'
   darkAccent: '#9ac9ee'
+  darkBrandInk: '#2f6ea8'
 typography:
   display:
     fontFamily: 'Oswald Variable, Arial Narrow, sans-serif'
@@ -43,6 +45,11 @@ Se descartó un mero cambio de colores: se rediseñan composición del inicio, c
 ## Colors
 
 Concreto claro #f4f7fa, superficie azul gris #e6edf3, tinta #14283c, texto secundario #52677b y azul técnico #245c88. Oscuro azul noche: #0c1724, #132438, texto #f0f4f8 y acero claro #9ac9ee. Contraste antes que desaturación estética.
+
+El logo de cabecera y pie usa --brand-ink: #14283c en claro y #2f6ea8 en oscuro, un azul marino
+sobre el fondo nocturno con 3.4:1 de contraste (petición del usuario: el logo no se presenta en
+blanco). La micro-letra .brand-caption usa --muted en ambos temas para conservar 4.5:1 y jerarquía
+secundaria; el punto de marca mantiene --accent.
 
 Fuente canónica: `src/styles/tokens.css` (modelo B). Documento refleja valores; componentes comparten CSS y no duplican temas React. Mapa: primary → --accent → acciones; background → --bg → documento; surface → --surface → visuales; text → --ink → titulares; muted → --muted → lectura secundaria; border → --line → separadores. Meta theme-color lee --bg computado.
 

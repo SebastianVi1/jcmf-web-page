@@ -1,0 +1,16 @@
+{
+  "mcp": {
+    "blender-mcp": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "mcp-for-blender"
+      ],
+      "enabled": true,
+      "environment": {
+        "BLENDER_HOST": "localhost",
+        "BLENDER_PORT": "9876"
+      }
+    }
+  }
+}

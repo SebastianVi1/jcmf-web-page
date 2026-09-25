@@ -261,6 +261,7 @@ svg {
   display: inline-flex;
   align-items: center;
   gap: 11px;
+  color: var(--brand-ink);
 }
 .brand strong {
   display: block;
@@ -272,6 +273,7 @@ svg {
 }
 .brand-caption {
   display: block;
+  color: var(--muted);
   font-size: 6.5px;
   letter-spacing: 0.26em;
   padding-top: 4px;
