@@ -1279,6 +1279,40 @@ svg {
     aspect-ratio: 4 / 3;
   }
 }
+/* Static illustrative figures: no counters or claims of live business data. */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: var(--metrics-gap);
+  margin: 0;
+}
+.metrics-grid > div {
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+.metrics-grid dt {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 15px;
+}
+.metrics-grid dd {
+  font: 500 var(--metric-size)/1.15 var(--font-display);
+  letter-spacing: -0.025em;
+  color: var(--accent);
+  margin: 0;
+}
+@media (max-width: 600px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .metrics-grid > div {
+    padding-top: 24px;
+  }
+}
 .process-section {
   border-top: 1px solid var(--line);
 }

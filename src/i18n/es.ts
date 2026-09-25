@@ -102,6 +102,15 @@ export const es = {
     projectsTitle: 'Ideas de hoy.\nReferentes de mañana.',
     projectsNote:
       'Una primera mirada a nuestro portafolio: referencias fotográficas en revisión y propuestas conceptuales.',
+    metricsEyebrow: 'CIFRAS ILUSTRATIVAS',
+    metricsTitle: 'Una visión en cifras.',
+    metricsNote:
+      'Datos ficticios para explorar el diseño. No representan la trayectoria ni los resultados de JCMF.',
+    metrics: [
+      ['25+', 'Proyectos · ejemplo'],
+      ['80,000 m²', 'Superficie construida · ejemplo'],
+      ['15', 'Años de experiencia · ejemplo'],
+    ],
     visualEyebrow: 'ARQUITECTURA EN PERSPECTIVA',
     visualTitle: 'De la estructura\nal detalle.',
     visualIntro:

@@ -103,6 +103,15 @@ export const en: Dictionary = {
     projectsTitle: 'Today’s ideas.\nTomorrow’s landmarks.',
     projectsNote:
       'A first look at our portfolio: photographic references under review and concept proposals.',
+    metricsEyebrow: 'ILLUSTRATIVE FIGURES',
+    metricsTitle: 'A vision in numbers.',
+    metricsNote:
+      'Fictional figures used to explore the design. They do not represent JCMF’s track record or results.',
+    metrics: [
+      ['25+', 'Projects · example'],
+      ['80,000 m²', 'Built area · example'],
+      ['15', 'Years of experience · example'],
+    ],
     visualEyebrow: 'ARCHITECTURE IN PERSPECTIVE',
     visualTitle: 'From structure\nto detail.',
     visualIntro:

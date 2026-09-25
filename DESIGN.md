@@ -38,7 +38,7 @@ Variante solicitada en una rama independiente de `modern_design`. Público: clie
 
 Dirección: una monografía arquitectónica de espacios habitables. Fotografías e imágenes proporcionadas tienen el papel principal; el pabellón y los trazos animados acompañan como estudios conceptuales. El hero fotográfico combina tipografía condensada monumental y contraste cinematográfico; la estructura conceptual acompaña la introducción.
 
-Se descartó un mero cambio de colores: se rediseñan composición del inicio, cabeceras interiores, servicios en filas, portafolio escalonado y cierre. La expresión se concentra en la escena y los trazos; no se añaden métricas ni decoraciones sin significado.
+Se descartó un mero cambio de colores: se rediseñan composición del inicio, cabeceras interiores, servicios en filas, portafolio escalonado y cierre. La expresión se concentra en la escena y los trazos; las cifras de prueba se etiquetan explícitamente como ficticias.
 
 ## Colors
 
@@ -124,3 +124,13 @@ de error, dimensiones y WebP; no añade fuentes externas ni datos de autoría.
 Composición 1.35:1, fotos 4:3 y 4:5; una columna en móvil.
 --visual-gap clamp(28px, 5vw, 72px) y --visual-offset 96px pertenecen a tokens.css.
 Los enlaces son nativos con foco visible, descripciones localizadas y etiquetas de referencia.
+
+## Cifras ilustrativas del prototipo
+
+HomeMetrics muestra tres datos ficticios solicitados para explorar el diseño (25+, 80,000 m², 15).
+El encabezado, la nota visible y cada etiqueta explican su condición de ejemplo en ES/EN;
+no se incorporan al SEO, datos estructurados ni fichas de proyectos.
+Son texto estático, sin contadores o peticiones; un dl mantiene su relación semántica.
+--metric-size clamp(48px, 5.8vw, 84px) y --metrics-gap clamp(24px, 4vw, 56px)
+definen tamaño y separación; tres columnas pasan a una en móvil.
+Reemplazar por evidencia aprobada o retirar el bloque antes de publicar; indexación desactivada.

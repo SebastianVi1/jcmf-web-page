@@ -5,6 +5,7 @@ import Architecture from '../components/Architecture.astro';
 import { getProjectPhoto } from '../lib/project-media';
 import Icon from '../components/Icon.astro';
 import HomeShowcase from '../components/HomeShowcase.astro';
+import HomeMetrics from '../components/HomeMetrics.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import CallToAction from '../components/CallToAction.astro';
 import { portfolioProjects as projects } from '../data/projects';
@@ -175,6 +176,7 @@ const heroPhoto = await getProjectPhoto(heroProject, true);
   <p class="caption portfolio-note">{copy.home.projectsNote}</p>
 </section>
 <HomeShowcase locale={locale} />
+<HomeMetrics locale={locale} />
 <section class="section process-section" aria-labelledby="process-title">
   <div class="container">
     <p class="eyebrow" data-reveal>
