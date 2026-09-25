@@ -784,7 +784,7 @@ svg {
   transition: transform 1s var(--ease);
 }
 .work-card .project-image {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 4 / 3;
 }
 /* Dimensiones reservadas y una sola capa: el filtro no afecta etiquetas o CTA. */
 .project-photo {
@@ -886,8 +886,29 @@ svg {
 .project-card h3 {
   font-size: 25px;
 }
+.project-card h3 a {
+  position: relative;
+  display: inline-block;
+  transition: color 0.35s;
+}
+.project-card h3 a::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1px;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
+}
 .project-card h3 a:hover {
   color: var(--accent);
+}
+.project-card h3 a:hover::after,
+.project-card h3 a:focus-visible::after {
+  transform: scaleX(1);
 }
 /* Portafolio editorial: el detalle conserva el encuadre completo del archivo. */
 .project-photo[data-mode='color'] img {
@@ -928,25 +949,37 @@ svg {
 .project-image:active .project-image-arrow {
   transform: scale(0.95);
 }
+/* Índice de obras: tres columnas compactas, fotografía 4:3 y numeración de catálogo. */
 .portfolio-grid {
-  gap: 72px 44px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 50px 26px;
   align-items: start;
 }
-.portfolio-grid .work-card[data-featured='true'] {
-  grid-column: 1 / -1;
+.portfolio-grid .work-card h3 {
+  font-size: clamp(18px, 1.7vw, 21px);
+  line-height: 1.3;
+  max-width: 100%;
 }
-.portfolio-grid .work-card[data-featured='true'] .project-image {
-  aspect-ratio: 16 / 9;
-  max-height: 660px;
+.portfolio-grid .work-card .project-meta {
+  margin-top: 15px;
+  font-size: 9px;
 }
-.portfolio-grid .work-card[data-featured='true'] h3 {
-  font-size: clamp(28px, 3vw, 42px);
+.portfolio-grid .work-card-rule {
+  margin-top: 18px;
 }
-.home-projects .work-card .project-image {
-  aspect-ratio: 4 / 3;
+.portfolio-grid .project-image-arrow {
+  right: 14px;
+  bottom: 14px;
+  width: 36px;
+  height: 36px;
 }
-.related-projects .work-card .project-image {
-  aspect-ratio: 4 / 3;
+.portfolio-grid .project-image-arrow svg {
+  width: 16px;
+  height: 16px;
+}
+.portfolio-grid .project-badge {
+  top: 14px;
+  left: 16px;
 }
 .page-hero-projects {
   padding-bottom: 50px;
@@ -1162,18 +1195,11 @@ svg {
   }
 }
 @media (max-width: 600px) {
-  .portfolio-grid {
-    gap: 42px;
-  }
-  .work-card .project-image {
-    aspect-ratio: 4 / 5;
-  }
-  .portfolio-grid .work-card[data-featured='true'] .project-image {
-    aspect-ratio: 4 / 3;
-  }
-  .work-card h3,
-  .portfolio-grid .work-card[data-featured='true'] h3 {
+  .work-card h3 {
     font-size: 26px;
+  }
+  .portfolio-grid .work-card h3 {
+    font-size: 22px;
   }
   .hero-showcase {
     grid-template-columns: 1fr;
@@ -1971,6 +1997,13 @@ svg {
     grid-template-columns: 45px 1fr 1fr 44px;
     gap: 18px;
   }
+  .portfolio-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 46px 22px;
+  }
+  .portfolio-grid .work-card h3 {
+    font-size: clamp(20px, 2.2vw, 24px);
+  }
 }
 @media (max-width: 900px) {
   .header-inner {
@@ -2436,6 +2469,10 @@ svg {
   .icon-button,
   .filters button {
     border: 1px solid ButtonText;
+  }
+  .project-card h3 a:hover,
+  .project-card h3 a:focus-visible {
+    text-decoration: underline;
   }
   .status-dot {
     background: CanvasText;

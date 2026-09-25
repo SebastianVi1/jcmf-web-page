@@ -43,7 +43,12 @@ const copy = t(locale);
   </div>
   <div class="project-grid portfolio-grid">
     {projects.map((project, index) => (
-      <ProjectCard project={project} locale={locale} featured={index === 0} />
+      <ProjectCard
+        project={project}
+        locale={locale}
+        index={index + 1}
+        sizes="(max-width: 600px) calc(100vw - 46px), (max-width: 1100px) 46vw, min(29vw, 410px)"
+      />
     ))}
   </div>
 </section>

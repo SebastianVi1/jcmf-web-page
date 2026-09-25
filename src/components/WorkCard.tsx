@@ -8,7 +8,8 @@ interface Props {
   mediaLabel: string;
   viewLabel: string;
   photo: ProjectPhotoProps;
-  featured?: boolean;
+  /** Número de catálogo en el índice del portafolio; opcional en otras vistas. */
+  index?: number;
 }
 
 /** Una tarjeta por obra; la navegación funciona desde el HTML, antes de hidratar. */
@@ -20,13 +21,12 @@ export default function WorkCard({
   mediaLabel,
   viewLabel,
   photo,
-  featured = false,
+  index,
 }: Props) {
   return (
     <article
       className="project-card work-card"
       data-category={categoryKey}
-      data-featured={featured || undefined}
       data-reveal="image"
     >
       <a
@@ -35,6 +35,11 @@ export default function WorkCard({
         aria-label={viewLabel + ': ' + title}
       >
         <ProjectPhoto {...photo} />
+        {index !== undefined && (
+          <span className="project-badge" aria-hidden="true">
+            {String(index).padStart(2, '0')}
+          </span>
+        )}
         <span className="project-image-arrow" aria-hidden="true">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path

@@ -56,7 +56,7 @@ Los renglones de hero están agrupados para entradas suaves, sin dividir caracte
 
 ## Layout
 
-Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: fotografía de fondo a todo el ancho, titular monumental alineado a izquierda, resumen y dos acciones debajo. Estudio conceptual junto a la introducción corporativa. Portafolio: una obra destacada horizontal y seis tarjetas verticales en dos columnas. Móvil vuelve a una columna. La variante destacada es explícita mediante data-featured, no depende de first-child dentro de las islas React.
+Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: fotografía de fondo a todo el ancho, titular monumental alineado a izquierda, resumen y dos acciones debajo. Estudio conceptual junto a la introducción corporativa. Portafolio: índice de obras en tres columnas con fotografía 4:3, número de catálogo y regla inferior; dos columnas entre 600 y 1100 px y una sola columna en móvil. No hay tarjeta destacada: todas las obras comparten escala y la jerarquía se resuelve con espacio, reglas y numeración, sin depender de first-child dentro de las islas React.
 
 Nosotros: hero con símbolo de volumen; proyectos: capas de un plano; contacto: pórtico abierto. PageHero comparte semántica y espaciado; HeroMark concentra las variantes. Servicios como filas con icono/título/descripción/enlace, adaptados a móvil.
 
@@ -74,7 +74,7 @@ Controles casi rectos, radio 2 px. Círculos para acciones compactas y CTA. Icon
 
 Portafolio: `src/lib/project-media.ts` concentra la optimización local. `ProjectCard.astro` adapta los datos a `WorkCard.tsx`; `ProjectCaseStudy.tsx` compone el detalle y ambos reutilizan `ProjectPhoto.tsx`. El HTML se genera en compilación y React hidrata cuando es visible. Datos y fuentes en src/data/projects.ts; referencias de investigación en PORTFOLIO.md. No se infiere autoría de una imagen ni se presenta una visualización como fotografía de obra concluida.
 
-Tarjetas 4:5 con encuadre por imagen; destacada 16:9 y tarjetas del inicio/relacionadas 4:3. Blanco y negro en reposo, color con hover o foco; 900 ms de filtro y 1200 ms de zoom 1.025 con --ease. En táctil se presentan a color. Detalle: grid de 12 columnas, imagen completa sin recorte en 8 columnas y ficha en 4; contexto y alcance debajo. En móvil todo sigue el orden natural. El detalle muestra color constante, sin zoom. Espacio reservado y mensaje localizado de error sin perder navegación.
+Tarjetas 4:3 con encuadre por imagen en portafolio, inicio y relacionadas. Blanco y negro en reposo, color con hover o foco; 900 ms de filtro y 1200 ms de zoom 1.025 con --ease. En táctil se presentan a color. El índice del portafolio estrecha la flecha de la imagen a 36 px y coloca el número de catálogo en .project-badge; el título gana subrayado progresivo de 600 ms al hover o foco, con texto alternativo en forced-colors. Detalle: grid de 12 columnas, imagen completa sin recorte en 8 columnas y ficha en 4; contexto y alcance debajo. En móvil todo sigue el orden natural. El detalle muestra color constante, sin zoom. Espacio reservado y mensaje localizado de error sin perder navegación.
 
 Conservar navegación, formulario React/Zod, filtros, 404, SEO, idiomas y dos temas. Select explícitamente nativo. Formulario síncrono de demostración sin almacenamiento o envío; botón inactivo hasta hidratar; errores vinculados y foco al primer inválido.
 
@@ -150,3 +150,19 @@ tokens.css define --motion-photo 1800ms, --motion-title 1100ms,
 Las flechas responden tanto al puntero como al foco; no se retrasa ni bloquea la navegación.
 La galería comparte la máscara de revelado existente, sin nuevos observadores.
 prefers-reduced-motion elimina también el zoom y los desplazamientos de interacción.
+
+## Índice de obras — septiembre 2026
+
+Solicitud del usuario: grid más compacto, fotografías más pequeñas y composición más limpia.
+Se retira la obra destacada de 16:9 a todo el ancho y su variante data-featured: el portafolio
+es ahora un índice uniforme de tres columnas (dos entre 600 y 1100 px, una en móvil) con
+fotografía 4:3, esquema de 402 px de ancho a 1440 px de viewport frente a los 620 px anteriores.
+Cada tarjeta lleva número de catálogo en .project-badge (01–07, aria-hidden: es jerarquía visual,
+no información nueva), flecha de 36 px, metadatos en 9 px y regla inferior que pasa a --accent.
+Las tarjetas del inicio y las relacionadas conservan su escala; .work-card .project-image unifica
+el encuadre en 4:3 y desaparecen las reglas duplicadas de home/relacionadas y el 4:5 residual.
+ProjectCard recibe index y sizes; cada cuadrícula declara su reparto de ancho para que el navegador
+descargue la variante WebP necesaria (hasta 480 px en escritorio en lugar de 800 px).
+Los títulos de tarjeta incorporan el subrayado progresivo de 600 ms ya documentado para hover.
+La última fila queda incompleta con siete obras: se acepta como cierre editorial, sin rellenar
+con contenido inventado ni escalas alternativas.

@@ -1,5 +1,25 @@
 # JCMF Constructora — plan detallado
 
+## Índice de obras compacto — 24 de septiembre de 2026
+
+Solicitud del usuario: mejor grid en la sección de proyectos, fotografías más pequeñas, composición más limpia y una mejora adicional donde fuera posible.
+
+- [x] Retirar la obra destacada de 16:9 a todo el ancho y su variante `data-featured`.
+- [x] Índice uniforme de tres columnas con fotografía 4:3 (402 px de tarjeta a 1440 px), dos columnas entre 600 y 1100 px y una columna en móvil.
+- [x] Numeración de catálogo 01–07 en `.project-badge`, flecha de 36 px y tipografía de tarjeta acorde al tamaño menor.
+- [x] Unificar el encuadre de `WorkCard` en 4:3 y eliminar las reglas duplicadas de inicio/relacionadas.
+- [x] Mejora de peso: cada cuadrícula declara su `sizes` y el portafolio descarga la variante de 480 px en escritorio.
+- [x] Mejora de interacción: subrayado progresivo de 600 ms en los títulos de tarjeta, con alternativa en forced-colors.
+- [x] Documentar la composición en DESIGN.md.
+
+Verificación de este cambio:
+
+- `bun run check`: 46 archivos, 0 errores/advertencias/sugerencias.
+- `bun run test`: 8 pruebas aprobadas.
+- `bun run test:e2e`: 19 pruebas aprobadas (incluye composición del portafolio, filtros, táctil, fallo de imagen y axe).
+- Geometría comprobada en 375/768/900/1024/1440 px: 3/2/1 columnas según ancho, sin desbordamiento horizontal; las tarjetas 2 y 3 comparten fila en escritorio.
+- Capturas de escritorio, tableta, móvil y tema oscuro revisadas.
+
 ## Evolución azul y portada fotográfica — 24 de septiembre de 2026
 
 - [x] Modo oscuro azul noche/acero y modo claro concreto/azul técnico, con SVG, scrollbar y favicon coordinados.

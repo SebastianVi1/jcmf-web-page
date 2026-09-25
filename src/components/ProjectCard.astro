@@ -7,9 +7,12 @@ import WorkCard from './WorkCard';
 interface Props {
   project: Project;
   locale: Locale;
-  featured?: boolean;
+  /** Posición en el índice del portafolio; sin número en inicio y relacionadas. */
+  index?: number;
+  /** Cada cuadrícula declara su propio reparto de ancho para descargar lo justo. */
+  sizes?: string;
 }
-const { project, locale, featured = false } = Astro.props;
+const { project, locale, index, sizes } = Astro.props;
 const copy = t(locale);
 const photo = await getProjectPhoto(project);
 ---
@@ -17,7 +20,7 @@ const photo = await getProjectPhoto(project);
 {photo && (
   <WorkCard
     client:visible
-    featured={featured}
+    index={index}
     href={projectRoute(locale, project.slug)}
     title={project.content[locale].title}
     category={copy.projects.categories[project.category]}
@@ -28,9 +31,7 @@ const photo = await getProjectPhoto(project);
     viewLabel={copy.ui.view}
     photo={{
       ...photo,
-      sizes: featured
-        ? '(max-width: 600px) calc(100vw - 46px), 88vw'
-        : photo.sizes,
+      sizes: sizes ?? photo.sizes,
       alt: project.content[locale].imageAlt || project.content[locale].title,
       errorLabel: copy.ui.imageError,
     }}
