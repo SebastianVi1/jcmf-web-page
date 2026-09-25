@@ -1532,6 +1532,11 @@ svg {
   margin-top: 19px;
   font-size: 17px;
 }
+.team-name {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
 .filter-bar {
   display: flex;
   align-items: center;

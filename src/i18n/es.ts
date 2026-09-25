@@ -156,16 +156,16 @@ export const es = {
     teamTitle: 'Muchas especialidades.\nUna misma dirección.',
     teamNote:
       'Estructura de equipo de referencia. Perfiles, nombres y fotografías pendientes de confirmar.',
+    // Replace names only when approved; role/name pairs stay aligned across locales.
     team: [
-      'Director General',
-      'Dirección de proyectos',
-      'Gerente General',
-      'Recursos Humanos',
-      'Gerente de Compras',
-      'Residencia de obra',
-      'Ingeniería e instalaciones',
-      'Costos y presupuestos',
-      '',
+      { role: 'Director General', name: 'Nombre por confirmar' },
+      { role: 'Dirección de proyectos', name: 'Nombre por confirmar' },
+      { role: 'Gerente General', name: 'Nombre por confirmar' },
+      { role: 'Recursos Humanos', name: 'Nombre por confirmar' },
+      { role: 'Gerente de Compras', name: 'Nombre por confirmar' },
+      { role: 'Residencia de obra', name: 'Nombre por confirmar' },
+      { role: 'Ingeniería e instalaciones', name: 'Nombre por confirmar' },
+      { role: 'Costos y presupuestos', name: 'Nombre por confirmar' },
     ],
   },
   projects: {

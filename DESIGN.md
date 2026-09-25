@@ -134,3 +134,11 @@ Son texto estático, sin contadores o peticiones; un dl mantiene su relación se
 --metric-size clamp(48px, 5.8vw, 84px) y --metrics-gap clamp(24px, 4vw, 56px)
 definen tamaño y separación; tres columnas pasan a una en móvil.
 Reemplazar por evidencia aprobada o retirar el bloque antes de publicar; indexación desactivada.
+
+## Equipo de referencia
+
+Nosotros muestra ocho cargos y una línea de nombre debajo de cada cargo.
+Los registros role/name viven en about.team (es.ts/en.ts), conservando la misma estructura
+en ambos idiomas. Los nombres siguen como «Nombre por confirmar» hasta disponer de aprobación;
+se retiró el registro vacío y se completaron los cargos faltantes en inglés.
+.team-name comparte --muted y la fuente de lectura; la cuadrícula sigue siendo 4/2 columnas.

@@ -154,11 +154,16 @@ export const en: Dictionary = {
     teamTitle: 'Many specialties.\nOne shared direction.',
     teamNote:
       'Reference team structure. Profiles, names and photographs are awaiting confirmation.',
+    // Replace names only when approved; role/name pairs stay aligned across locales.
     team: [
-      'Project management',
-      'Site supervision',
-      'Engineering & installations',
-      'Cost planning',
+      { role: 'Managing Director', name: 'Name to be confirmed' },
+      { role: 'Project Management', name: 'Name to be confirmed' },
+      { role: 'General Manager', name: 'Name to be confirmed' },
+      { role: 'Human Resources', name: 'Name to be confirmed' },
+      { role: 'Purchasing Manager', name: 'Name to be confirmed' },
+      { role: 'Site Supervision', name: 'Name to be confirmed' },
+      { role: 'Engineering & Installations', name: 'Name to be confirmed' },
+      { role: 'Cost Planning', name: 'Name to be confirmed' },
     ],
   },
   projects: {
