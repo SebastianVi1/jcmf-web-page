@@ -92,7 +92,9 @@ Movimiento finito:
 - Trazado SVG: 2300 ms con pathLength normalizado; masas aparecen en 1800 ms, desplazamiento 10 px.
 - Hero interior: línea de separación dibujada en 1800 ms.
 - Scroll: elevación 14 px y opacidad en 800 ms; máscara de imagen 1400 ms y reglas 1500 ms.
-- Hover: subrayado progresivo 600 ms, zoom de imagen 1.025 en 1000 ms, giro leve de flechas/CTA.
+- Hover: subrayado progresivo 600 ms, zoom de imagen 1.025 en 1200 ms, giro leve de flechas/CTA.
+  El paso de blanco y negro a color baja a 600 ms: animar `filter` repinta cada fotograma y
+  acortar la ventana de repintado hace el hover más fluido sin cambiar su carácter.
 - Easing compartido cubic-bezier(.22,1,.36,1). Transiciones de página Astro, con lectura sin saltos.
 
 Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las ilustraciones son decorativas y los títulos permanecen semánticos. No hay loops, paralaje agresivo ni dependencia de movimiento para operar.
@@ -157,6 +159,27 @@ tokens.css define --motion-photo 1800ms, --motion-title 1100ms,
 Las flechas responden tanto al puntero como al foco; no se retrasa ni bloquea la navegación.
 La galería comparte la máscara de revelado existente, sin nuevos observadores.
 prefers-reduced-motion elimina también el zoom y los desplazamientos de interacción.
+
+## Fluidez de movimiento — septiembre 2026
+
+Solicitud del usuario: que todo se sienta más fluido, solo con cambios necesarios.
+Se aprueban seis frentes (A–F); el cambio de tema con transición (G) queda descartado.
+
+- Navegación entre páginas: `SiteLayout.astro` deja el preset `fade` de Astro (180 ms y easing
+  ajeno) por una animación propia `page-out/page-in` de 160/320 ms con el `--ease` del sitio.
+  El header conserva `transition:name` y `prefers-reduced-motion` anula `::view-transition-*`.
+- Menú móvil: `nav-enter` de 220 ms solo al abrir (opacidad y 8 px de subida). El cierre es
+  inmediato para no retener el foco ni el estado de Escape.
+- Filtros del portafolio: `filter-in` de 320 ms en las tarjetas que vuelven a aparecer, con la
+  cascada existente; la salida no se retiene para que el recuento sea inmediato.
+- Revelado por columnas: `WorkCard` recibe `index` y publica `--reveal-delay` 0/90/180 ms según
+  su columna; el mismo valor retrasa la máscara de imagen y la entrada del filtro.
+- Hover de foto: filtro de color 600 ms (ver nota de hover).
+- Tiempos unificados: `--motion-color 350ms` y `--motion-hover 600ms` en tokens; sustituyen los
+  valores sueltos de 0.3/0.35/0.5/0.6 s y todas las transiciones usan `var(--ease)`.
+
+Solo se animan transform, opacity, color, fondo y clip; sin bucles, sin paralaje y sin
+interrumpir la navegación. La suite de navegador (19 pruebas) y las unitarias (8) se mantienen.
 
 ## Índice de obras — septiembre 2026
 

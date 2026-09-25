@@ -63,7 +63,16 @@ function init() {
   const mobileNav = document.querySelector<HTMLElement>('#mobile-nav');
   function setMenu(open: boolean) {
     if (!menu || !mobileNav) return;
-    mobileNav.hidden = !open;
+    if (open) {
+      mobileNav.hidden = false;
+      // Se reinicia la animación de entrada; el cierre sigue siendo inmediato.
+      mobileNav.classList.remove('nav-enter');
+      void mobileNav.offsetWidth;
+      mobileNav.classList.add('nav-enter');
+    } else {
+      mobileNav.hidden = true;
+      mobileNav.classList.remove('nav-enter');
+    }
     menu.setAttribute('aria-expanded', String(open));
     menu.setAttribute(
       'aria-label',
@@ -143,17 +152,30 @@ function init() {
               el.setAttribute('aria-pressed', String(el === button)),
             );
           let count = 0;
+          const entering: HTMLElement[] = [];
           document
             .querySelectorAll<HTMLElement>('[data-category]')
             .forEach((el) => {
-              el.hidden =
-                category !== 'all' && category !== el.dataset.category;
-              if (!el.hidden) {
-                count++;
-                // Un resultado recién filtrado debe ser visible inmediatamente.
-                el.classList.remove('reveal-pending');
+              const visible =
+                category === 'all' || category === el.dataset.category;
+              if (!visible) {
+                el.hidden = true;
+                el.classList.remove('filter-enter');
+                return;
               }
+              count++;
+              // Un resultado recién filtrado debe ser visible inmediatamente.
+              const wasHidden = el.hidden;
+              el.hidden = false;
+              el.classList.remove('reveal-pending');
+              if (wasHidden) entering.push(el);
             });
+          // La entrada se desvanece por columnas; la salida no se retiene.
+          entering.forEach((el) => el.classList.remove('filter-enter'));
+          if (entering.length) {
+            void document.body.offsetHeight;
+            entering.forEach((el) => el.classList.add('filter-enter'));
+          }
           const counter = document.querySelector('[data-project-count]');
           if (counter) counter.textContent = String(count);
         },
