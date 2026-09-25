@@ -80,11 +80,11 @@ Conservar navegación, formulario React/Zod, filtros, 404, SEO, idiomas y dos te
 
 Movimiento finito:
 
-- Hero por renglones: 1350 ms, desplazamiento de 25% de su propia línea, escalonado 130 ms.
+- Hero por renglones: 1100 ms, desplazamiento de 25% de su propia línea, escalonado 130 ms. Fotografía con acercamiento inicial 1.045 → 1 en 1800 ms, una sola vez; acciones aparecen con 260 ms de retraso.
 - Aparición secundaria: 1200 ms y 9 px.
 - Trazado SVG: 2300 ms con pathLength normalizado; masas aparecen en 1800 ms, desplazamiento 10 px.
 - Hero interior: línea de separación dibujada en 1800 ms.
-- Scroll: elevación 14 px y opacidad en 1000–1100 ms; máscara de imagen 1400 ms y reglas 1500 ms.
+- Scroll: elevación 14 px y opacidad en 800 ms; máscara de imagen 1400 ms y reglas 1500 ms.
 - Hover: subrayado progresivo 600 ms, zoom de imagen 1.025 en 1000 ms, giro leve de flechas/CTA.
 - Easing compartido cubic-bezier(.22,1,.36,1). Transiciones de página Astro, con lectura sin saltos.
 
@@ -142,3 +142,11 @@ Los registros role/name viven en about.team (es.ts/en.ts), conservando la misma 
 en ambos idiomas. Los nombres siguen como «Nombre por confirmar» hasta disponer de aprobación;
 se retiró el registro vacío y se completaron los cargos faltantes en inglés.
 .team-name comparte --muted y la fuente de lectura; la cuadrícula sigue siendo 4/2 columnas.
+
+## Movimiento de la portada y galería
+
+tokens.css define --motion-photo 1800ms, --motion-title 1100ms,
+--motion-reveal 800ms y --motion-feedback 350ms. Son animaciones finitas de transform/opacity.
+Las flechas responden tanto al puntero como al foco; no se retrasa ni bloquea la navegación.
+La galería comparte la máscara de revelado existente, sin nuevos observadores.
+prefers-reduced-motion elimina también el zoom y los desplazamientos de interacción.

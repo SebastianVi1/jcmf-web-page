@@ -49,6 +49,10 @@
   --page-max: 1280px;
   --gutter: clamp(24px, 6vw, 96px);
   --section-space: clamp(80px, 9vw, 130px);
+  --motion-photo: 1800ms;
+  --motion-title: 1100ms;
+  --motion-reveal: 800ms;
+  --motion-feedback: 350ms;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 [data-theme='dark'] {
