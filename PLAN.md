@@ -1,5 +1,32 @@
 # JCMF Constructora — plan detallado
 
+## Evolución azul y portada fotográfica — 24 de septiembre de 2026
+
+- [x] Modo oscuro azul noche/acero y modo claro concreto/azul técnico, con SVG, scrollbar y favicon coordinados.
+- [x] Oswald autoalojada para titulares y DM Sans para lectura.
+- [x] Portada a todo el ancho con fotografía existente, título monumental, resumen y acciones ES/EN.
+- [x] Galería editorial inferior con dos referencias adicionales y tratamiento compartido de carga/error.
+- [x] Estadísticas ficticias solicitadas para diseño, etiquetadas en el encabezado, explicación y cada cifra.
+- [x] Ocho cargos del equipo con nombre pendiente debajo; paridad ES/EN y eliminación de la tarjeta vacía.
+- [x] Entrada fotográfica finita, renglones escalonados, revelados más ágiles y flechas con hover/foco.
+- [x] Documentar componentes, contenido editable, paletas, escalas y movimiento.
+- [x] Guardar cada funcionalidad en un commit independiente.
+
+Verificación final de esta evolución:
+
+- `bun run check`: 46 archivos, 0 errores/advertencias/sugerencias.
+- `bun run test`: 8 pruebas aprobadas.
+- `bun run build`: 27 páginas generadas.
+- `bun run test:e2e`: 19 pruebas aprobadas; incluye ES/EN, ambos temas, 320/375/768/1440 px según flujo, foco/teclado, sin JS, movimiento reducido y fallo de imágenes.
+- axe sin infracciones en las páginas/estados comprobados; capturas de portada completa, Nosotros y móvil inspeccionadas.
+- Auditoría premium estricta: 0 hallazgos; JSON local en `premium-ui.audit.json`.
+- `designmd lint DESIGN.md`: 0 errores; 7 avisos de tokens sin referencias YAML de componente. Los tokens pertenecen a CSS (modelo B), con mapeo documentado y coincidencia de valores comprobada.
+- Prettier aprobado para src, tests, scripts y documentación editada. `bun run format:check` global detecta únicamente `opencode.json`, archivo previo del usuario sin seguimiento, que se conserva sin editar.
+- Capturas y tarjeta social regeneradas para la nueva portada.
+- Un selector del hero anterior se actualizó. Las primeras pruebas del formulario encontraron una caché Vite obsoleta; reiniciar después de check/build resolvió el 504 y la suite final pasó completa.
+
+Las cifras no son resultados de JCMF y los nombres siguen pendientes. Mantener la indexación desactivada hasta sustituir o retirar los ejemplos. Se preservaron los cambios ajenos en AGENTS.md, 3d_models/ y opencode.json.
+
 ## Portafolio fotográfico de ejemplo
 
 - [x] Revisar los siete archivos locales y conservar las ediciones de alcance del usuario.

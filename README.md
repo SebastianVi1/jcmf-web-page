@@ -73,3 +73,16 @@ Desplegar `dist/` en un hosting estático que sirva `404.html` con estado HTTP 4
 ## Verificación
 
 El plan registra los resultados de compilación, tipos y revisión del navegador. Pruebas E2E cubren rutas, cambio de idioma/tema, móvil, formulario, filtros, contenido sin JavaScript y accesibilidad automatizada. Una revisión manual final de contenido y accesibilidad sigue siendo necesaria antes de publicar.
+
+## Personalizar el diseño actual
+
+- Paletas y escalas: editar `src/styles/tokens.css` y reflejar las decisiones en `DESIGN.md`.
+- Portada: `src/views/Home.astro` reutiliza el adaptador WebP y muestra texto de `home` en los dos diccionarios.
+- Galería inferior: `HomeShowcase.astro` selecciona slugs existentes; la procedencia sigue en `PORTFOLIO.md`.
+- Cifras de diseño: `home.metrics` contiene ejemplos ficticios con etiquetas explícitas. Reemplazarlos por cifras aprobadas o retirar `HomeMetrics` antes de publicar.
+- Equipo: cada registro de `about.team` tiene `role` y `name`. Sustituir los nombres por confirmar en ambos idiomas cuando estén aprobados.
+- Animación: duraciones `--motion-*` en tokens; reglas en `global.css`. Movimiento reducido elimina los efectos.
+- Capturas y tarjeta social: `node scripts/capture.mjs`; pruebas de la nueva portada en `tests/browser/home-design.spec.ts`.
+
+Si Vite muestra `504 Outdated Optimize Dep` después de instalar fuentes o ejecutar comprobaciones,
+reiniciar con `bun run astro dev stop` y `bun run dev -- --background` antes de probar el navegador.
