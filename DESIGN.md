@@ -3,12 +3,12 @@ version: alpha
 name: JCMF Constructora — Minimal
 description: Arquitectura serena, espacio editorial y trazos que se convierten en materia.
 colors:
-  primary: '#4b5f43'
-  background: '#f8f7f3'
-  surface: '#eeeee7'
-  text: '#282e28'
-  muted: '#62695e'
-  border: '#d7dbd0'
+  primary: '#245c88'
+  background: '#f4f7fa'
+  surface: '#e6edf3'
+  text: '#14283c'
+  muted: '#52677b'
+  border: '#c7d5e1'
   darkBackground: '#0c1724'
   darkSurface: '#132438'
   darkText: '#f0f4f8'
@@ -42,7 +42,7 @@ Se descartó un mero cambio de colores: se rediseñan composición del inicio, c
 
 ## Colors
 
-Marfil #f8f7f3, superficie mineral #eeeee7, carbón #282e28, texto secundario #62695e y oliva #4b5f43. Oscuro azul noche: #0c1724, #132438, texto #f0f4f8 y acero claro #9ac9ee. Contraste antes que desaturación estética.
+Concreto claro #f4f7fa, superficie azul gris #e6edf3, tinta #14283c, texto secundario #52677b y azul técnico #245c88. Oscuro azul noche: #0c1724, #132438, texto #f0f4f8 y acero claro #9ac9ee. Contraste antes que desaturación estética.
 
 Fuente canónica: `src/styles/tokens.css` (modelo B). Documento refleja valores; componentes comparten CSS y no duplican temas React. Mapa: primary → --accent → acciones; background → --bg → documento; surface → --surface → visuales; text → --ink → titulares; muted → --muted → lectura secundaria; border → --line → separadores. Meta theme-color lee --bg computado.
 
@@ -95,7 +95,7 @@ Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las
 - Mantener el contenido factual y la condición conceptual de las imágenes.
 - Tratar el espacio en blanco como separación útil, no como ausencia de contenido.
 - Cambiar valores únicamente desde tokens y reflejarlos aquí.
-- Modo oscuro azul noche/acero solicitado por el usuario; modo claro marfil/oliva. No importar la composición de modern_design.
+- Modo oscuro azul noche/acero solicitado por el usuario; modo claro concreto/azul técnico. No importar la composición de modern_design.
 - No añadir una segunda hoja de overrides: global.css es la implementación compartida.
 - Verificar ambos idiomas, paletas, móvil, teclado y reducción de movimiento.
 
@@ -110,3 +110,8 @@ Geometría: --hero-height 740px, --hero-space clamp(36px, 5vw, 76px),
 --hero-title-size clamp(72px, 10.8vw, 156px); móvil mínimo 680px con altura natural si el contenido crece.
 La fotografía reutiliza el adaptador WebP y usa sizes=100vw, carga prioritaria y dimensiones explícitas.
 Se presenta como referencia; no implica autoría ni obra ejecutada. El texto es ES/EN sin métricas inventadas.
+
+El tema claro evoluciona también a azul por solicitud del usuario: fondos de concreto frío,
+acento técnico, materiales SVG y scrollbars coherentes. Favicon y meta theme-color inicial
+reflejan --accent y --bg; el script de tema actualiza el meta desde CSS computado.
+README describe la identidad actual; el historial de PLAN conserva las propuestas anteriores.
