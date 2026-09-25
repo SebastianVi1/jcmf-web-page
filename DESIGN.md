@@ -15,7 +15,7 @@ colors:
   darkAccent: '#9ac9ee'
 typography:
   display:
-    fontFamily: 'Manrope Variable, Arial, sans-serif'
+    fontFamily: 'Oswald Variable, Arial Narrow, sans-serif'
   body:
     fontFamily: 'DM Sans Variable, Arial, sans-serif'
 rounded:
@@ -42,7 +42,7 @@ Se descartó un mero cambio de colores: se rediseñan composición del inicio, c
 
 ## Colors
 
-Marfil #f8f7f3, superficie mineral #eeeee7, carbón #282e28, texto secundario #62695e y oliva #4b5f43. Oscuro botánico: #0c1724, #132438, texto #f0f4f8 y acero claro #9ac9ee. Contraste antes que desaturación estética.
+Marfil #f8f7f3, superficie mineral #eeeee7, carbón #282e28, texto secundario #62695e y oliva #4b5f43. Oscuro azul noche: #0c1724, #132438, texto #f0f4f8 y acero claro #9ac9ee. Contraste antes que desaturación estética.
 
 Fuente canónica: `src/styles/tokens.css` (modelo B). Documento refleja valores; componentes comparten CSS y no duplican temas React. Mapa: primary → --accent → acciones; background → --bg → documento; surface → --surface → visuales; text → --ink → titulares; muted → --muted → lectura secundaria; border → --line → separadores. Meta theme-color lee --bg computado.
 
@@ -50,7 +50,7 @@ Materiales SVG se gestionan también con tokens --model-top/front/side/glass/sla
 
 ## Typography
 
-Manrope Variable peso 400 para titulares; DM Sans Variable para lectura. Autoalojadas, español e inglés completos, fallback Arial. Titular inicial 62–99 px en escritorio y 40–70 px móvil; interior 36–76 px. Cuerpo 16–22 px, controles 12–14 px y etiquetas técnicas 9–11 px.
+Oswald Variable peso 500 para titulares, de proporción condensada y carácter estructural; DM Sans Variable para lectura. Autoalojadas, español e inglés completos, fallback Arial. Titular inicial 62–99 px en escritorio y 40–70 px móvil; interior 36–76 px. Cuerpo 16–22 px, controles 12–14 px y etiquetas técnicas 9–11 px.
 
 Los renglones de hero están agrupados para entradas suaves, sin dividir caracteres ni alterar su lectura accesible. Textos con anchura natural y sin alturas fijas.
 
@@ -95,6 +95,6 @@ Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las
 - Mantener el contenido factual y la condición conceptual de las imágenes.
 - Tratar el espacio en blanco como separación útil, no como ausencia de contenido.
 - Cambiar valores únicamente desde tokens y reflejarlos aquí.
-- No reutilizar azules del diseño anterior en favicon, meta o tarjeta social.
+- Modo oscuro azul noche/acero solicitado por el usuario; modo claro marfil/oliva. No importar la composición de modern_design.
 - No añadir una segunda hoja de overrides: global.css es la implementación compartida.
 - Verificar ambos idiomas, paletas, móvil, teclado y reducción de movimiento.
