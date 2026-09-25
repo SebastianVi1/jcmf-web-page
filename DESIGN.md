@@ -9,10 +9,10 @@ colors:
   text: '#282e28'
   muted: '#62695e'
   border: '#d7dbd0'
-  darkBackground: '#191e19'
-  darkSurface: '#232a22'
-  darkText: '#eeefe6'
-  darkAccent: '#bdcbaa'
+  darkBackground: '#0c1724'
+  darkSurface: '#132438'
+  darkText: '#f0f4f8'
+  darkAccent: '#9ac9ee'
 typography:
   display:
     fontFamily: 'Manrope Variable, Arial, sans-serif'
@@ -42,7 +42,7 @@ Se descartó un mero cambio de colores: se rediseñan composición del inicio, c
 
 ## Colors
 
-Marfil #f8f7f3, superficie mineral #eeeee7, carbón #282e28, texto secundario #62695e y oliva #4b5f43. Oscuro botánico: #191e19, #232a22, texto #eeefe6 y salvia #bdcbaa. Contraste antes que desaturación estética.
+Marfil #f8f7f3, superficie mineral #eeeee7, carbón #282e28, texto secundario #62695e y oliva #4b5f43. Oscuro botánico: #0c1724, #132438, texto #f0f4f8 y acero claro #9ac9ee. Contraste antes que desaturación estética.
 
 Fuente canónica: `src/styles/tokens.css` (modelo B). Documento refleja valores; componentes comparten CSS y no duplican temas React. Mapa: primary → --accent → acciones; background → --bg → documento; surface → --surface → visuales; text → --ink → titulares; muted → --muted → lectura secundaria; border → --line → separadores. Meta theme-color lee --bg computado.
 
