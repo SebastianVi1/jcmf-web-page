@@ -40,6 +40,46 @@ const schema = {
   url: site.origin,
   description: pageDescription,
 };
+// Comparte el easing de tokens.css (--ease): el contenido entra y sale sin cortes.
+const pageEasing = 'cubic-bezier(0.22, 1, 0.36, 1)';
+const pageSwap = {
+  forwards: {
+    old: [
+      {
+        name: 'page-out',
+        duration: '160ms',
+        easing: pageEasing,
+        fillMode: 'both',
+      },
+    ],
+    new: [
+      {
+        name: 'page-in',
+        duration: '320ms',
+        easing: pageEasing,
+        fillMode: 'both',
+      },
+    ],
+  },
+  backwards: {
+    old: [
+      {
+        name: 'page-out',
+        duration: '160ms',
+        easing: pageEasing,
+        fillMode: 'both',
+      },
+    ],
+    new: [
+      {
+        name: 'page-in',
+        duration: '320ms',
+        easing: pageEasing,
+        fillMode: 'both',
+      },
+    ],
+  },
+};
 ---
 
 <!doctype html>
@@ -129,7 +169,7 @@ const schema = {
       {copy.ui.skip}
     </a>
     <Header locale={locale} page={page} slug={slug} />
-    <main id="main-content" tabindex="-1" transition:animate="fade">
+    <main id="main-content" tabindex="-1" transition:animate={pageSwap}>
       <slot />
     </main>
     <Footer locale={locale} />

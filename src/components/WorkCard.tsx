@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import ProjectPhoto, { type ProjectPhotoProps } from './ProjectPhoto';
 
 interface Props {
@@ -28,6 +29,14 @@ export default function WorkCard({
       className="project-card work-card"
       data-category={categoryKey}
       data-reveal="image"
+      style={
+        index !== undefined
+          ? ({
+              // Cascada por columna dentro de la fila del índice.
+              '--reveal-delay': `${((index - 1) % 3) * 90}ms`,
+            } as CSSProperties)
+          : undefined
+      }
     >
       <a
         className="project-image"

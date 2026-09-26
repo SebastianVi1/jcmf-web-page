@@ -176,13 +176,13 @@ svg {
   border: 1px solid transparent;
   border-radius: var(--radius);
   font-size: 13px;
-  transition: background 0.35s var(--ease);
+  transition: background var(--motion-color) var(--ease);
 }
 .button:hover {
   background: var(--accent-hover);
 }
 .button svg {
-  transition: transform 0.5s var(--ease);
+  transition: transform var(--motion-hover) var(--ease);
 }
 .button:hover svg {
   transform: translate(2px, -2px);
@@ -204,7 +204,7 @@ svg {
   min-height: 45px;
   font-size: 13px;
   border-bottom: 1px solid var(--line);
-  transition: color 0.35s;
+  transition: color var(--motion-color) var(--ease);
 }
 .text-link::after {
   content: '';
@@ -225,7 +225,7 @@ svg {
   transform: scaleX(1);
 }
 .text-link svg {
-  transition: transform 0.6s var(--ease);
+  transition: transform var(--motion-hover) var(--ease);
 }
 .text-link:hover svg {
   transform: translate(3px, -3px);
@@ -295,7 +295,7 @@ svg {
   position: relative;
   font-size: 12px;
   color: var(--muted);
-  transition: color 0.3s;
+  transition: color var(--motion-color) var(--ease);
 }
 .desktop-nav a:hover,
 .desktop-nav a[aria-current] {
@@ -333,7 +333,7 @@ svg {
   border-radius: 50%;
   align-items: center;
   justify-content: center;
-  transition: background 0.3s;
+  transition: background var(--motion-color) var(--ease);
 }
 .icon-button:hover {
   background: var(--surface);
@@ -757,8 +757,8 @@ svg {
   align-items: center;
   justify-content: center;
   transition:
-    color 0.3s,
-    transform 0.6s var(--ease);
+    color var(--motion-color) var(--ease),
+    transform var(--motion-hover) var(--ease);
 }
 .service-link:hover {
   color: var(--accent);
@@ -805,7 +805,7 @@ svg {
   object-position: var(--photo-position, 50% 50%);
   filter: grayscale(1);
   transition:
-    filter 900ms var(--ease),
+    filter 600ms var(--ease),
     transform 1200ms var(--ease);
 }
 .project-photo:hover img,
@@ -872,7 +872,7 @@ svg {
   height: 44px;
   background: var(--bg);
   border-radius: 50%;
-  transition: transform 0.6s var(--ease);
+  transition: transform var(--motion-hover) var(--ease);
 }
 .project-image:hover .project-image-arrow {
   transform: rotate(45deg);
@@ -891,7 +891,7 @@ svg {
 .project-card h3 a {
   position: relative;
   display: inline-block;
-  transition: color 0.35s;
+  transition: color var(--motion-color) var(--ease);
 }
 .project-card h3 a::after {
   content: '';
@@ -903,7 +903,7 @@ svg {
   background: var(--accent);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.6s var(--ease);
+  transition: transform var(--motion-hover) var(--ease);
 }
 .project-card h3 a:hover {
   color: var(--accent);
@@ -939,7 +939,7 @@ svg {
   margin-top: 24px;
   background: var(--line);
   transform-origin: left;
-  transition: background 0.6s var(--ease);
+  transition: background var(--motion-hover) var(--ease);
 }
 .work-card:focus-within .work-card-rule,
 .work-card:hover .work-card-rule {
@@ -1429,8 +1429,8 @@ svg {
   border: 1px solid var(--line);
   border-radius: 50%;
   transition:
-    background 0.6s,
-    color 0.6s,
+    background var(--motion-hover) var(--ease),
+    color var(--motion-hover) var(--ease),
     transform 0.8s var(--ease);
 }
 .cta-link:hover .cta-circle {
@@ -1607,7 +1607,7 @@ svg {
   min-height: 44px;
   padding: 9px 19px;
   font-size: 12px;
-  transition: background 0.3s;
+  transition: background var(--motion-color) var(--ease);
 }
 .filters button[aria-pressed='true'] {
   background: var(--accent);
@@ -1768,7 +1768,7 @@ svg {
   min-height: 50px;
   padding: 12px 14px;
   font-size: 14px;
-  transition: border-color 0.3s;
+  transition: border-color var(--motion-color) var(--ease);
 }
 .field textarea {
   resize: none;
@@ -1866,6 +1866,7 @@ svg {
 [data-reveal='image'] .visual-photo {
   clip-path: inset(0);
   transition: clip-path 1.4s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 [data-reveal='image'].reveal-pending .project-image,
 [data-reveal='image'].reveal-pending .visual-photo {
@@ -1963,6 +1964,57 @@ svg {
   to {
     transform: scaleX(1);
   }
+}
+/* Transición entre páginas: el contenido sube y se funde con el easing del sitio. */
+@keyframes page-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Menú móvil: entra suave; el cierre permanece inmediato para no retener el foco. */
+@keyframes nav-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.js .mobile-nav.nav-enter {
+  animation: nav-enter 220ms var(--ease) both;
+}
+/* Filtro de portafolio: las tarjetas entran por columnas; la salida es inmediata. */
+@keyframes filter-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.project-card.filter-enter {
+  animation: filter-in 320ms var(--ease) both;
+  /* Reutiliza la cascada por columna del revelado; no se mutan estilos en línea. */
+  animation-delay: var(--reveal-delay, 0ms);
 }
 @media (min-width: 1600px) {
   .hero {

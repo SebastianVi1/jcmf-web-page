@@ -54,6 +54,8 @@
   --motion-title: 1100ms;
   --motion-reveal: 800ms;
   --motion-feedback: 350ms;
+  --motion-color: 350ms;
+  --motion-hover: 600ms;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 [data-theme='dark'] {
