@@ -36,6 +36,11 @@ components:
 
 ## Overview
 
+Portada 3D, septiembre 2026: la secuencia de construcción sustituye la fotografía
+inicial y el pabellón de la introducción, según `plan-3d.md`. Esta decisión
+actualiza las descripciones históricas del hero fotográfico que siguen abajo.
+La identidad azul y las fuentes existentes se conservan.
+
 Variante solicitada en una rama independiente de `modern_design`. Público: clientes y responsables de obra que necesitan entender capacidades, ver referencias y contactar. Registro corporativo de marca; español/inglés; contexto mexicano según el CV, con proyectos y contactos explícitamente provisionales.
 
 Dirección: una monografía arquitectónica de espacios habitables. Fotografías e imágenes proporcionadas tienen el papel principal; el pabellón y los trazos animados acompañan como estudios conceptuales. El hero fotográfico combina tipografía condensada monumental y contraste cinematográfico; la estructura conceptual acompaña la introducción.
@@ -43,6 +48,13 @@ Dirección: una monografía arquitectónica de espacios habitables. Fotografías
 Se descartó un mero cambio de colores: se rediseñan composición del inicio, cabeceras interiores, servicios en filas, portafolio escalonado y cierre. La expresión se concentra en la escena y los trazos; las cifras de prueba se etiquetan explícitamente como ficticias.
 
 ## Colors
+
+La escena utiliza los materiales originales del GLB proporcionado: fachada clara,
+vidrio azul, vegetación y amarillo de seguridad. El fondo transparente deja ver
+`--bg`; ninguna paleta se duplica en React. La luz lee tokens CSS: cielo #f1faff,
+rebote #7498a6 y principal #ffffff en claro; #c6e4fa, #52677b y #f0f4f8 en oscuro.
+Exposición 1.1/1.2, entorno de estudio con intensidad 0.55, luz hemisférica 0.65
+y direccional 2.5. No hay posprocesado ni sombras dinámicas.
 
 Concreto claro #f4f7fa, superficie azul gris #e6edf3, tinta #14283c, texto secundario #52677b y azul técnico #245c88. Oscuro azul noche: #0c1724, #132438, texto #f0f4f8 y acero claro #9ac9ee. Contraste antes que desaturación estética.
 
@@ -63,6 +75,18 @@ Los renglones de hero están agrupados para entradas suaves, sin dividir caracte
 
 ## Layout
 
+La nueva portada usa un único escenario abierto. En escritorio el texto ocupa
+38% con máximo 490px y el lienzo empieza al 36%; el encuadre reserva margen
+interno para que el modelo no invada la lectura. JCMF es el H1, con Constructora
+en la segunda línea; tamaños 112/58px, 88/46px hasta 1100px, 64/36px hasta 900px
+y 56/32px hasta 600px. Letter-spacing 0. En móvil el texto precede al lienzo,
+con acciones visibles y pie de etapa fuera de la geometría 3D.
+
+Tokens `--construction-*`: cabecera 89px (73px en móvil), margen inferior 24px
+(12px en móvil), altura `100svh - cabecera - margen`, recorrido 300svh,
+separación 28px (16px hasta 900px) y pie 96px (80px hasta 900px).
+La vista estática tiene altura mínima 660px, o 690px hasta 900px.
+
 Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: fotografía de fondo a todo el ancho, titular monumental alineado a izquierda, resumen y dos acciones debajo. Estudio conceptual junto a la introducción corporativa. Portafolio: índice de obras en tres columnas con fotografía 4:3, número de catálogo y regla inferior; dos columnas entre 600 y 1100 px y una sola columna en móvil. No hay tarjeta destacada: todas las obras comparten escala y la jerarquía se resuelve con espacio, reglas y numeración, sin depender de first-child dentro de las islas React.
 
 Nosotros: hero con símbolo de volumen; proyectos: capas de un plano; contacto: pórtico abierto. PageHero comparte semántica y espaciado; HeroMark concentra las variantes. Servicios como filas con icono/título/descripción/enlace, adaptados a móvil.
@@ -78,6 +102,26 @@ Sin sombras decorativas ni tarjetas flotantes. Espacio, superficies suaves y sep
 Controles casi rectos, radio 2 px. Círculos para acciones compactas y CTA. Iconos de trazo fino con nombres accesibles en sus botones. Tarjetas sin borde exterior ni recuadro interior al hacer hover; se conserva el foco visible de teclado.
 
 ## Components
+
+ConstructionHero entrega HTML estático, imágenes WebP transparentes y enlaces.
+ConstructionIsland carga React Three Fiber y GSAP solo con movimiento permitido,
+WebGL2 disponible y viewport de al menos 660px de alto. ConstructionScene es dueña
+del GLB, entorno y controlador. Los recursos se liberan al navegar, fallar o
+cambiar las preferencias. No se instala un segundo package.json de la entrega 3D.
+
+La animación sigue el scroll nativo mediante ScrollTrigger (scrub 0.35); el último
+10% del recorrido mantiene el edificio completo. Cámara ortográfica con variación
+máxima de 8 grados en escritorio y fija en móvil. Se encuadran también grúa y
+andamios. Construcción, trabajadores y maquinaria son reversibles y se detienen
+con el scroll; R3F renderiza bajo demanda. DPR máximo 1.5 en escritorio y 1 en móvil.
+
+Los posters provienen de la misma escena. Sin JavaScript, movimiento reducido,
+WebGL o en ventanas bajas se muestra el edificio terminado sin recorrido largo.
+El respaldo de carga muestra el terreno; errores mantienen enlaces y permiten
+reintentar. La preferencia de movimiento reducido evita descargar el motor 3D
+y el modelo. El enlace a capacidades permite omitir la secuencia con teclado.
+El terreno existe desde el progreso cero; se omite su aparición desde vacío
+en la entrega original, conservando la excavación y las siguientes etapas.
 
 Portafolio: `src/lib/project-media.ts` concentra la optimización local. `ProjectCard.astro` adapta los datos a `WorkCard.tsx`; `ProjectCaseStudy.tsx` compone el detalle y ambos reutilizan `ProjectPhoto.tsx`. El HTML se genera en compilación y React hidrata cuando es visible. Datos y fuentes en src/data/projects.ts; referencias de investigación en PORTFOLIO.md. No se infiere autoría de una imagen ni se presenta una visualización como fotografía de obra concluida.
 

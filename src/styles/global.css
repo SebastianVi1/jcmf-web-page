@@ -386,6 +386,232 @@ svg {
   display: none;
 }
 /* Shared photo surface: stable contrast in both themes, natural content height. */
+.construction-hero {
+  position: relative;
+  background: var(--bg);
+}
+.construction-stage {
+  position: relative;
+  min-height: 660px;
+  height: var(--construction-height);
+  isolation: isolate;
+}
+.construction-copy {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: var(--gutter);
+  width: var(--construction-copy-width);
+  max-width: 490px;
+  transform: translateY(-60%);
+}
+.construction-title {
+  font-size: var(--construction-title);
+  line-height: 1.08;
+  letter-spacing: 0;
+}
+.construction-title span {
+  display: block;
+}
+.construction-title span + span {
+  font-size: var(--construction-name);
+  margin-top: 8px;
+}
+.construction-intro {
+  margin-top: var(--construction-gap);
+  max-width: 36ch;
+  font-size: 17px;
+  line-height: 1.75;
+}
+.construction-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+  margin-top: var(--construction-gap);
+}
+.construction-visual {
+  position: absolute;
+  inset: 0 0 var(--construction-footer) var(--construction-visual-left);
+}
+.construction-poster,
+.construction-island,
+.construction-visual astro-island {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.construction-poster {
+  object-fit: contain;
+}
+.construction-poster-start {
+  display: none;
+}
+.construction-island canvas {
+  touch-action: auto;
+}
+.construction-hero[data-mode='ready'] .construction-poster {
+  visibility: hidden;
+}
+.construction-footer {
+  position: absolute;
+  inset: auto var(--gutter) 0;
+  min-height: var(--construction-footer);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--construction-gap);
+  border-top: 1px solid var(--line);
+}
+.construction-caption {
+  min-width: 0;
+}
+.construction-caption > p:first-child {
+  font-size: 12px;
+}
+.construction-phase {
+  font-size: 14px;
+  color: var(--ink);
+}
+.construction-progress {
+  display: block;
+  width: 180px;
+  height: 2px;
+  background: var(--line);
+  margin-top: 10px;
+}
+.construction-progress > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.construction-phase,
+.construction-progress {
+  display: none;
+}
+.construction-hero[data-mode='ready'] .construction-phase,
+.construction-hero[data-mode='ready'] .construction-progress {
+  display: block;
+}
+.construction-loading,
+.construction-error {
+  position: absolute;
+  inset: auto var(--gutter) 12px;
+  text-align: center;
+  font-size: 12px;
+}
+.construction-error {
+  background: var(--bg);
+  padding: 12px;
+}
+.construction-error button {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+@media (prefers-reduced-motion: no-preference) and (min-height: 660px) {
+  .js .construction-hero:not([data-mode='static']) {
+    height: calc(var(--construction-height) + var(--construction-travel));
+  }
+  .js .construction-hero:not([data-mode='static']) .construction-stage {
+    position: sticky;
+    top: var(--construction-header);
+    min-height: 0;
+  }
+  .js .construction-hero:not([data-mode='static']) .construction-poster-start {
+    display: block;
+  }
+  .js
+    .construction-hero:not([data-mode='static'])
+    .construction-poster-complete {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .construction-stage {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) var(--construction-footer);
+    padding: var(--construction-gap) var(--gutter) 0;
+    min-height: 690px;
+  }
+  .construction-copy {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    max-width: 620px;
+  }
+  .construction-title {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+  .construction-title span + span {
+    margin-top: 0;
+  }
+  .construction-intro {
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 60ch;
+    margin-top: 14px;
+  }
+  .construction-actions {
+    margin-top: 16px;
+    gap: 8px 20px;
+  }
+  .construction-actions .button {
+    min-height: 44px;
+    padding: 10px 14px;
+    gap: 12px;
+  }
+  .construction-visual {
+    position: relative;
+    inset: auto;
+    min-height: 0;
+    margin-inline: calc(-1 * var(--gutter));
+  }
+  .construction-footer {
+    position: relative;
+    inset: auto;
+    gap: 16px;
+  }
+  .construction-skip {
+    max-width: 160px;
+    font-size: 12px;
+    gap: 12px;
+  }
+  .construction-caption > p:first-child {
+    font-size: 11px;
+  }
+  .construction-phase {
+    font-size: 12px;
+  }
+  .construction-progress {
+    width: 120px;
+    margin-top: 6px;
+  }
+  .construction-error {
+    inset-inline: var(--gutter);
+  }
+}
+@media (max-width: 360px) {
+  .construction-actions {
+    gap: 4px 14px;
+  }
+  .construction-actions .button {
+    font-size: 12px;
+    padding-inline: 10px;
+  }
+  .construction-actions .text-link {
+    font-size: 12px;
+    gap: 12px;
+  }
+}
 .masthead {
   position: relative;
   isolation: isolate;

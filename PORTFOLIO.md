@@ -38,4 +38,19 @@ Las imágenes verticales se conservan completas en el detalle. Hover/foco revela
 | Proyectos conceptuales        | Siete imágenes locales                | Galería de archivos proporcionados; concepto anterior fuera de la galería, URL conservada. |
 | Detalle fijo 16:9             | Encajar fotografías verticales        | Grid responsivo con proporción original sin recorte.                                       |
 
-Paleta, fuentes, accesibilidad y navegación compartidas se conservan. No hay efectos infinitos ni dependencias de animación nuevas.
+Paleta, fuentes, accesibilidad y navegación compartidas se conservan. No hay efectos infinitos.
+
+## Maqueta de construcción de la portada
+
+El usuario proporcionó `3d_models/construction_complete`. La integración publica
+su `output/building.glb` en `public/models/building.glb` y adapta su controlador
+y rutas a `src/features/construction`. El archivo tiene 6,679,364 bytes; el
+manifiesto de origen declara cinco plantas, seis trabajadores y 101,248 triángulos.
+Estas características describen el recurso, no una obra ni capacidades verificadas
+de JCMF. La portada lo identifica como visualización conceptual en ES/EN.
+
+Los posters `public/images/construction/start.webp` y `complete.webp` se renderizan
+desde el mismo modelo mediante `node scripts/capture-construction.mjs`, con el
+servidor de desarrollo activo. No son fotografías ni se incorporan al portafolio
+como nuevos proyectos. La fuente de Blender, backups y la aplicación de preview
+permanecen fuera del build y del formato del sitio.

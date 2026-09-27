@@ -1,0 +1,75 @@
+---
+import { t } from '../i18n';
+import { route, type Locale } from '../i18n/routes';
+import Icon from './Icon.astro';
+import ConstructionIsland from '../features/construction/ConstructionIsland';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const copy = t(locale);
+---
+
+<section
+  class="construction-hero"
+  aria-labelledby="hero-title"
+  data-construction
+>
+  <div class="construction-stage">
+    <div class="construction-copy">
+      <h1 id="hero-title" class="construction-title">
+        <span>{copy.home.construction.brand}</span>
+        <span>{copy.home.construction.name}</span>
+      </h1>
+      <p class="construction-intro">{copy.home.intro}</p>
+      <div class="construction-actions">
+        <a class="button" href={route(locale, 'projects')}>
+          {copy.home.primary}
+          <Icon name="diagonal" size={18} />
+        </a>
+        <a class="text-link" href={route(locale, 'contact')}>
+          {copy.nav.contact}
+          <Icon name="diagonal" size={18} />
+        </a>
+      </div>
+    </div>
+    <div class="construction-visual">
+      <img
+        class="construction-poster construction-poster-complete"
+        src="/images/construction/complete.webp"
+        width="1200"
+        height="1200"
+        alt=""
+        fetchpriority="high"
+      />
+      <img
+        class="construction-poster construction-poster-start"
+        src="/images/construction/start.webp"
+        width="1200"
+        height="1200"
+        alt=""
+      />
+      <ConstructionIsland client:load copy={copy.home.construction} />
+    </div>
+    <div class="construction-footer">
+      <div class="construction-caption">
+        <p>{copy.home.construction.caption}</p>
+        <p class="construction-phase" data-construction-phase>
+          {copy.home.construction.phases[0]}
+        </p>
+        <span class="construction-progress" aria-hidden="true">
+          <span data-construction-meter></span>
+        </span>
+      </div>
+      <a
+        class="construction-skip text-link"
+        href="#capacidades"
+        data-construction-skip
+      >
+        {copy.ui.scroll}
+        <Icon name="down" size={18} />
+      </a>
+    </div>
+  </div>
+</section>

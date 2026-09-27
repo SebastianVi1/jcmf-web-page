@@ -58,6 +58,23 @@ export const es = {
     ],
   },
   home: {
+    construction: {
+      brand: 'JCMF',
+      name: 'Constructora',
+      caption: 'Visualización conceptual',
+      loading: 'Preparando la escena',
+      error: 'La escena no está disponible. Puedes seguir explorando el sitio.',
+      retry: 'Reintentar',
+      phases: [
+        'Preparación del terreno',
+        'Cimentación',
+        'Estructura',
+        'Muros',
+        'Ventanas',
+        'Acabados',
+        'Edificio terminado',
+      ],
+    },
     eyebrow: 'INGENIERÍA · CONSTRUCCIÓN · VISIÓN',
     title: ['Construimos', 'lo que sigue.'],
     intro:

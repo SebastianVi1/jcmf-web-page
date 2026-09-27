@@ -24,6 +24,13 @@ const hoistLength = (p: number, time: number) => {
   );
 };
 
+// The source fades in the site itself; keep that base visible in a website hero.
+const siteBase = new Set([
+  'Terrain',
+  'Excavation',
+  'Excavation_Soil_To_Remove',
+]);
+
 /** Initialize once on a fresh clone of this delivery's GLB. Units: meters, Y-up. */
 export function createConstructionController(root: Object3D) {
   const entries: {
@@ -79,7 +86,7 @@ export function createConstructionController(root: Object3D) {
       obj.scale.copy(scale);
       let amount = 1;
       if (d.construction) {
-        amount = smooth(p, d.start, d.end);
+        amount = siteBase.has(obj.name) ? 1 : smooth(p, d.start, d.end);
         if (d.retireStart !== undefined)
           amount *= 1 - smooth(p, d.retireStart, d.retireEnd);
         if (d.mode === 'uniform')

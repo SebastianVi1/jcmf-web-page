@@ -46,6 +46,22 @@
   --hero-height: 740px;
   --hero-space: clamp(36px, 5vw, 76px);
   --hero-title-size: clamp(72px, 10.8vw, 156px);
+  --construction-header: 89px;
+  --construction-peek: 24px;
+  --construction-height: calc(
+    100svh - var(--construction-header) - var(--construction-peek)
+  );
+  --construction-travel: 300svh;
+  --construction-title: 112px;
+  --construction-name: 58px;
+  --construction-copy-width: 38%;
+  --construction-visual-left: 36%;
+  --construction-gap: 28px;
+  --construction-footer: 96px;
+  --construction-light-sky: #f1faff;
+  --construction-light-ground: #7498a6;
+  --construction-light-key: #ffffff;
+  --construction-exposure: 1.1;
   --radius: 2px;
   --page-max: 1280px;
   --gutter: clamp(24px, 6vw, 96px);
@@ -87,4 +103,33 @@
   --model-tree: #6d8b9d;
   --model-line: #9bb8cf;
   --model-inset: #65869e;
+  --construction-light-sky: #c6e4fa;
+  --construction-light-ground: #52677b;
+  --construction-light-key: #f0f4f8;
+  --construction-exposure: 1.2;
+}
+
+@media (max-width: 1100px) {
+  :root {
+    --construction-title: 88px;
+    --construction-name: 46px;
+  }
+}
+@media (max-width: 900px) {
+  :root {
+    --construction-title: 64px;
+    --construction-name: 36px;
+    --construction-copy-width: 100%;
+    --construction-visual-left: 0%;
+    --construction-gap: 16px;
+    --construction-footer: 80px;
+  }
+}
+@media (max-width: 600px) {
+  :root {
+    --construction-header: 73px;
+    --construction-title: 56px;
+    --construction-name: 32px;
+    --construction-peek: 12px;
+  }
 }

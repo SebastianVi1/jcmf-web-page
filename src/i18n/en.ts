@@ -59,6 +59,23 @@ export const en: Dictionary = {
     ],
   },
   home: {
+    construction: {
+      brand: 'JCMF',
+      name: 'Constructora',
+      caption: 'Concept visualization',
+      loading: 'Preparing the scene',
+      error: 'The scene is unavailable. You can continue exploring the site.',
+      retry: 'Try again',
+      phases: [
+        'Site preparation',
+        'Foundations',
+        'Structure',
+        'Walls',
+        'Windows',
+        'Finishes',
+        'Completed building',
+      ],
+    },
     eyebrow: 'ENGINEERING · CONSTRUCTION · VISION',
     title: ['Building', 'what comes next.'],
     intro:
