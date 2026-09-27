@@ -11,6 +11,7 @@ import {
   AgXToneMapping,
   Box3,
   Color,
+  Group,
   Mesh,
   Object3D,
   OrthographicCamera,
@@ -25,7 +26,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createConstructionController } from './construction-controller';
-import { modelProgress, phaseIndex } from './progress';
+import { brandReveal, modelProgress, phaseIndex } from './progress';
 import type { SceneProps } from './ConstructionIsland';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -79,11 +80,17 @@ function Building({
   onReady,
   onError,
   phases,
+  paused,
 }: SceneProps & { model: Object3D }) {
   const { camera, gl, scene, invalidate, size } = useThree();
   const progress = useRef({ value: 0 });
   const visible = useRef(true);
   const rendered = useRef(false);
+  const pivot = useRef<Group>(null);
+  const pose = useRef({ time: 0 });
+  const pausedRef = useRef(paused);
+  pausedRef.current = paused;
+  const scheduleIdle = useRef<() => void>(() => {});
   const controller = useMemo(
     () => createConstructionController(model),
     [model],
@@ -112,6 +119,20 @@ function Building({
     [bounds],
   );
   const center = useMemo(() => bounds.getCenter(new Vector3()), [bounds]);
+  const orbitRadius = useMemo(
+    () =>
+      Math.hypot(
+        Math.max(
+          Math.abs(bounds.min.x - center.x),
+          Math.abs(bounds.max.x - center.x),
+        ),
+        Math.max(
+          Math.abs(bounds.min.z - center.z),
+          Math.abs(bounds.max.z - center.z),
+        ),
+      ),
+    [bounds, center],
+  );
   const offset = useMemo(() => new Vector3(), []);
   const [lights, setLights] = useState({
     sky: '',
@@ -169,9 +190,26 @@ function Building({
     const meter = host.querySelector<HTMLElement>('[data-construction-meter]')!;
     const phase = host.querySelector<HTMLElement>('[data-construction-phase]')!;
     let lastPhase = -1;
+    let wakeTimer: number | undefined;
+    let idle: gsap.core.Tween | undefined;
+    const queueIdle = () => {
+      idle?.pause();
+      window.clearTimeout(wakeTimer);
+      host.dataset.idle = 'paused';
+      if (!visible.current || document.hidden || pausedRef.current) return;
+      wakeTimer = window.setTimeout(() => {
+        if (!visible.current || document.hidden || pausedRef.current) return;
+        idle?.resume();
+        host.dataset.idle = 'running';
+      }, 700);
+    };
     const update = () => {
       const p = modelProgress(progress.current.value);
       host.dataset.progress = p.toFixed(4);
+      host.style.setProperty(
+        '--construction-brand-reveal',
+        String(brandReveal(p)),
+      );
       meter.style.transform = `scaleX(${p})`;
       const index = phaseIndex(p);
       if (index !== lastPhase) {
@@ -179,8 +217,18 @@ function Building({
         lastPhase = index;
       }
       if (visible.current && !document.hidden) invalidate();
+      queueIdle();
     };
     const context = gsap.context(() => {
+      // Both periods divide 120 seconds, so the repeated pose is seamless.
+      idle = gsap.to(pose.current, {
+        time: 120,
+        duration: 120,
+        repeat: -1,
+        ease: 'none',
+        paused: true,
+        onUpdate: () => invalidate(),
+      });
       gsap.to(progress.current, {
         value: 1,
         ease: 'none',
@@ -198,25 +246,37 @@ function Building({
         },
       });
     }, host);
+    scheduleIdle.current = queueIdle;
+    window.addEventListener('scroll', queueIdle, { passive: true });
     const resize = new ResizeObserver(() => ScrollTrigger.refresh());
     resize.observe(stage);
     const intersection = new IntersectionObserver(([entry]) => {
       visible.current = entry.isIntersecting;
+      queueIdle();
       if (visible.current) invalidate();
     });
-    intersection.observe(host);
+    intersection.observe(stage);
     const visibility = () => {
+      queueIdle();
       if (!document.hidden) invalidate();
     };
     document.addEventListener('visibilitychange', visibility);
     update();
     return () => {
       context.revert();
+      window.clearTimeout(wakeTimer);
+      window.removeEventListener('scroll', queueIdle);
+      scheduleIdle.current = () => {};
+      host.style.removeProperty('--construction-brand-reveal');
       resize.disconnect();
       intersection.disconnect();
       document.removeEventListener('visibilitychange', visibility);
     };
   }, [host, phases, invalidate]);
+
+  useEffect(() => {
+    scheduleIdle.current();
+  }, [paused]);
 
   useEffect(
     () =>
@@ -232,19 +292,28 @@ function Building({
   useFrame(() => {
     const p = modelProgress(progress.current.value);
     controller.update(p, p * 48);
+    const yaw = (pose.current.time * Math.PI) / 60;
+    const lift = Math.sin((pose.current.time * Math.PI * 2) / 7.5) * 0.25;
+    if (pivot.current) {
+      pivot.current.rotation.y = yaw;
+      pivot.current.position.y = lift;
+    }
     const ortho = camera as OrthographicCamera;
-    const mobile = window.innerWidth <= 900;
-    const angle =
-      Math.atan2(-31, 39) + (mobile ? 0 : ((p - 0.5) * Math.PI * 8) / 180);
+    const angle = Math.atan2(-31, 39);
     offset.set(Math.sin(angle) * 50, 29, Math.cos(angle) * 50);
     ortho.position.copy(center).add(offset);
     ortho.lookAt(center);
     ortho.updateMatrixWorld();
-    // Project the union bounds into camera space for stable, aspect-aware framing.
-    const projected = bounds.clone().applyMatrix4(ortho.matrixWorldInverse);
-    const extent = projected.getSize(new Vector3());
+    // Fit the whole turn, including the crane, without zooming as the model rotates.
+    const elevation = Math.atan2(29, 50);
+    const projectedHeight =
+      (bounds.max.y - bounds.min.y + 0.5) * Math.cos(elevation) +
+      2 * orbitRadius * Math.sin(elevation);
     const height =
-      Math.max(extent.y, extent.x / (size.width / size.height)) * 1.08;
+      Math.max(
+        projectedHeight,
+        (2 * orbitRadius) / (size.width / size.height),
+      ) * 1.04;
     ortho.left = (-height * size.width) / size.height / 2;
     ortho.right = -ortho.left;
     ortho.top = height / 2;
@@ -254,6 +323,8 @@ function Building({
     ortho.updateProjectionMatrix();
     gl.domElement.dataset.progress = p.toFixed(4);
     gl.domElement.dataset.frames = String(gl.info.render.frame);
+    gl.domElement.dataset.yaw = yaw.toFixed(5);
+    gl.domElement.dataset.lift = lift.toFixed(5);
     if (!ready.current && lights.sky) {
       ready.current = true;
       rendered.current = true;
@@ -274,7 +345,11 @@ function Building({
           />
         </>
       )}
-      <primitive object={model} dispose={null} />
+      <group ref={pivot} position={[center.x, 0, center.z]}>
+        <group position={[-center.x, 0, -center.z]}>
+          <primitive object={model} dispose={null} />
+        </group>
+      </group>
     </>
   );
 }

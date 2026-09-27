@@ -20,6 +20,8 @@ typography:
     fontFamily: 'Oswald Variable, Arial Narrow, sans-serif'
   body:
     fontFamily: 'DM Sans Variable, Arial, sans-serif'
+  construction:
+    fontFamily: 'Bebas Neue, Oswald Variable, Arial Narrow, sans-serif'
 rounded:
   DEFAULT: '2px'
 spacing:
@@ -39,7 +41,8 @@ components:
 Portada 3D, septiembre 2026: la secuencia de construcción sustituye la fotografía
 inicial y el pabellón de la introducción, según `plan-3d.md`. Esta decisión
 actualiza las descripciones históricas del hero fotográfico que siguen abajo.
-La identidad azul y las fuentes existentes se conservan.
+La identidad azul y las fuentes existentes se conservan; el cierre de la escena
+usa Bebas Neue para dar protagonismo al nombre solicitado en mayúsculas.
 
 Variante solicitada en una rama independiente de `modern_design`. Público: clientes y responsables de obra que necesitan entender capacidades, ver referencias y contactar. Registro corporativo de marca; español/inglés; contexto mexicano según el CV, con proyectos y contactos explícitamente provisionales.
 
@@ -69,23 +72,33 @@ Materiales SVG se gestionan también con tokens --model-top/front/side/glass/sla
 
 ## Typography
 
+Bebas Neue 400, autoalojada y cargada desde el componente de portada, es la fuente
+del cierre JCMF CONSTRUCTORA. Token `--font-construction`; mayúsculas, espaciado 0
+y altura de línea 0.95. El resto de los titulares conserva Oswald.
+
 Oswald Variable peso 500 para titulares, de proporción condensada y carácter estructural; DM Sans Variable para lectura. Autoalojadas, español e inglés completos, fallback Arial. Titular inicial Oswald en mayúsculas, 72–156 px en escritorio y 48–76 px móvil; interior 36–76 px. Cuerpo 16–22 px, controles 12–14 px y etiquetas técnicas 9–11 px.
 
 Los renglones de hero están agrupados para entradas suaves, sin dividir caracteres ni alterar su lectura accesible. Textos con anchura natural y sin alturas fijas.
 
 ## Layout
 
-La nueva portada usa un único escenario abierto. En escritorio el texto ocupa
-38% con máximo 490px y el lienzo empieza al 36%; el encuadre reserva margen
-interno para que el modelo no invada la lectura. JCMF es el H1, con Constructora
-en la segunda línea; tamaños 112/58px, 88/46px hasta 1100px, 64/36px hasta 900px
-y 56/32px hasta 600px. Letter-spacing 0. En móvil el texto precede al lienzo,
-con acciones visibles y pie de etapa fuera de la geometría 3D.
+La portada usa un único escenario abierto y centrado a todo el ancho, sin texto
+ni acciones promocionales sobre el modelo. JCMF Constructora es el H1 debajo del
+lienzo: aparece suavemente entre el 78% y el 98% de la construcción. Firma casi
+de borde a borde, con margen propio de 24px. Tamaños JCMF/Constructora por banda:
+272/272px desde 1800px, 210/210px en escritorio, 160/160px hasta 1400px,
+128/128px hasta 1100px, 100/100px hasta 900px y 84/84px hasta 700px.
+Hasta 600px se compone en dos líneas: 256/88px, 184/64px hasta 479px y
+160/56px hasta 360px. Son escalas fijas, sin tipografía dependiente de vw.
+Su espacio siempre está reservado, sin saltos al aparecer. En la versión estática
+el nombre siempre es visible. Pausa y salto a capacidades son controles compactos.
 
 Tokens `--construction-*`: cabecera 89px (77px en móvil), margen inferior 24px
 (12px en móvil), altura `100svh - cabecera - margen`, recorrido 300svh,
-separación 28px (16px hasta 900px) y pie 96px (80px hasta 900px).
-La vista estática tiene altura mínima 660px, o 690px hasta 900px.
+separación 28px (16px hasta 900px), nombre 232px (288px desde 1800px, 184px hasta
+1400px, 152px hasta 1100px, 124px hasta 900px, 108px hasta 700px, 348px hasta
+600px, 256px hasta 479px, 224px hasta 360px) y pie 76px (72px hasta 900px).
+La vista estática tiene altura mínima 660px.
 
 Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: fotografía de fondo a todo el ancho, titular monumental alineado a izquierda, resumen y dos acciones debajo. Estudio conceptual junto a la introducción corporativa. Portafolio: índice de obras en tres columnas con fotografía 4:3, número de catálogo y regla inferior; dos columnas entre 600 y 1100 px y una sola columna en móvil. No hay tarjeta destacada: todas las obras comparten escala y la jerarquía se resuelve con espacio, reglas y numeración, sin depender de first-child dentro de las islas React.
 
@@ -110,10 +123,13 @@ del GLB, entorno y controlador. Los recursos se liberan al navegar, fallar o
 cambiar las preferencias. No se instala un segundo package.json de la entrega 3D.
 
 La animación sigue el scroll nativo mediante ScrollTrigger (scrub 0.35); el último
-10% del recorrido mantiene el edificio completo. Cámara ortográfica con variación
-máxima de 8 grados en escritorio y fija en móvil. Se encuadran también grúa y
-andamios. Construcción, trabajadores y maquinaria son reversibles y se detienen
-con el scroll; R3F renderiza bajo demanda. DPR máximo 1.5 en escritorio y 1 en móvil.
+10% del recorrido mantiene el edificio completo. Cámara ortográfica fija con
+encuadre estable para toda la rotación, incluyendo grúa y andamios. Construcción,
+trabajadores y maquinaria son reversibles y dependen solo del scroll. Tras 700ms
+sin desplazamiento, el conjunto gira una vuelta cada 120s y flota con amplitud
+0.25 y período 7.5s. El botón de pausa detiene ambos movimientos; también se
+suspenden fuera de pantalla o al ocultar la pestaña. R3F renderiza bajo demanda,
+activada durante scroll o movimiento en reposo. DPR máximo 1.5 y 1 en móvil.
 
 Los posters provienen de la misma escena. Sin JavaScript, movimiento reducido,
 WebGL o en ventanas bajas se muestra el edificio terminado sin recorrido largo.
@@ -139,7 +155,7 @@ Movimiento finito:
 - Hover: subrayado progresivo 600 ms, zoom de imagen 1.025 en 1000 ms, giro leve de flechas/CTA.
 - Easing compartido cubic-bezier(.22,1,.36,1). Transiciones de página Astro, con lectura sin saltos.
 
-Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las ilustraciones son decorativas y los títulos permanecen semánticos. No hay loops, paralaje agresivo ni dependencia de movimiento para operar.
+Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las ilustraciones son decorativas y los títulos permanecen semánticos. La única excepción al movimiento finito es el giro y flotación pausables de la escena 3D, solicitado para la portada; reduced motion lo elimina por completo. No hay paralaje agresivo ni dependencia de movimiento para operar.
 
 ## Do's and Don'ts
 

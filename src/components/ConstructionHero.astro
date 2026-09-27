@@ -1,6 +1,7 @@
 ---
+import '@fontsource/bebas-neue/latin-400.css';
 import { t } from '../i18n';
-import { route, type Locale } from '../i18n/routes';
+import type { Locale } from '../i18n/routes';
 import Icon from './Icon.astro';
 import ConstructionIsland from '../features/construction/ConstructionIsland';
 
@@ -17,23 +18,6 @@ const copy = t(locale);
   data-construction
 >
   <div class="construction-stage">
-    <div class="construction-copy">
-      <h1 id="hero-title" class="construction-title">
-        <span>{copy.home.construction.brand}</span>{' '}
-        <span>{copy.home.construction.name}</span>
-      </h1>
-      <p class="construction-intro">{copy.home.intro}</p>
-      <div class="construction-actions">
-        <a class="button" href={route(locale, 'projects')}>
-          {copy.home.primary}
-          <Icon name="diagonal" size={18} />
-        </a>
-        <a class="text-link" href={route(locale, 'contact')}>
-          {copy.nav.contact}
-          <Icon name="diagonal" size={18} />
-        </a>
-      </div>
-    </div>
     <div class="construction-visual">
       <img
         class="construction-poster construction-poster-complete"
@@ -52,6 +36,12 @@ const copy = t(locale);
       />
       <ConstructionIsland client:load copy={copy.home.construction} />
     </div>
+    <div class="construction-brand">
+      <h1 id="hero-title" class="construction-title">
+        <span>{copy.home.construction.brand}</span>{' '}
+        <span>{copy.home.construction.name}</span>
+      </h1>
+    </div>
     <div class="construction-footer">
       <div class="construction-caption">
         <p>{copy.home.construction.caption}</p>
@@ -63,11 +53,12 @@ const copy = t(locale);
         </span>
       </div>
       <a
-        class="construction-skip text-link"
+        class="construction-skip icon-button"
         href="#capacidades"
+        aria-label={copy.ui.scroll}
+        title={copy.ui.scroll}
         data-construction-skip
       >
-        {copy.ui.scroll}
         <Icon name="down" size={18} />
       </a>
     </div>

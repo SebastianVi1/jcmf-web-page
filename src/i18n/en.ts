@@ -66,6 +66,8 @@ export const en: Dictionary = {
       loading: 'Preparing the scene',
       error: 'The scene is unavailable. You can continue exploring the site.',
       retry: 'Try again',
+      pause: 'Pause rotation and floating',
+      resume: 'Resume rotation and floating',
       phases: [
         'Site preparation',
         'Foundations',

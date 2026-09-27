@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { Group, Object3D } from 'three';
 import { createConstructionController } from '../src/features/construction/construction-controller';
 import {
+  brandReveal,
   modelProgress,
   phaseIndex,
 } from '../src/features/construction/progress';
@@ -12,6 +13,13 @@ import {
 } from '../src/features/construction/worker-routes';
 
 describe('construction progress', () => {
+  it('reveals the brand only near completion and reverses with progress', () => {
+    assert.equal(brandReveal(0), 0);
+    assert.equal(brandReveal(0.78), 0);
+    assert.ok(Math.abs(brandReveal(0.88) - 0.5) < 1e-8);
+    assert.equal(brandReveal(1), 1);
+    assert.equal(brandReveal(0.5), 0);
+  });
   it('shows the site before scrolling and still excavates it in order', () => {
     const root = new Group();
     const soil = new Object3D();

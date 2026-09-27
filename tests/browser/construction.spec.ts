@@ -24,7 +24,7 @@ async function seek(page: Page, progress: number) {
     .toBeCloseTo(progress, 2);
 }
 
-test('construction is visible, reversible, idle when stopped, and cleans up during navigation', async ({
+test('construction is visible, reversible, idle when paused, and cleans up during navigation', async ({
   page,
 }, testInfo) => {
   test.setTimeout(120000);
@@ -37,6 +37,8 @@ test('construction is visible, reversible, idle when stopped, and cleans up duri
     'ready',
     { timeout: 60000 },
   );
+  await page.locator('.construction-motion').click();
+  await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '0');
   const initialStats = await sharp(
     await page.locator('canvas').screenshot(),
   ).stats();
@@ -54,10 +56,13 @@ test('construction is visible, reversible, idle when stopped, and cleans up duri
   ).toBeGreaterThan(8);
   await page.screenshot({ path: testInfo.outputPath('structure.png') });
   await seek(page, 1);
+  await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '1');
+  await page.screenshot({ path: testInfo.outputPath('finished.png') });
   await expect(page.locator('[data-construction-phase]')).toHaveText(
     'Edificio terminado',
   );
   await seek(page, 0.55);
+  await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '0');
   await expect(page.locator('[data-construction-phase]')).toHaveText('Muros');
   await expect
     .poll(
@@ -89,6 +94,50 @@ test('construction is visible, reversible, idle when stopped, and cleans up duri
   expect(errors).toEqual([]);
 });
 
+test('idle motion rotates and floats without building progress, can pause, and stops offscreen', async ({
+  page,
+}) => {
+  test.setTimeout(90000);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const host = page.locator('[data-construction]');
+  const canvas = page.locator('canvas');
+  await expect(host).toHaveAttribute('data-mode', 'ready', { timeout: 60000 });
+  await seek(page, 1);
+  await expect(host).toHaveAttribute('data-idle', 'running');
+  const yaw = await canvas.getAttribute('data-yaw');
+  const lift = await canvas.getAttribute('data-lift');
+  const before = await page.screenshot();
+  await page.waitForTimeout(1000);
+  await expect(canvas).not.toHaveAttribute('data-yaw', yaw!);
+  await expect(canvas).not.toHaveAttribute('data-lift', lift!);
+  expect((await page.screenshot()).equals(before)).toBe(false);
+  await expect(canvas).toHaveAttribute('data-progress', '1.0000');
+  await page.getByRole('button', { name: 'Pausar giro y flotación' }).click();
+  await expect(host).toHaveAttribute('data-idle', 'paused');
+  await page.waitForTimeout(200);
+  const pausedYaw = await canvas.getAttribute('data-yaw');
+  const frames = await canvas.getAttribute('data-frames');
+  await page.waitForTimeout(1000);
+  await expect(canvas).toHaveAttribute('data-yaw', pausedYaw!);
+  await expect(canvas).toHaveAttribute('data-frames', frames!);
+  await page.getByRole('button', { name: 'Reanudar giro y flotación' }).click();
+  await expect(host).toHaveAttribute('data-idle', 'running');
+  await expect(canvas).not.toHaveAttribute('data-yaw', pausedYaw!);
+  await page.evaluate(() =>
+    document
+      .querySelector('#capacidades')!
+      .scrollIntoView({ behavior: 'instant' }),
+  );
+  await expect(host).toHaveAttribute('data-idle', 'paused');
+  await page.waitForTimeout(1000);
+  const hiddenFrames = await canvas.getAttribute('data-frames');
+  await page.waitForTimeout(1000);
+  await expect(canvas).toHaveAttribute('data-frames', hiddenFrames!);
+  await seek(page, 0.5);
+  await expect(host).toHaveAttribute('data-idle', 'running');
+});
+
 test('mobile English dark scene fits, changes theme and supports the keyboard skip link', async ({
   page,
 }, testInfo) => {
@@ -102,6 +151,7 @@ test('mobile English dark scene fits, changes theme and supports the keyboard sk
     'ready',
     { timeout: 60000 },
   );
+  await page.locator('.construction-motion').click();
   await seek(page, 0.45);
   await expect(page.locator('[data-construction-phase]')).toHaveText('Walls');
   const boxes = await page.evaluate(() => {
@@ -112,22 +162,32 @@ test('mobile English dark scene fits, changes theme and supports the keyboard sk
       return { top, bottom, left, right };
     };
     return {
-      text: rect('.construction-copy'),
+      brand: rect('.construction-brand'),
       scene: rect('canvas'),
       footer: rect('.construction-footer'),
       overflow: document.documentElement.scrollWidth > innerWidth,
     };
   });
-  expect(boxes.text.bottom).toBeLessThanOrEqual(boxes.scene.top + 1);
-  expect(boxes.scene.bottom).toBeLessThanOrEqual(boxes.footer.top + 1);
+  expect(boxes.scene.bottom).toBeLessThanOrEqual(boxes.brand.top + 1);
+  expect(boxes.brand.bottom).toBeLessThanOrEqual(boxes.footer.top + 13);
   expect(boxes.overflow).toBe(false);
   await page.screenshot({ path: testInfo.outputPath('mobile-dark.png') });
   const stats = await sharp(await page.locator('canvas').screenshot()).stats();
   expect(
     Math.max(...stats.channels.slice(0, 3).map((channel) => channel.stdev)),
   ).toBeGreaterThan(8);
+  await seek(page, 1);
+  await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '1');
+  await expect(page.locator('.construction-title')).toHaveCSS(
+    'text-transform',
+    'uppercase',
+  );
+  await page.mouse.move(0, 0);
+  await page.screenshot({ path: testInfo.outputPath('mobile-finale.png') });
   await page.getByRole('button', { name: 'Switch to light theme' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  await seek(page, 1);
+  await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '1');
   const axe = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
     .analyze();
@@ -161,7 +221,9 @@ test('reduced motion never downloads the model or the scene module and remains s
       ),
   ).toBe(true);
   await page.evaluate(() => scrollTo(0, 300));
-  const action = page.locator('.construction-actions a').first();
+  await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '1');
+  await expect(page.locator('.construction-motion')).toHaveCount(0);
+  const action = page.locator('.construction-skip');
   await action.hover();
   await expect(action.locator('svg')).toHaveCSS('transform', 'none');
   expect(downloads).toEqual([]);
@@ -180,7 +242,9 @@ test('a failed model keeps navigation usable and can be retried', async ({
     'static',
   );
   await expect(
-    page.getByRole('link', { name: 'Explorar proyectos', exact: true }),
+    page
+      .locator('.desktop-nav')
+      .getByRole('link', { name: 'Proyectos', exact: true }),
   ).toBeVisible();
   await page.unroute('**/models/building.glb');
   await page.getByRole('button', { name: 'Reintentar' }).click();
@@ -211,7 +275,9 @@ test('late model loading preserves the layout and catches up to the current scro
   );
   await expect(page.locator('.construction-poster-start')).toBeVisible();
   await expect(
-    page.getByRole('link', { name: 'Explorar proyectos', exact: true }),
+    page
+      .locator('.desktop-nav')
+      .getByRole('link', { name: 'Proyectos', exact: true }),
   ).toBeVisible();
   const height = await page
     .locator('[data-construction]')

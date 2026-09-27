@@ -10,3 +10,8 @@ export function phaseIndex(progress: number) {
   const index = phaseEnds.findIndex((end) => progress < end);
   return index < 0 ? phaseEnds.length - 1 : index;
 }
+
+export function brandReveal(progress: number) {
+  const amount = Math.max(0, Math.min(1, (progress - 0.78) / 0.2));
+  return amount * amount * (3 - 2 * amount);
+}

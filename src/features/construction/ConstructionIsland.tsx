@@ -6,6 +6,7 @@ import {
   type ComponentType,
 } from 'react';
 import type { Dictionary } from '../../i18n';
+import { Pause, Play } from 'lucide-react';
 
 export type ConstructionCopy = Dictionary['home']['construction'];
 export type SceneProps = {
@@ -13,6 +14,7 @@ export type SceneProps = {
   onReady: () => void;
   onError: () => void;
   phases: string[];
+  paused: boolean;
 };
 
 export default function ConstructionIsland({
@@ -27,6 +29,7 @@ export default function ConstructionIsland({
     'static' | 'loading' | 'ready' | 'error'
   >('static');
   const [attempt, setAttempt] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const section = anchor.current!.closest<HTMLElement>(
@@ -108,7 +111,26 @@ export default function ConstructionIsland({
           onReady={ready}
           onError={fail}
           phases={copy.phases}
+          paused={paused}
         />
+      )}
+      {status === 'ready' && (
+        <button
+          type="button"
+          className="construction-motion icon-button"
+          aria-label={paused ? copy.resume : copy.pause}
+          title={paused ? copy.resume : copy.pause}
+          onClick={() => setPaused((value) => !value)}
+        >
+          {paused ? (
+            <Play size={18} aria-hidden="true" />
+          ) : (
+            <Pause size={18} aria-hidden="true" />
+          )}
+          <span className="construction-tooltip" aria-hidden="true">
+            {paused ? copy.resume : copy.pause}
+          </span>
+        </button>
       )}
       {status === 'loading' && (
         <p className="construction-loading">{copy.loading}</p>

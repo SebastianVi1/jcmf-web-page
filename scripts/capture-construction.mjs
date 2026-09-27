@@ -15,6 +15,7 @@ try {
   await page
     .locator('[data-construction][data-mode="ready"]')
     .waitFor({ timeout: 60000 });
+  await page.locator('.construction-motion').click();
   const seek = async (value) => {
     await page.evaluate((p) => {
       const host = document.querySelector('[data-construction]');
@@ -49,7 +50,7 @@ try {
     html, body, .construction-hero { background: transparent !important; }
     .construction-stage { height: 1200px !important; }
     .construction-visual { position: absolute !important; inset: 0 !important; margin: 0 !important; }
-    .construction-copy, .construction-footer, .construction-poster { visibility: hidden !important; }
+    .construction-brand, .construction-footer, .construction-poster, .construction-motion { visibility: hidden !important; }
   `,
   });
   for (const [name, progress] of [

@@ -30,6 +30,8 @@
   --model-line: #65869f;
   --model-inset: #85a3ba;
   --font-display: 'Oswald Variable', 'Arial Narrow', sans-serif;
+  --font-construction:
+    'Bebas Neue', 'Oswald Variable', 'Arial Narrow', sans-serif;
   --font-body: 'DM Sans Variable', Arial, sans-serif;
   --hero-bg: #101d28;
   --hero-ink: #ffffff;
@@ -52,12 +54,12 @@
     100svh - var(--construction-header) - var(--construction-peek)
   );
   --construction-travel: 300svh;
-  --construction-title: 112px;
-  --construction-name: 58px;
-  --construction-copy-width: 38%;
-  --construction-visual-left: 36%;
+  --construction-title: 210px;
+  --construction-name: 210px;
+  --construction-brand-height: 232px;
+  --construction-brand-inset: 24px;
   --construction-gap: 28px;
-  --construction-footer: 96px;
+  --construction-footer: 76px;
   --construction-light-sky: #f1faff;
   --construction-light-ground: #7498a6;
   --construction-light-key: #ffffff;
@@ -109,27 +111,63 @@
   --construction-exposure: 1.2;
 }
 
+@media (min-width: 1800px) {
+  :root {
+    --construction-title: 272px;
+    --construction-name: 272px;
+    --construction-brand-height: 288px;
+  }
+}
+@media (max-width: 1400px) {
+  :root {
+    --construction-title: 160px;
+    --construction-name: 160px;
+    --construction-brand-height: 184px;
+  }
+}
 @media (max-width: 1100px) {
   :root {
-    --construction-title: 88px;
-    --construction-name: 46px;
+    --construction-title: 128px;
+    --construction-name: 128px;
+    --construction-brand-height: 152px;
   }
 }
 @media (max-width: 900px) {
   :root {
-    --construction-title: 64px;
-    --construction-name: 36px;
-    --construction-copy-width: 100%;
-    --construction-visual-left: 0%;
+    --construction-title: 100px;
+    --construction-name: 100px;
+    --construction-brand-height: 124px;
     --construction-gap: 16px;
-    --construction-footer: 80px;
+    --construction-footer: 72px;
+  }
+}
+@media (max-width: 700px) {
+  :root {
+    --construction-title: 84px;
+    --construction-name: 84px;
+    --construction-brand-height: 108px;
   }
 }
 @media (max-width: 600px) {
   :root {
     --construction-header: 77px;
-    --construction-title: 56px;
-    --construction-name: 32px;
+    --construction-title: 256px;
+    --construction-name: 88px;
+    --construction-brand-height: 348px;
     --construction-peek: 12px;
+  }
+}
+@media (max-width: 479px) {
+  :root {
+    --construction-title: 184px;
+    --construction-name: 64px;
+    --construction-brand-height: 256px;
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    --construction-title: 160px;
+    --construction-name: 56px;
+    --construction-brand-height: 224px;
   }
 }

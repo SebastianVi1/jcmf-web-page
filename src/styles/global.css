@@ -392,47 +392,40 @@ svg {
 }
 .construction-stage {
   position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--construction-brand-height) var(
+      --construction-footer
+    );
   min-height: 660px;
   height: var(--construction-height);
   isolation: isolate;
 }
-.construction-copy {
-  position: absolute;
-  z-index: 2;
-  top: 50%;
-  left: var(--gutter);
-  width: var(--construction-copy-width);
-  max-width: 490px;
-  transform: translateY(-60%);
+.construction-brand {
+  display: grid;
+  place-items: center;
+  padding-inline: var(--construction-brand-inset);
 }
 .construction-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0 16px;
+  font-family: var(--font-construction);
   font-size: var(--construction-title);
-  line-height: 1.08;
+  font-weight: 400;
+  line-height: 0.95;
   letter-spacing: 0;
-}
-.construction-title span {
-  display: block;
+  text-align: center;
+  text-transform: uppercase;
 }
 .construction-title span + span {
   font-size: var(--construction-name);
-  margin-top: 8px;
-}
-.construction-intro {
-  margin-top: var(--construction-gap);
-  max-width: 36ch;
-  font-size: 17px;
-  line-height: 1.75;
-}
-.construction-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 24px;
-  margin-top: var(--construction-gap);
 }
 .construction-visual {
-  position: absolute;
-  inset: 0 0 var(--construction-footer) var(--construction-visual-left);
+  position: relative;
+  min-width: 0;
+  min-height: 0;
 }
 .construction-poster,
 .construction-island,
@@ -455,9 +448,8 @@ svg {
   visibility: hidden;
 }
 .construction-footer {
-  position: absolute;
-  inset: auto var(--gutter) 0;
-  min-height: var(--construction-footer);
+  position: relative;
+  margin-inline: var(--gutter);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -468,18 +460,17 @@ svg {
   min-width: 0;
 }
 .construction-caption > p:first-child {
-  font-size: 12px;
+  font-size: 11px;
 }
 .construction-phase {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--ink);
 }
 .construction-progress {
-  display: block;
-  width: 180px;
+  width: 140px;
   height: 2px;
   background: var(--line);
-  margin-top: 10px;
+  margin-top: 6px;
 }
 .construction-progress > span {
   display: block;
@@ -496,6 +487,29 @@ svg {
 .construction-hero[data-mode='ready'] .construction-phase,
 .construction-hero[data-mode='ready'] .construction-progress {
   display: block;
+}
+.construction-motion {
+  position: absolute;
+  z-index: 2;
+  top: var(--construction-gap);
+  right: var(--gutter);
+}
+.construction-tooltip {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: max-content;
+  max-width: 220px;
+  padding: 6px 10px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0;
+  pointer-events: none;
+}
+.construction-motion:is(:hover, :focus-visible) .construction-tooltip {
+  opacity: 1;
 }
 .construction-loading,
 .construction-error {
@@ -522,6 +536,12 @@ svg {
     top: var(--construction-header);
     min-height: 0;
   }
+  .js .construction-hero:not([data-mode='static']) .construction-brand {
+    opacity: var(--construction-brand-reveal, 0);
+    transform: translateY(
+      calc(12px * (1 - var(--construction-brand-reveal, 0)))
+    );
+  }
   .js .construction-hero:not([data-mode='static']) .construction-poster-start {
     display: block;
   }
@@ -531,85 +551,12 @@ svg {
     display: none;
   }
 }
-@media (max-width: 900px) {
-  .construction-stage {
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr) var(--construction-footer);
-    padding: var(--construction-gap) var(--gutter) 0;
-    min-height: 690px;
-  }
-  .construction-copy {
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
-    max-width: 620px;
-  }
+@media (max-width: 600px) {
   .construction-title {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 8px 16px;
+    gap: 0 12px;
   }
-  .construction-title span + span {
-    margin-top: 0;
-  }
-  .construction-intro {
-    font-size: 15px;
-    line-height: 1.6;
-    max-width: 60ch;
-    margin-top: 14px;
-  }
-  .construction-actions {
-    margin-top: 16px;
-    gap: 8px 20px;
-  }
-  .construction-actions .button {
-    min-height: 44px;
-    padding: 10px 14px;
-    gap: 12px;
-  }
-  .construction-visual {
-    position: relative;
-    inset: auto;
-    min-height: 0;
-    margin-inline: calc(-1 * var(--gutter));
-  }
-  .construction-footer {
-    position: relative;
-    inset: auto;
-    gap: 16px;
-  }
-  .construction-skip {
-    max-width: 160px;
-    font-size: 12px;
-    gap: 12px;
-  }
-  .construction-caption > p:first-child {
-    font-size: 11px;
-  }
-  .construction-phase {
-    font-size: 12px;
-  }
-  .construction-progress {
-    width: 120px;
-    margin-top: 6px;
-  }
-  .construction-error {
-    inset-inline: var(--gutter);
-  }
-}
-@media (max-width: 360px) {
-  .construction-actions {
-    gap: 4px 14px;
-  }
-  .construction-actions .button {
-    font-size: 12px;
-    padding-inline: 10px;
-  }
-  .construction-actions .text-link {
-    font-size: 12px;
-    gap: 12px;
+  .construction-title span:first-child {
+    flex-basis: 100%;
   }
 }
 .masthead {
@@ -2669,8 +2616,6 @@ svg {
     stroke-dashoffset: 0;
   }
   .masthead-image,
-  .construction-actions a,
-  .construction-actions a > svg,
   .construction-skip > svg,
   .masthead-actions a,
   .masthead-actions a > svg,

@@ -65,6 +65,8 @@ export const es = {
       loading: 'Preparando la escena',
       error: 'La escena no está disponible. Puedes seguir explorando el sitio.',
       retry: 'Reintentar',
+      pause: 'Pausar giro y flotación',
+      resume: 'Reanudar giro y flotación',
       phases: [
         'Preparación del terreno',
         'Cimentación',

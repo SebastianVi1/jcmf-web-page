@@ -95,13 +95,16 @@ El recorrido usa scroll nativo y tres alturas de pantalla. El último 10% mantie
 el edificio terminado. Con movimiento reducido, sin WebGL2, sin JavaScript o en
 ventanas de menos de 660px de alto se muestra un poster estático. Los enlaces
 permanecen disponibles durante la carga y ante errores. La escena solo se carga
-en las portadas ES/EN y no renderiza continuamente en reposo.
+en las portadas ES/EN. Tras 700ms sin scroll, el modelo flota y gira lentamente;
+el control de pausa detiene ambos movimientos. Fuera de pantalla o con la pestaña
+oculta se suspende el giro. El nombre aparece debajo de la escena entre el 78%
+y el 98% de la construcción, sin desplazar el contenido. El cierre usa Bebas Neue
+autoalojada, mayúsculas casi a todo el ancho y dos líneas en móvil.
 
 - `node scripts/capture-construction.mjs`: regenera los dos posters WebP y captura
   etapas de escritorio; requiere el servidor en http://localhost:4321.
 - `bunx playwright test tests/browser/construction.spec.ts`: verifica la escena,
-  reversibilidad, carga lenta, fallback, teclado y movimiento reducido.
-- `plan-3d.md`: plan acordado y registro de implementación/verificación.
+  reversibilidad, giro y pausa, carga lenta, fallback, teclado y movimiento reducido.
 
 No ejecutar capturas/E2E al mismo tiempo que `astro check`, builds o cambios de
 dependencias: la reoptimización de Vite puede recargar páginas durante la prueba.
