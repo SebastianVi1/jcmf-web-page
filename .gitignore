@@ -29,5 +29,5 @@ playwright-report/
 premium-ui.audit.json
 premium-audit.json
 
-# 3D authoring workspace (Blender sources, scripts, renders, deps)
+#3d-models
 3d_models/

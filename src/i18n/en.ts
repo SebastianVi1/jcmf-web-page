@@ -68,6 +68,12 @@ export const en: Dictionary = {
       retry: 'Try again',
       pause: 'Pause rotation and floating',
       resume: 'Resume rotation and floating',
+      resumeSpin: 'Resume rotation',
+      steer: 'Model controls',
+      steerLeft: 'Turn the building left',
+      steerRight: 'Turn the building right',
+      steerUp: 'Tilt the view up',
+      steerDown: 'Tilt the view down',
       phases: [
         'Site preparation',
         'Foundations',

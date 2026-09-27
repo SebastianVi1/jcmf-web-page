@@ -1,6 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import sharp from 'sharp';
+import { wrapPi } from '../../src/features/construction/progress';
 
 async function seek(page: Page, progress: number) {
   await page.evaluate((value) => {
@@ -113,10 +114,10 @@ test('construction is visible, reversible, idle when paused, and cleans up durin
   expect(errors).toEqual([]);
 });
 
-test('continuous motion rotates and floats without focus, survives scroll, and stops offscreen', async ({
+test('continuous motion settles the finished building facing front and stops offscreen', async ({
   page,
 }) => {
-  test.setTimeout(90000);
+  test.setTimeout(150000);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
   const host = page.locator('[data-construction]');
@@ -124,14 +125,24 @@ test('continuous motion rotates and floats without focus, survives scroll, and s
   await expect(host).toHaveAttribute('data-mode', 'ready', { timeout: 60000 });
   await seek(page, 1);
   await expect(host).toHaveAttribute('data-idle', 'running');
+  await expect(canvas).toHaveAttribute('data-progress', '1.0000');
+  // The finished building turns to face the camera and stops rotating while
+  // the float continues.
+  const azimuth = Number(await canvas.getAttribute('data-azimuth'));
+  await expect
+    .poll(
+      async () =>
+        wrapPi(Number(await canvas.getAttribute('data-yaw')) - azimuth),
+      { timeout: 15000 },
+    )
+    .toBeCloseTo(0, 3);
   const yaw = await canvas.getAttribute('data-yaw');
   const lift = await canvas.getAttribute('data-lift');
   const before = await page.screenshot();
   await page.waitForTimeout(1000);
-  await expect(canvas).not.toHaveAttribute('data-yaw', yaw!);
+  await expect(canvas).toHaveAttribute('data-yaw', yaw!);
   await expect(canvas).not.toHaveAttribute('data-lift', lift!);
   expect((await page.screenshot()).equals(before)).toBe(false);
-  await expect(canvas).toHaveAttribute('data-progress', '1.0000');
   await page.getByRole('button', { name: 'Pausar giro y flotación' }).click();
   await expect(host).toHaveAttribute('data-idle', 'paused');
   await page.waitForTimeout(200);
@@ -147,7 +158,12 @@ test('continuous motion rotates and floats without focus, survives scroll, and s
     .toBe(true);
   await page.getByRole('button', { name: 'Reanudar giro y flotación' }).click();
   await expect(host).toHaveAttribute('data-idle', 'running');
-  await expect(canvas).not.toHaveAttribute('data-yaw', pausedYaw!);
+  // Scrolling back leaves the facade settle and resumes the idle turn.
+  await seek(page, 0.5);
+  await page.waitForTimeout(200);
+  const spinning = await canvas.getAttribute('data-yaw');
+  await page.waitForTimeout(1000);
+  await expect(canvas).not.toHaveAttribute('data-yaw', spinning!);
   await page.evaluate(() =>
     document
       .querySelector('#capacidades')!
@@ -184,6 +200,120 @@ test('continuous motion rotates and floats without focus, survives scroll, and s
   expect(samples.every(({ state }) => state === 'running')).toBe(true);
   expect(samples.at(-1)!.yaw).not.toBe(samples[0].yaw);
   expect(samples.at(-1)!.lift).not.toBe(samples[0].lift);
+});
+
+test('scroll drives the building turn from the right to the frontal finish', async ({
+  page,
+}) => {
+  test.setTimeout(120000);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const host = page.locator('[data-construction]');
+  const canvas = page.locator('canvas');
+  await expect(host).toHaveAttribute('data-mode', 'ready', { timeout: 60000 });
+  const turn = async () => {
+    const yaw = Number(await canvas.getAttribute('data-yaw'));
+    const azimuth = Number(await canvas.getAttribute('data-azimuth'));
+    return wrapPi(yaw - azimuth);
+  };
+  await seek(page, 0.15);
+  await page.waitForTimeout(150);
+  const start = await turn();
+  await seek(page, 0.55);
+  await page.waitForTimeout(150);
+  const middle = await turn();
+  await seek(page, 0.95);
+  await page.waitForTimeout(150);
+  const nearEnd = await turn();
+  await seek(page, 1);
+  await page.waitForTimeout(150);
+  const finish = await turn();
+  // The turn sweeps right to left with the scroll and ends on the facade.
+  expect(start).toBeGreaterThan(1.2);
+  expect(middle).toBeLessThan(start);
+  expect(nearEnd).toBeLessThan(middle);
+  expect(Math.abs(finish)).toBeLessThan(0.02);
+});
+
+test('arrow controls steer fluidly, keep the float, and hold the idle spin', async ({
+  page,
+}) => {
+  test.setTimeout(120000);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const host = page.locator('[data-construction]');
+  const canvas = page.locator('canvas');
+  await expect(host).toHaveAttribute('data-mode', 'ready', { timeout: 60000 });
+  await seek(page, 0.3);
+  await expect(host).toHaveAttribute('data-idle', 'running');
+  const readYaw = async () => Number(await canvas.getAttribute('data-yaw'));
+  const readLift = async () => Number(await canvas.getAttribute('data-lift'));
+  const readElevation = async () =>
+    Number(await canvas.getAttribute('data-elevation'));
+  const right = page.getByRole('button', {
+    name: 'Girar el edificio a la derecha',
+  });
+  await right.hover();
+  const y0 = await readYaw();
+  const l0 = await readLift();
+  // Holding the control turns the model continuously (no steps) while the
+  // float keeps running and nothing pauses.
+  await page.mouse.down();
+  await page.waitForTimeout(1200);
+  const during = await page.evaluate(async () => {
+    const canvas = document.querySelector('canvas')!;
+    const values: string[] = [];
+    for (let i = 0; i < 10; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 60));
+      values.push(canvas.dataset.yaw!);
+    }
+    return values;
+  });
+  await page.mouse.up();
+  expect(new Set(during).size).toBeGreaterThan(4);
+  expect(await readLift()).not.toBe(l0);
+  await expect(host).toHaveAttribute('data-idle', 'running');
+  expect(wrapPi((await readYaw()) - y0)).toBeGreaterThan(0.3);
+  // Releasing leaves the building where it is: the idle spin stays held and
+  // only the tail of the steering glide remains.
+  await page.waitForTimeout(1300);
+  const held = await readYaw();
+  await page.waitForTimeout(900);
+  expect(Math.abs((await readYaw()) - held)).toBeLessThan(1e-3);
+  // A quick tap still nudges the model.
+  await right.click();
+  await expect.poll(readYaw).toBeGreaterThan(held);
+  const nudged = await readYaw();
+  // Arrow keys steer the same way and never scroll the page.
+  const scrollBefore = await page.evaluate(() => scrollY);
+  await page
+    .getByRole('button', { name: 'Girar el edificio a la izquierda' })
+    .focus();
+  await page.keyboard.down('ArrowLeft');
+  await page.waitForTimeout(800);
+  await page.keyboard.up('ArrowLeft');
+  await expect.poll(readYaw).toBeLessThan(nudged);
+  expect(await page.evaluate(() => scrollY)).toBe(scrollBefore);
+  // Up and down tilt the view fluidly (held keys steer continuously).
+  const base = await readElevation();
+  await page
+    .getByRole('button', { name: 'Inclinar la vista hacia arriba' })
+    .focus();
+  await page.keyboard.down('ArrowUp');
+  await page.waitForTimeout(800);
+  await page.keyboard.up('ArrowUp');
+  await expect.poll(readElevation).toBeGreaterThan(base + 0.1);
+  await page.keyboard.down('ArrowDown');
+  await page.waitForTimeout(800);
+  await page.keyboard.up('ArrowDown');
+  await expect.poll(readElevation).toBeLessThan(base + 0.1);
+  // The play button resumes the idle turn from the manual orientation.
+  await page.getByRole('button', { name: 'Reanudar giro' }).click();
+  await expect(host).toHaveAttribute('data-idle', 'running');
+  await page.waitForTimeout(200);
+  const spinning = await readYaw();
+  await page.waitForTimeout(1000);
+  expect(await readYaw()).not.toBe(spinning);
 });
 
 test('mobile English dark scene fits, changes theme and supports the keyboard skip link', async ({
@@ -285,7 +415,11 @@ test('a failed model keeps navigation usable and can be retried', async ({
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.route('**/models/building.glb', (route) => route.abort());
   await page.goto('/');
-  await expect(page.getByRole('button', { name: 'Reintentar' })).toBeVisible();
+  // The scene bootstrap is deferred until the page is idle, so the error can
+  // appear a moment after load.
+  await expect(page.getByRole('button', { name: 'Reintentar' })).toBeVisible({
+    timeout: 15000,
+  });
   await expect(page.locator('[data-construction]')).toHaveAttribute(
     'data-mode',
     'static',

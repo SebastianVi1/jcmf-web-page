@@ -1,5 +1,6 @@
 import {
   Component,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -27,10 +28,21 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createConstructionController } from './construction-controller';
 import { createProgressSmoother } from './worker-routes';
-import { brandReveal, cameraPose, modelProgress, phaseIndex } from './progress';
+import {
+  brandReveal,
+  cameraPose,
+  displayYaw,
+  driftFade,
+  modelProgress,
+  phaseIndex,
+  viewElevation,
+} from './progress';
 import type { SceneProps } from './ConstructionIsland';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// The idle turn keeps the historical 120 s per revolution.
+const SPIN_SPEED = Math.PI / 60;
 
 function disposeModel(model: Object3D) {
   const geometries = new Set<Mesh['geometry']>();
@@ -82,6 +94,9 @@ function Building({
   onError,
   phases,
   paused,
+  manual,
+  steering,
+  steerEpoch,
 }: SceneProps & { model: Object3D }) {
   const { camera, gl, scene, invalidate, size } = useThree();
   const progress = useRef({ value: 0 });
@@ -92,8 +107,27 @@ function Building({
   const rendered = useRef(false);
   const pivot = useRef<Group>(null);
   const pose = useRef({ time: 0, activity: 0 });
+  const drift = useRef(0);
+  const lastScroll = useRef(0);
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
+  const manualRef = useRef(manual);
+  manualRef.current = manual;
+  // Smoothed estimate of the real cost of one frame; drives the pacing below.
+  const frameCost = useRef(0);
+  const lastDelay = useRef(0);
+  const pendingRender = useRef<number | null>(null);
+  const pump = useCallback(() => {
+    if (pendingRender.current !== null) return;
+    // On slow renderers the loop must leave idle time for the main thread so
+    // the page never freezes while the scene animates.
+    const delay = frameCost.current > 22 ? frameCost.current * 0.82 : 0;
+    lastDelay.current = delay;
+    pendingRender.current = window.setTimeout(() => {
+      pendingRender.current = null;
+      invalidate();
+    }, delay);
+  }, [invalidate]);
   const syncMotion = useRef<() => void>(() => {});
   const controller = useMemo(
     () => createConstructionController(model),
@@ -217,7 +251,7 @@ function Building({
     };
     publishProgress.current = publish;
     const update = () => {
-      if (visible.current) invalidate();
+      if (visible.current) pump();
     };
     const context = gsap.context(() => {
       // Floating repeats independently of the workers' finite activity interval.
@@ -227,14 +261,14 @@ function Building({
         repeat: -1,
         ease: 'none',
         paused: true,
-        onUpdate: () => invalidate(),
+        onUpdate: pump,
       });
       activity = gsap.to(pose.current, {
         activity: 120,
         duration: 120,
         ease: 'none',
         paused: true,
-        onUpdate: () => invalidate(),
+        onUpdate: pump,
       });
       // Refresh must not capture the current progress as a new animation start.
       gsap.fromTo(
@@ -263,10 +297,15 @@ function Building({
     const intersection = new IntersectionObserver(([entry]) => {
       visible.current = entry.isIntersecting;
       updateMotion();
-      if (visible.current) invalidate();
+      if (visible.current) pump();
     });
     intersection.observe(gl.domElement);
     document.addEventListener('visibilitychange', updateMotion);
+    // The idle drift runs only while the scroll is stationary.
+    const markScroll = () => {
+      lastScroll.current = performance.now();
+    };
+    window.addEventListener('scroll', markScroll, { passive: true });
     updateMotion();
     update();
     return () => {
@@ -276,8 +315,13 @@ function Building({
       resize.disconnect();
       intersection.disconnect();
       document.removeEventListener('visibilitychange', updateMotion);
+      window.removeEventListener('scroll', markScroll);
+      if (pendingRender.current !== null) {
+        clearTimeout(pendingRender.current);
+        pendingRender.current = null;
+      }
     };
-  }, [host, phases, invalidate, gl]);
+  }, [host, phases, pump, gl]);
 
   useEffect(() => {
     syncMotion.current();
@@ -294,26 +338,51 @@ function Building({
   );
 
   const ready = useRef(false);
+  useEffect(() => {
+    pump();
+  }, [steerEpoch, pump]);
   useFrame(() => {
     const now = performance.now();
-    const dt = lastFrame.current ? (now - lastFrame.current) / 1000 : 1 / 60;
+    const dt = lastFrame.current
+      ? Math.min(0.25, (now - lastFrame.current) / 1000)
+      : 1 / 60;
     lastFrame.current = now;
+    // The interval between rendered frames minus the pacing delay estimates
+    // what a frame costs; outliers (tab switches) are ignored.
+    const task = Math.max(0, dt * 1000 - lastDelay.current);
+    if (task < 250) frameCost.current += (task - frameCost.current) * 0.25;
     const displayed = smoothing.step(progress.current.value, dt);
-    if (displayed !== progress.current.value && visible.current) invalidate();
+    if (displayed !== progress.current.value && visible.current) pump();
     const p = modelProgress(displayed);
     publishProgress.current(p);
     controller.update(p, p * 48 + pose.current.activity);
-    const yaw = (pose.current.time * Math.PI) / 60;
+    const { azimuth, elevation } = cameraPose(p);
+    // The scroll drives the turn (right to left, ending frontal). The idle
+    // drift only adds its slow rotation while the scroll is stationary and
+    // outside the frontal finale; the float is independent and always runs.
+    const fade = driftFade(p);
+    if (
+      !pausedRef.current &&
+      !manualRef.current &&
+      visible.current &&
+      fade > 0 &&
+      now - lastScroll.current > 500
+    ) {
+      drift.current += SPIN_SPEED * dt;
+    }
+    const steer = steering.step(dt);
+    if (steer.active) pump();
+    const yaw = displayYaw(azimuth, p, drift.current, steer.yaw);
     const lift = Math.sin((pose.current.time * Math.PI * 2) / 7.5) * 0.9;
     if (pivot.current) {
       pivot.current.rotation.y = yaw;
       pivot.current.position.y = lift;
     }
     const ortho = camera as OrthographicCamera;
-    const { azimuth, elevation } = cameraPose(p);
+    const view = viewElevation(elevation, steer.tilt);
     offset.set(
       Math.sin(azimuth) * 50,
-      Math.tan(elevation) * 50,
+      Math.tan(view) * 50,
       Math.cos(azimuth) * 50,
     );
     ortho.position.copy(center).add(offset);
@@ -321,8 +390,8 @@ function Building({
     ortho.updateMatrixWorld();
     // Fit the whole turn, including the crane, without zooming as the model rotates.
     const projectedHeight =
-      (bounds.max.y - bounds.min.y + 1.8) * Math.cos(elevation) +
-      2 * orbitRadius * Math.sin(elevation);
+      (bounds.max.y - bounds.min.y + 1.8) * Math.cos(view) +
+      2 * orbitRadius * Math.sin(view);
     const height =
       Math.max(
         projectedHeight,
@@ -341,7 +410,7 @@ function Building({
     gl.domElement.dataset.yaw = yaw.toFixed(5);
     gl.domElement.dataset.lift = lift.toFixed(5);
     gl.domElement.dataset.azimuth = azimuth.toFixed(5);
-    gl.domElement.dataset.elevation = elevation.toFixed(5);
+    gl.domElement.dataset.elevation = view.toFixed(5);
     if (!ready.current && lights.sky) {
       ready.current = true;
       rendered.current = true;
@@ -382,10 +451,15 @@ export default function ConstructionScene(props: SceneProps) {
           signal: abort.signal,
         });
         if (!response.ok) throw new Error('Model unavailable');
-        const gltf = await new GLTFLoader().parseAsync(
-          await response.arrayBuffer(),
-          '/models/',
-        );
+        const buffer = await response.arrayBuffer();
+        // Parsing the model is a long task: yield first so the loading state
+        // paints before the main thread is busy.
+        await new Promise((resolve) => setTimeout(resolve, 0));
+        if (abort.signal.aborted) return;
+        const gltf = await new GLTFLoader().parseAsync(buffer, '/models/');
+        // Yield once more so building the scene graph does not follow the
+        // parse in the same long task.
+        await new Promise((resolve) => setTimeout(resolve, 0));
         if (abort.signal.aborted) {
           disposeModel(gltf.scene);
           return;
@@ -407,12 +481,21 @@ export default function ConstructionScene(props: SceneProps) {
   }, [props.onError]);
 
   if (!model) return null;
+  // Capture scripts can request full resolution via window.__JCMF_DPR.
+  const override = (window as unknown as { __JCMF_DPR?: number }).__JCMF_DPR;
+  const dpr =
+    override ??
+    (props.lowPower
+      ? 0.55
+      : window.innerWidth <= 900
+        ? 1
+        : Math.min(devicePixelRatio, 1.5));
   return (
     <SceneBoundary onError={props.onError}>
       <Canvas
         orthographic
         frameloop="demand"
-        dpr={window.innerWidth <= 900 ? 1 : Math.min(devicePixelRatio, 1.5)}
+        dpr={dpr}
         gl={{ alpha: true, antialias: true, powerPreference: 'default' }}
       >
         <Building {...props} model={model} />

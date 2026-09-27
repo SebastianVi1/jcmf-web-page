@@ -67,6 +67,12 @@ export const es = {
       retry: 'Reintentar',
       pause: 'Pausar giro y flotación',
       resume: 'Reanudar giro y flotación',
+      resumeSpin: 'Reanudar giro',
+      steer: 'Controles del modelo',
+      steerLeft: 'Girar el edificio a la izquierda',
+      steerRight: 'Girar el edificio a la derecha',
+      steerUp: 'Inclinar la vista hacia arriba',
+      steerDown: 'Inclinar la vista hacia abajo',
       phases: [
         'Preparación del terreno',
         'Cimentación',

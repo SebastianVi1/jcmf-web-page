@@ -1,12 +1,22 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ComponentType,
+  type KeyboardEvent,
 } from 'react';
 import type { Dictionary } from '../../i18n';
-import { Pause, Play } from 'lucide-react';
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  ArrowUp,
+  Pause,
+  Play,
+} from 'lucide-react';
+import { createSteering, type SteerDirection, type Steering } from './progress';
 
 export type ConstructionCopy = Dictionary['home']['construction'];
 export type SceneProps = {
@@ -15,6 +25,17 @@ export type SceneProps = {
   onError: () => void;
   phases: string[];
   paused: boolean;
+  manual: boolean;
+  lowPower: boolean;
+  steering: Steering;
+  steerEpoch: number;
+};
+
+const arrowKeys: Record<string, SteerDirection> = {
+  ArrowLeft: 'left',
+  ArrowRight: 'right',
+  ArrowUp: 'up',
+  ArrowDown: 'down',
 };
 
 export default function ConstructionIsland({
@@ -23,6 +44,7 @@ export default function ConstructionIsland({
   copy: ConstructionCopy;
 }) {
   const anchor = useRef<HTMLDivElement>(null);
+  const steering = useMemo(() => createSteering(), []);
   const [Scene, setScene] = useState<ComponentType<SceneProps> | null>(null);
   const [host, setHost] = useState<HTMLElement | null>(null);
   const [status, setStatus] = useState<
@@ -30,6 +52,9 @@ export default function ConstructionIsland({
   >('static');
   const [attempt, setAttempt] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [manual, setManual] = useState(false);
+  const [lowPower, setLowPower] = useState(false);
+  const [steerEpoch, setSteerEpoch] = useState(0);
 
   useEffect(() => {
     const section = anchor.current!.closest<HTMLElement>(
@@ -40,6 +65,7 @@ export default function ConstructionIsland({
     const short = matchMedia('(max-height: 659px)');
     let cancelled = false;
     let generation = 0;
+    let pending: (() => void) | null = null;
     function configure() {
       const current = ++generation;
       setScene(null);
@@ -54,18 +80,44 @@ export default function ConstructionIsland({
         setStatus('error');
         return;
       }
+      const debugInfo = context.getExtension('WEBGL_debug_renderer_info');
+      const renderer = debugInfo
+        ? String(context.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL))
+        : '';
+      setLowPower(
+        /swiftshader|llvmpipe|software|subzero|basic render/i.test(renderer),
+      );
       context.getExtension('WEBGL_lose_context')?.loseContext();
-      import('./ConstructionScene')
-        .then(({ default: Component }) => {
-          if (!cancelled && current === generation) setScene(() => Component);
-        })
-        .catch((error: unknown) => {
-          console.warn('Construction scene could not be initialized', error);
-          if (!cancelled && current === generation) {
-            section.dataset.mode = 'static';
-            setStatus('error');
-          }
-        });
+      const start = () => {
+        pending = null;
+        if (cancelled || current !== generation) return;
+        import('./ConstructionScene')
+          .then(({ default: Component }) => {
+            if (!cancelled && current === generation) setScene(() => Component);
+          })
+          .catch((error: unknown) => {
+            console.warn('Construction scene could not be initialized', error);
+            if (!cancelled && current === generation) {
+              section.dataset.mode = 'static';
+              setStatus('error');
+            }
+          });
+      };
+      // The scene module and the model parse are heavy. Wait until the page has
+      // finished loading and the main thread is idle so the posters cover them
+      // instead of freezing the page during startup.
+      const idle = (callback: () => void) =>
+        typeof window.requestIdleCallback === 'function'
+          ? window.requestIdleCallback(callback, { timeout: 2000 })
+          : window.setTimeout(callback, 200);
+      const defer = () => {
+        if (!cancelled) idle(start);
+      };
+      if (document.readyState === 'complete') defer();
+      else {
+        window.addEventListener('load', defer, { once: true });
+        pending = () => window.removeEventListener('load', defer);
+      }
     }
     const skip = section.querySelector<HTMLAnchorElement>(
       '[data-construction-skip]',
@@ -73,9 +125,16 @@ export default function ConstructionIsland({
     const focusTarget = () =>
       document.getElementById('capacidades')?.focus({ preventScroll: true });
     skip.addEventListener('click', focusTarget);
+    const releaseSteering = () => {
+      steering.releaseAll();
+      setSteerEpoch((value) => value + 1);
+    };
+    window.addEventListener('blur', releaseSteering);
     const stop = () => {
       cancelled = true;
       generation++;
+      pending?.();
+      pending = null;
       setScene(null);
     };
     configure();
@@ -87,9 +146,10 @@ export default function ConstructionIsland({
       reduced.removeEventListener('change', configure);
       short.removeEventListener('change', configure);
       skip.removeEventListener('click', focusTarget);
+      window.removeEventListener('blur', releaseSteering);
       document.removeEventListener('astro:before-swap', stop);
     };
-  }, [attempt]);
+  }, [attempt, steering]);
 
   const ready = useCallback(() => {
     if (!host?.isConnected) return;
@@ -103,6 +163,55 @@ export default function ConstructionIsland({
     setStatus('error');
   }, [host]);
 
+  // Fluid steering: held controls move continuously; a tap still glides. The
+  // float keeps running; only the idle spin yields to manual control.
+  const press = useCallback(
+    (direction: SteerDirection) => {
+      steering.press(direction);
+      setManual(true);
+      setSteerEpoch((value) => value + 1);
+    },
+    [steering],
+  );
+  const release = useCallback(
+    (direction: SteerDirection) => {
+      steering.release(direction);
+      setSteerEpoch((value) => value + 1);
+    },
+    [steering],
+  );
+  const onSteerKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    const direction = arrowKeys[event.key];
+    if (!direction) return;
+    // Arrow keys steer the model instead of scrolling the page.
+    event.preventDefault();
+    press(direction);
+  };
+  const onSteerKeyUp = (event: KeyboardEvent<HTMLDivElement>) => {
+    const direction = arrowKeys[event.key];
+    if (direction) release(direction);
+  };
+  const controls = (direction: SteerDirection) => ({
+    onPointerDown: () => press(direction),
+    onPointerUp: () => release(direction),
+    onPointerCancel: () => release(direction),
+    onPointerLeave: () => release(direction),
+    onKeyDown: (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      press(direction);
+    },
+    onKeyUp: (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') release(direction);
+    },
+  });
+
+  const motionLabel = paused
+    ? copy.resume
+    : manual
+      ? copy.resumeSpin
+      : copy.pause;
+
   return (
     <div className="construction-island" ref={anchor}>
       {Scene && host && (
@@ -112,25 +221,93 @@ export default function ConstructionIsland({
           onError={fail}
           phases={copy.phases}
           paused={paused}
+          manual={manual}
+          lowPower={lowPower}
+          steering={steering}
+          steerEpoch={steerEpoch}
         />
       )}
       {status === 'ready' && (
-        <button
-          type="button"
-          className="construction-motion icon-button"
-          aria-label={paused ? copy.resume : copy.pause}
-          title={paused ? copy.resume : copy.pause}
-          onClick={() => setPaused((value) => !value)}
-        >
-          {paused ? (
-            <Play size={18} aria-hidden="true" />
-          ) : (
-            <Pause size={18} aria-hidden="true" />
-          )}
-          <span className="construction-tooltip" aria-hidden="true">
-            {paused ? copy.resume : copy.pause}
-          </span>
-        </button>
+        <>
+          <div
+            className="construction-steer"
+            role="group"
+            aria-label={copy.steer}
+            onKeyDown={onSteerKeyDown}
+            onKeyUp={onSteerKeyUp}
+          >
+            <button
+              type="button"
+              className="construction-steer-up icon-button"
+              aria-label={copy.steerUp}
+              title={copy.steerUp}
+              {...controls('up')}
+            >
+              <ArrowUp size={18} aria-hidden="true" />
+              <span className="construction-tooltip" aria-hidden="true">
+                {copy.steerUp}
+              </span>
+            </button>
+            <button
+              type="button"
+              className="construction-steer-left icon-button"
+              aria-label={copy.steerLeft}
+              title={copy.steerLeft}
+              {...controls('left')}
+            >
+              <ArrowLeft size={18} aria-hidden="true" />
+              <span className="construction-tooltip" aria-hidden="true">
+                {copy.steerLeft}
+              </span>
+            </button>
+            <button
+              type="button"
+              className="construction-steer-down icon-button"
+              aria-label={copy.steerDown}
+              title={copy.steerDown}
+              {...controls('down')}
+            >
+              <ArrowDown size={18} aria-hidden="true" />
+              <span className="construction-tooltip" aria-hidden="true">
+                {copy.steerDown}
+              </span>
+            </button>
+            <button
+              type="button"
+              className="construction-steer-right icon-button"
+              aria-label={copy.steerRight}
+              title={copy.steerRight}
+              {...controls('right')}
+            >
+              <ArrowRight size={18} aria-hidden="true" />
+              <span className="construction-tooltip" aria-hidden="true">
+                {copy.steerRight}
+              </span>
+            </button>
+          </div>
+          <button
+            type="button"
+            className="construction-motion icon-button"
+            aria-label={motionLabel}
+            title={motionLabel}
+            onClick={() => {
+              if (paused) {
+                setPaused(false);
+                setManual(false);
+              } else if (manual) setManual(false);
+              else setPaused(true);
+            }}
+          >
+            {paused || manual ? (
+              <Play size={18} aria-hidden="true" />
+            ) : (
+              <Pause size={18} aria-hidden="true" />
+            )}
+            <span className="construction-tooltip" aria-hidden="true">
+              {motionLabel}
+            </span>
+          </button>
+        </>
       )}
       {status === 'loading' && (
         <p className="construction-loading">{copy.loading}</p>

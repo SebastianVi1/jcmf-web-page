@@ -501,6 +501,37 @@ svg {
   bottom: var(--construction-motion-bottom);
   right: var(--gutter);
 }
+.construction-steer {
+  position: absolute;
+  z-index: 2;
+  bottom: var(--construction-motion-bottom);
+  right: calc(var(--gutter) + 56px);
+  display: grid;
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(2, 44px);
+}
+.construction-steer .icon-button {
+  position: relative;
+  touch-action: none;
+}
+.construction-steer-up {
+  grid-area: 1 / 2;
+}
+.construction-steer-left {
+  grid-area: 2 / 1;
+}
+.construction-steer-down {
+  grid-area: 2 / 2;
+}
+.construction-steer-right {
+  grid-area: 2 / 3;
+}
+@media (max-width: 600px) {
+  .construction-steer {
+    right: auto;
+    left: var(--gutter);
+  }
+}
 .construction-tooltip {
   position: absolute;
   bottom: calc(100% + 8px);
@@ -515,7 +546,10 @@ svg {
   opacity: 0;
   pointer-events: none;
 }
-.construction-motion:is(:hover, :focus-visible) .construction-tooltip {
+.construction-motion:is(:hover, :focus-visible) .construction-tooltip,
+.construction-steer
+  .icon-button:is(:hover, :focus-visible)
+  .construction-tooltip {
   opacity: 1;
 }
 .construction-loading,

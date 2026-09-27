@@ -6,8 +6,15 @@ const page = await browser.newPage({
   colorScheme: 'light',
   reducedMotion: 'reduce',
 });
+const base = (
+  process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:4321'
+).replace(/\/$/, '');
+// Capture at full resolution regardless of render performance.
+await page.addInitScript(() => {
+  window.__JCMF_DPR = 2;
+});
 await mkdir('test-results/screenshots', { recursive: true });
-await page.goto('http://localhost:4321/');
+await page.goto(`${base}/`);
 await page.evaluate(() => document.fonts.ready);
 await page.screenshot({
   path: 'test-results/screenshots/home-desktop.png',
@@ -24,7 +31,7 @@ await page.screenshot({
   path: 'test-results/screenshots/home-mobile.png',
   fullPage: true,
 });
-await page.goto('http://localhost:4321/en/contact/');
+await page.goto(`${base}/en/contact/`);
 await page.waitForFunction(
   () => !document.querySelector('.form-submit')?.disabled,
 );
@@ -36,18 +43,18 @@ await page.locator('#type').click();
 await page.screenshot({ path: 'test-results/screenshots/select-mobile.png' });
 await page.keyboard.press('Escape');
 await page.setViewportSize({ width: 1440, height: 1000 });
-await page.goto('http://localhost:4321/nosotros/');
+await page.goto(`${base}/nosotros/`);
 await page.screenshot({
   path: 'test-results/screenshots/about-desktop.png',
   fullPage: true,
 });
-await page.goto('http://localhost:4321/proyectos/');
+await page.goto(`${base}/proyectos/`);
 await page.screenshot({
   path: 'test-results/screenshots/projects-desktop.png',
   fullPage: true,
 });
 await page.setViewportSize({ width: 1200, height: 630 });
-await page.goto('http://localhost:4321/');
+await page.goto(`${base}/`);
 await page.addStyleTag({
   content:
     '.site-header{position:static}.header-inner{min-height:65px}.desktop-nav,.header-actions,.hero-bottom,.sector-strip,body>main>section:not(.masthead),.site-footer{display:none!important}.masthead-content{min-height:565px;padding-block:30px}.masthead .hero-title{font-size:108px}.masthead-footer{margin-top:24px}.masthead-actions{margin-top:18px}',

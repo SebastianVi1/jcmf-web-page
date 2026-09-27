@@ -5,8 +5,17 @@ import { createConstructionController } from '../src/features/construction/const
 import {
   brandReveal,
   cameraPose,
+  createSteering,
+  displayYaw,
+  driftFade,
   modelProgress,
   phaseIndex,
+  sequenceSweep,
+  sequenceTurn,
+  settleAmount,
+  steerTuning,
+  viewElevation,
+  wrapPi,
 } from '../src/features/construction/progress';
 import {
   sampleWorkerRoute,
@@ -78,6 +87,64 @@ describe('construction progress', () => {
     assert.ok(Math.abs(brandReveal(0.88) - 0.5) < 1e-8);
     assert.equal(brandReveal(1), 1);
     assert.equal(brandReveal(0.5), 0);
+  });
+  it('turns the building right to left with the scroll and finishes frontal', () => {
+    // The sweep starts from the right side and ends exactly on the facade.
+    assert.equal(sequenceSweep(1), 0);
+    assert.equal(sequenceSweep(NaN), sequenceTurn);
+    assert.ok(sequenceSweep(0) > 1.5);
+    let previous = Infinity;
+    for (let i = 0; i <= 20; i++) {
+      const sweep = sequenceSweep(i / 20);
+      assert.ok(sweep < previous);
+      previous = sweep;
+    }
+    // The finale window zeroes the idle drift and is fully reversible.
+    assert.equal(settleAmount(0), 0);
+    assert.equal(settleAmount(1), 1);
+    assert.equal(driftFade(0), 1);
+    assert.equal(driftFade(1), 0);
+    const azimuth = cameraPose(1).azimuth;
+    // The finished frame is the frontal facade however long the visitor idled.
+    assert.equal(displayYaw(azimuth, 1, 12, 0), azimuth);
+    assert.ok(
+      Math.abs(wrapPi(displayYaw(azimuth, 1, 12, 0.2) - azimuth - 0.2)) < 1e-12,
+    );
+    // Early sequence keeps the turned pose; scrolling back restores it.
+    assert.ok(displayYaw(azimuth, 0, 0, 0) > azimuth + 1.5);
+    const back = displayYaw(azimuth, 0.95, 2, 0);
+    assert.ok(back > azimuth && back < azimuth + sequenceTurn);
+  });
+  it('steers fluidly while held, glides on tap, and clamps the tilt', () => {
+    const steering = createSteering();
+    steering.press('right');
+    let yaw = 0;
+    for (let i = 0; i < 60; i++) yaw = steering.step(1 / 60).yaw;
+    // Continuous turn near the tuned rate while held, not a single step.
+    assert.ok(yaw > 0.4 && yaw < steerTuning.yawRate * 1.05);
+    steering.release('right');
+    for (let i = 0; i < 60; i++) yaw = steering.step(1 / 60).yaw;
+    const stopped = steering.step(1 / 60);
+    assert.ok(Math.abs(stopped.yaw - yaw) < 1e-3);
+    assert.equal(stopped.active, false);
+    // A quick tap still moves the model a perceptible amount.
+    const tap = createSteering();
+    tap.press('down');
+    tap.release('down');
+    let tilt = 0;
+    for (let i = 0; i < 120; i++) tilt = tap.step(1 / 60).tilt;
+    assert.ok(tilt < -0.05 && tilt > steerTuning.tiltMin);
+    // Holding clamps at the limit instead of flying past it.
+    const crank = createSteering();
+    crank.press('up');
+    let value = 0;
+    for (let i = 0; i < 300; i++) value = crank.step(1 / 60).tilt;
+    assert.equal(value, steerTuning.tiltMax);
+    assert.ok(Number.isFinite(value));
+    // The documented finale elevation survives an untouched tilt.
+    assert.ok(
+      Math.abs(viewElevation(cameraPose(1).elevation, 0) - 0.42) < 1e-12,
+    );
   });
   it('shows the site before scrolling and still excavates it in order', () => {
     const root = new Group();

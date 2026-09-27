@@ -8,6 +8,11 @@ const page = await browser.newPage({
   reducedMotion: 'no-preference',
 });
 page.on('pageerror', (error) => console.error(error.message));
+// Posters are committed assets: capture at full resolution regardless of
+// render performance.
+await page.addInitScript(() => {
+  window.__JCMF_DPR = 2;
+});
 await mkdir('test-results/construction', { recursive: true });
 await mkdir('public/images/construction', { recursive: true });
 try {

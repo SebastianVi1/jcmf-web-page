@@ -95,19 +95,39 @@ El recorrido usa scroll nativo y tres alturas de pantalla. El último 10% mantie
 el edificio terminado. Con movimiento reducido, sin WebGL2, sin JavaScript o en
 ventanas de menos de 660px de alto se muestra un poster estático. Los enlaces
 permanecen disponibles durante la carga y ante errores. La escena solo se carga
-en las portadas ES/EN. El modelo flota y gira continuamente mientras está visible,
-también durante scroll y sin foco o hover. El control de pausa detiene ambos
-movimientos; fuera de pantalla se suspenden automáticamente. El navegador puede
-limitar los fotogramas de pestañas ocultas. La cámara describe un arco suave y baja hacia la
-fachada durante la construcción. Entre el 78% y el 98%, el nombre aparece detrás
-del edificio mediante fade y revelado vertical, sin desplazar el contenido.
+en las portadas ES/EN. El scroll mueve la rotación del edificio de derecha a
+izquierda a lo largo de la secuencia y el último cuadro es exactamente el frente
+del edificio (la fachada de entrada queda de cara a la cámara). El giro
+automático lento solo aparece con el scroll detenido y retoma desde la
+orientación actual; mientras se hace scroll, la rotación la manda el recorrido.
+La flotación corre siempre, en paralelo. El control de pausa detiene giro y
+flotación; fuera de pantalla se suspenden automáticamente. El navegador puede
+limitar los fotogramas de pestañas ocultas. La cámara describe un arco suave y
+baja hacia la fachada durante la construcción. Entre el 78% y el 98%, el nombre
+aparece detrás del edificio mediante fade y revelado vertical, sin desplazar el
+contenido.
+
+Un pad de flechas permite girar el edificio (izquierda/derecha) e inclinar la
+vista (arriba/abajo). El control es fluido: mantener presionado gira de forma
+continua y un toque corto da un impulso visible. Usar las flechas detiene el giro
+automático —el edificio queda donde lo dejas— pero no la flotación; el botón de
+reproducción reanuda el giro. Las flechas también funcionan con las teclas de
+dirección y no desplazan la página.
 El cierre usa Bebas Neue autoalojada, mayúsculas casi a todo el ancho y una
 composición superior/inferior en móvil.
 
 - `node scripts/capture-construction.mjs`: regenera los dos posters WebP y captura
   etapas de escritorio; requiere el servidor en http://localhost:4321.
 - `bunx playwright test tests/browser/construction.spec.ts`: verifica la escena,
-  reversibilidad, giro y pausa, carga lenta, fallback, teclado y movimiento reducido.
+  reversibilidad, asentamiento de frente, flechas fluidas, giro y pausa, carga
+  lenta, fallback, teclado y movimiento reducido.
+
+El rendimiento está cuidado: la escena se carga hasta que la página termina de
+cargar y el hilo principal queda libre, con los pósters cubriendo la espera, y el
+bucle de render deja tiempo libre en equipos lentos (los renderizadores por
+software arrancan con menor resolución de lienzo) para que la página nunca se
+congele. Los scripts de captura fuerzan resolución completa mediante
+`window.__JCMF_DPR` para que las imágenes versionadas no salgan borrosas.
 
 No ejecutar capturas/E2E al mismo tiempo que `astro check`, builds o cambios de
 dependencias: la reoptimización de Vite puede recargar páginas durante la prueba.
