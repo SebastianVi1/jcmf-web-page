@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "check": "astro check",
-    "test": "bun test tests/contact.test.ts",
+    "test": "bun test tests/contact.test.ts tests/construction.test.ts",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -20,12 +20,15 @@
     "@astrojs/react": "^6.0.6",
     "@fontsource-variable/dm-sans": "^5.3.0",
     "@fontsource-variable/oswald": "^5.3.0",
+    "@react-three/fiber": "^9.3.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "astro": "^7.3.3",
+    "gsap": "^3.13.0",
     "impeccable": "^4.1.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "three": "0.180.0",
     "zod": "^4.6.5"
   },
   "allowScripts": {
@@ -36,6 +39,7 @@
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.6.2",
+    "@types/three": "0.180.0",
     "prettier": "^3.9.8",
     "prettier-plugin-astro": "^1.0.1",
     "typescript": "^6"
