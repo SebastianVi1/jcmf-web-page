@@ -95,11 +95,14 @@ El recorrido usa scroll nativo y tres alturas de pantalla. El último 10% mantie
 el edificio terminado. Con movimiento reducido, sin WebGL2, sin JavaScript o en
 ventanas de menos de 660px de alto se muestra un poster estático. Los enlaces
 permanecen disponibles durante la carga y ante errores. La escena solo se carga
-en las portadas ES/EN. Tras 700ms sin scroll, el modelo flota y gira lentamente;
-el control de pausa detiene ambos movimientos. Fuera de pantalla o con la pestaña
-oculta se suspende el giro. El nombre aparece debajo de la escena entre el 78%
-y el 98% de la construcción, sin desplazar el contenido. El cierre usa Bebas Neue
-autoalojada, mayúsculas casi a todo el ancho y dos líneas en móvil.
+en las portadas ES/EN. El modelo flota y gira continuamente mientras está visible,
+también durante scroll y sin foco o hover. El control de pausa detiene ambos
+movimientos; fuera de pantalla se suspenden automáticamente. El navegador puede
+limitar los fotogramas de pestañas ocultas. La cámara describe un arco suave y baja hacia la
+fachada durante la construcción. Entre el 78% y el 98%, el nombre aparece detrás
+del edificio mediante fade y revelado vertical, sin desplazar el contenido.
+El cierre usa Bebas Neue autoalojada, mayúsculas casi a todo el ancho y una
+composición superior/inferior en móvil.
 
 - `node scripts/capture-construction.mjs`: regenera los dos posters WebP y captura
   etapas de escritorio; requiere el servidor en http://localhost:4321.
@@ -108,6 +111,8 @@ autoalojada, mayúsculas casi a todo el ancho y dos líneas en móvil.
 
 No ejecutar capturas/E2E al mismo tiempo que `astro check`, builds o cambios de
 dependencias: la reoptimización de Vite puede recargar páginas durante la prueba.
+Si el servidor usa otro puerto, pasar `PLAYWRIGHT_BASE_URL=http://localhost:4322`
+a los comandos de E2E y captura para verificar esa misma instancia.
 
 Si Vite muestra `504 Outdated Optimize Dep` después de instalar fuentes o ejecutar comprobaciones,
 reiniciar con `bun run astro dev stop` y `bun run dev -- --background` antes de probar el navegador.

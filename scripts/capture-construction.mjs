@@ -11,7 +11,7 @@ page.on('pageerror', (error) => console.error(error.message));
 await mkdir('test-results/construction', { recursive: true });
 await mkdir('public/images/construction', { recursive: true });
 try {
-  await page.goto('http://localhost:4321/');
+  await page.goto(process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:4321/');
   await page
     .locator('[data-construction][data-mode="ready"]')
     .waitFor({ timeout: 60000 });
@@ -25,7 +25,9 @@ try {
         scrollY -
         parseFloat(getComputedStyle(stage).top);
       scrollTo({
-        top: top + p * 0.9 * (host.offsetHeight - stage.offsetHeight),
+        top:
+          top +
+          (p === 1 ? 0.96 : p * 0.9) * (host.offsetHeight - stage.offsetHeight),
         behavior: 'instant',
       });
     }, value);
@@ -44,6 +46,14 @@ try {
       path: `test-results/construction/desktop-${progress}.png`,
     });
   }
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.getByRole('button', { name: 'Activar tema oscuro' }).click();
+  await seek(1);
+  await page.mouse.move(0, 0);
+  await page.screenshot({
+    path: 'test-results/construction/mobile-finale.png',
+  });
+  await page.getByRole('button', { name: 'Activar tema claro' }).click();
   await page.setViewportSize({ width: 1200, height: 1400 });
   await page.addStyleTag({
     content: `

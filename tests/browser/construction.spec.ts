@@ -11,7 +11,10 @@ async function seek(page: Page, progress: number) {
       scrollY -
       parseFloat(getComputedStyle(stage).top);
     scrollTo({
-      top: start + value * 0.9 * (host.offsetHeight - stage.offsetHeight),
+      top:
+        start +
+        (value === 1 ? 0.96 : value * 0.9) *
+          (host.offsetHeight - stage.offsetHeight),
       behavior: 'instant',
     });
   }, progress);
@@ -39,6 +42,9 @@ test('construction is visible, reversible, idle when paused, and cleans up durin
   );
   await page.locator('.construction-motion').click();
   await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '0');
+  const initialAngle = await page
+    .locator('canvas')
+    .getAttribute('data-azimuth');
   const initialStats = await sharp(
     await page.locator('canvas').screenshot(),
   ).stats();
@@ -56,6 +62,16 @@ test('construction is visible, reversible, idle when paused, and cleans up durin
   ).toBeGreaterThan(8);
   await page.screenshot({ path: testInfo.outputPath('structure.png') });
   await seek(page, 1);
+  await expect(page.locator('canvas')).not.toHaveAttribute(
+    'data-azimuth',
+    initialAngle!,
+  );
+  await expect(page.locator('canvas')).toHaveAttribute(
+    'data-elevation',
+    '0.42000',
+  );
+  await expect(page.locator('.construction-visual')).toHaveCSS('z-index', '1');
+  await expect(page.locator('.construction-brand')).toHaveCSS('z-index', '0');
   await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '1');
   await page.screenshot({ path: testInfo.outputPath('finished.png') });
   await expect(page.locator('[data-construction-phase]')).toHaveText(
@@ -63,6 +79,9 @@ test('construction is visible, reversible, idle when paused, and cleans up durin
   );
   await seek(page, 0.55);
   await expect(page.locator('.construction-brand')).toHaveCSS('opacity', '0');
+  await expect(page.locator('[data-construction-phase]')).toHaveText('Muros');
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await seek(page, 0.55);
   await expect(page.locator('[data-construction-phase]')).toHaveText('Muros');
   await expect
     .poll(
@@ -94,7 +113,7 @@ test('construction is visible, reversible, idle when paused, and cleans up durin
   expect(errors).toEqual([]);
 });
 
-test('idle motion rotates and floats without building progress, can pause, and stops offscreen', async ({
+test('continuous motion rotates and floats without focus, survives scroll, and stops offscreen', async ({
   page,
 }) => {
   test.setTimeout(90000);
@@ -117,10 +136,15 @@ test('idle motion rotates and floats without building progress, can pause, and s
   await expect(host).toHaveAttribute('data-idle', 'paused');
   await page.waitForTimeout(200);
   const pausedYaw = await canvas.getAttribute('data-yaw');
-  const frames = await canvas.getAttribute('data-frames');
   await page.waitForTimeout(1000);
   await expect(canvas).toHaveAttribute('data-yaw', pausedYaw!);
-  await expect(canvas).toHaveAttribute('data-frames', frames!);
+  await expect
+    .poll(async () => {
+      const frames = await canvas.getAttribute('data-frames');
+      await page.waitForTimeout(1000);
+      return (await canvas.getAttribute('data-frames')) === frames;
+    })
+    .toBe(true);
   await page.getByRole('button', { name: 'Reanudar giro y flotación' }).click();
   await expect(host).toHaveAttribute('data-idle', 'running');
   await expect(canvas).not.toHaveAttribute('data-yaw', pausedYaw!);
@@ -131,11 +155,35 @@ test('idle motion rotates and floats without building progress, can pause, and s
   );
   await expect(host).toHaveAttribute('data-idle', 'paused');
   await page.waitForTimeout(1000);
-  const hiddenFrames = await canvas.getAttribute('data-frames');
-  await page.waitForTimeout(1000);
-  await expect(canvas).toHaveAttribute('data-frames', hiddenFrames!);
+  await expect
+    .poll(async () => {
+      const frames = await canvas.getAttribute('data-frames');
+      await page.waitForTimeout(1000);
+      return (await canvas.getAttribute('data-frames')) === frames;
+    })
+    .toBe(true);
   await seek(page, 0.5);
   await expect(host).toHaveAttribute('data-idle', 'running');
+  await page.mouse.move(0, 0);
+  const samples = await page.evaluate(async () => {
+    const host = document.querySelector<HTMLElement>('[data-construction]')!;
+    const canvas = host.querySelector('canvas')!;
+    window.dispatchEvent(new Event('blur'));
+    const poses = [];
+    for (let i = 0; i < 12; i++) {
+      scrollBy({ top: 10, behavior: 'instant' });
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      poses.push({
+        state: host.dataset.idle,
+        yaw: canvas.dataset.yaw,
+        lift: canvas.dataset.lift,
+      });
+    }
+    return poses;
+  });
+  expect(samples.every(({ state }) => state === 'running')).toBe(true);
+  expect(samples.at(-1)!.yaw).not.toBe(samples[0].yaw);
+  expect(samples.at(-1)!.lift).not.toBe(samples[0].lift);
 });
 
 test('mobile English dark scene fits, changes theme and supports the keyboard skip link', async ({
@@ -168,8 +216,9 @@ test('mobile English dark scene fits, changes theme and supports the keyboard sk
       overflow: document.documentElement.scrollWidth > innerWidth,
     };
   });
-  expect(boxes.scene.bottom).toBeLessThanOrEqual(boxes.brand.top + 1);
-  expect(boxes.brand.bottom).toBeLessThanOrEqual(boxes.footer.top + 13);
+  expect(boxes.scene.top).toBeCloseTo(boxes.brand.top, 0);
+  expect(boxes.scene.bottom).toBeCloseTo(boxes.brand.bottom, 0);
+  expect(boxes.scene.bottom).toBeLessThanOrEqual(boxes.footer.top + 1);
   expect(boxes.overflow).toBe(false);
   await page.screenshot({ path: testInfo.outputPath('mobile-dark.png') });
   const stats = await sharp(await page.locator('canvas').screenshot()).stats();

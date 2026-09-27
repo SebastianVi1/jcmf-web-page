@@ -14,7 +14,7 @@ export interface ConstructionOptions {
 }
 const smooth = (p: number, a: number, b: number) => {
   const t = Math.max(0, Math.min(1, (p - a) / (b - a)));
-  return t * t * (3 - 2 * t);
+  return t * t * t * (t * (t * 6 - 15) + 10);
 };
 const hoistLength = (p: number, time: number) => {
   const target = 1 + 15 * smooth(p, 0.19, 0.4);
@@ -40,8 +40,11 @@ export function createConstructionController(root: Object3D) {
     scale: Vector3;
   }[] = [];
   const workers = new Map<string, RouteSegment[]>();
+  const activeRanges = new Map<Object3D, [number, number][]>();
   root.traverse((object) => {
     const d = object.userData;
+    if (d.activeRangesJSON)
+      activeRanges.set(object, JSON.parse(d.activeRangesJSON));
     if (d.workerRoot) workers.set(d.workerId, JSON.parse(d.workerRouteJSON));
     if (
       d.construction ||
@@ -89,11 +92,21 @@ export function createConstructionController(root: Object3D) {
         amount = siteBase.has(obj.name) ? 1 : smooth(p, d.start, d.end);
         if (d.retireStart !== undefined)
           amount *= 1 - smooth(p, d.retireStart, d.retireEnd);
+        const ranges = activeRanges.get(obj);
+        if (ranges)
+          amount *= Math.max(
+            0,
+            ...ranges.map(
+              ([a, b]) =>
+                smooth(p, a, a + 0.008) * (1 - smooth(p, b - 0.008, b)),
+            ),
+          );
         if (d.mode === 'uniform')
           obj.scale.multiplyScalar(Math.max(0.00001, amount));
-        else if (d.mode === 'slide')
+        else if (d.mode === 'slide') {
           obj.position.y = position.y + (d.installLift ?? 0.6) * (1 - amount);
-        else obj.scale.y = scale.y * Math.max(0.00001, amount);
+          obj.scale.multiplyScalar(Math.max(0.00001, amount));
+        } else obj.scale.y = scale.y * Math.max(0.00001, amount);
       }
       const task = tasks.get(d.workerId);
       const active =

@@ -26,7 +26,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { createConstructionController } from './construction-controller';
-import { brandReveal, modelProgress, phaseIndex } from './progress';
+import { createProgressSmoother } from './worker-routes';
+import { brandReveal, cameraPose, modelProgress, phaseIndex } from './progress';
 import type { SceneProps } from './ConstructionIsland';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -84,13 +85,16 @@ function Building({
 }: SceneProps & { model: Object3D }) {
   const { camera, gl, scene, invalidate, size } = useThree();
   const progress = useRef({ value: 0 });
+  const smoothing = useMemo(() => createProgressSmoother(0), [model]);
+  const lastFrame = useRef(0);
+  const publishProgress = useRef<(p: number) => void>(() => {});
   const visible = useRef(true);
   const rendered = useRef(false);
   const pivot = useRef<Group>(null);
-  const pose = useRef({ time: 0 });
+  const pose = useRef({ time: 0, activity: 0 });
   const pausedRef = useRef(paused);
   pausedRef.current = paused;
-  const scheduleIdle = useRef<() => void>(() => {});
+  const syncMotion = useRef<() => void>(() => {});
   const controller = useMemo(
     () => createConstructionController(model),
     [model],
@@ -190,21 +194,15 @@ function Building({
     const meter = host.querySelector<HTMLElement>('[data-construction-meter]')!;
     const phase = host.querySelector<HTMLElement>('[data-construction-phase]')!;
     let lastPhase = -1;
-    let wakeTimer: number | undefined;
     let idle: gsap.core.Tween | undefined;
-    const queueIdle = () => {
-      idle?.pause();
-      window.clearTimeout(wakeTimer);
-      host.dataset.idle = 'paused';
-      if (!visible.current || document.hidden || pausedRef.current) return;
-      wakeTimer = window.setTimeout(() => {
-        if (!visible.current || document.hidden || pausedRef.current) return;
-        idle?.resume();
-        host.dataset.idle = 'running';
-      }, 700);
+    let activity: gsap.core.Tween | undefined;
+    const updateMotion = () => {
+      const running = visible.current && !pausedRef.current;
+      idle?.paused(!running);
+      activity?.paused(!running || document.hidden);
+      host.dataset.idle = running ? 'running' : 'paused';
     };
-    const update = () => {
-      const p = modelProgress(progress.current.value);
+    const publish = (p: number) => {
       host.dataset.progress = p.toFixed(4);
       host.style.setProperty(
         '--construction-brand-reveal',
@@ -216,11 +214,13 @@ function Building({
         phase.textContent = phases[index];
         lastPhase = index;
       }
-      if (visible.current && !document.hidden) invalidate();
-      queueIdle();
+    };
+    publishProgress.current = publish;
+    const update = () => {
+      if (visible.current) invalidate();
     };
     const context = gsap.context(() => {
-      // Both periods divide 120 seconds, so the repeated pose is seamless.
+      // Floating repeats independently of the workers' finite activity interval.
       idle = gsap.to(pose.current, {
         time: 120,
         duration: 120,
@@ -229,53 +229,58 @@ function Building({
         paused: true,
         onUpdate: () => invalidate(),
       });
-      gsap.to(progress.current, {
-        value: 1,
+      activity = gsap.to(pose.current, {
+        activity: 120,
+        duration: 120,
         ease: 'none',
-        onUpdate: update,
-        scrollTrigger: {
-          trigger: host,
-          start: () => `top ${parseFloat(getComputedStyle(stage).top) || 0}px`,
-          end: () => `+=${Math.max(1, host.offsetHeight - stage.offsetHeight)}`,
-          scrub: 0.35,
-          invalidateOnRefresh: true,
-          onRefresh: (trigger) => {
-            progress.current.value = trigger.progress;
-            update();
+        paused: true,
+        onUpdate: () => invalidate(),
+      });
+      // Refresh must not capture the current progress as a new animation start.
+      gsap.fromTo(
+        progress.current,
+        { value: 0 },
+        {
+          value: 1,
+          ease: 'none',
+          onUpdate: update,
+          scrollTrigger: {
+            trigger: host,
+            start: () =>
+              `top ${parseFloat(getComputedStyle(stage).top) || 0}px`,
+            end: () =>
+              `+=${Math.max(1, host.offsetHeight - stage.offsetHeight)}`,
+            scrub: true,
+            invalidateOnRefresh: true,
+            onRefresh: update,
           },
         },
-      });
+      );
     }, host);
-    scheduleIdle.current = queueIdle;
-    window.addEventListener('scroll', queueIdle, { passive: true });
+    syncMotion.current = updateMotion;
     const resize = new ResizeObserver(() => ScrollTrigger.refresh());
     resize.observe(stage);
     const intersection = new IntersectionObserver(([entry]) => {
       visible.current = entry.isIntersecting;
-      queueIdle();
+      updateMotion();
       if (visible.current) invalidate();
     });
-    intersection.observe(stage);
-    const visibility = () => {
-      queueIdle();
-      if (!document.hidden) invalidate();
-    };
-    document.addEventListener('visibilitychange', visibility);
+    intersection.observe(gl.domElement);
+    document.addEventListener('visibilitychange', updateMotion);
+    updateMotion();
     update();
     return () => {
       context.revert();
-      window.clearTimeout(wakeTimer);
-      window.removeEventListener('scroll', queueIdle);
-      scheduleIdle.current = () => {};
+      syncMotion.current = () => {};
       host.style.removeProperty('--construction-brand-reveal');
       resize.disconnect();
       intersection.disconnect();
-      document.removeEventListener('visibilitychange', visibility);
+      document.removeEventListener('visibilitychange', updateMotion);
     };
-  }, [host, phases, invalidate]);
+  }, [host, phases, invalidate, gl]);
 
   useEffect(() => {
-    scheduleIdle.current();
+    syncMotion.current();
   }, [paused]);
 
   useEffect(
@@ -290,34 +295,44 @@ function Building({
 
   const ready = useRef(false);
   useFrame(() => {
-    const p = modelProgress(progress.current.value);
-    controller.update(p, p * 48);
+    const now = performance.now();
+    const dt = lastFrame.current ? (now - lastFrame.current) / 1000 : 1 / 60;
+    lastFrame.current = now;
+    const displayed = smoothing.step(progress.current.value, dt);
+    if (displayed !== progress.current.value && visible.current) invalidate();
+    const p = modelProgress(displayed);
+    publishProgress.current(p);
+    controller.update(p, p * 48 + pose.current.activity);
     const yaw = (pose.current.time * Math.PI) / 60;
-    const lift = Math.sin((pose.current.time * Math.PI * 2) / 7.5) * 0.25;
+    const lift = Math.sin((pose.current.time * Math.PI * 2) / 7.5) * 0.9;
     if (pivot.current) {
       pivot.current.rotation.y = yaw;
       pivot.current.position.y = lift;
     }
     const ortho = camera as OrthographicCamera;
-    const angle = Math.atan2(-31, 39);
-    offset.set(Math.sin(angle) * 50, 29, Math.cos(angle) * 50);
+    const { azimuth, elevation } = cameraPose(p);
+    offset.set(
+      Math.sin(azimuth) * 50,
+      Math.tan(elevation) * 50,
+      Math.cos(azimuth) * 50,
+    );
     ortho.position.copy(center).add(offset);
     ortho.lookAt(center);
     ortho.updateMatrixWorld();
     // Fit the whole turn, including the crane, without zooming as the model rotates.
-    const elevation = Math.atan2(29, 50);
     const projectedHeight =
-      (bounds.max.y - bounds.min.y + 0.5) * Math.cos(elevation) +
+      (bounds.max.y - bounds.min.y + 1.8) * Math.cos(elevation) +
       2 * orbitRadius * Math.sin(elevation);
     const height =
       Math.max(
         projectedHeight,
         (2 * orbitRadius) / (size.width / size.height),
-      ) * 1.04;
+      ) * 1.12;
     ortho.left = (-height * size.width) / size.height / 2;
     ortho.right = -ortho.left;
-    ortho.top = height / 2;
-    ortho.bottom = -height / 2;
+    const framingOffset = size.width <= 600 ? 0 : -height * 0.02;
+    ortho.top = height / 2 + framingOffset;
+    ortho.bottom = -height / 2 + framingOffset;
     ortho.near = 0.1;
     ortho.far = Math.max(200, sphere.radius * 8);
     ortho.updateProjectionMatrix();
@@ -325,6 +340,8 @@ function Building({
     gl.domElement.dataset.frames = String(gl.info.render.frame);
     gl.domElement.dataset.yaw = yaw.toFixed(5);
     gl.domElement.dataset.lift = lift.toFixed(5);
+    gl.domElement.dataset.azimuth = azimuth.toFixed(5);
+    gl.domElement.dataset.elevation = elevation.toFixed(5);
     if (!ready.current && lights.sky) {
       ready.current = true;
       rendered.current = true;

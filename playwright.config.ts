@@ -4,7 +4,7 @@ export default defineConfig({
   fullyParallel: true,
   workers: 2,
   use: {
-    baseURL: 'http://localhost:4321',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:4321',
     viewport: { width: 1440, height: 1000 },
     colorScheme: 'light',
     reducedMotion: 'reduce',

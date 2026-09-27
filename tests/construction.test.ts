@@ -4,15 +4,74 @@ import { Group, Object3D } from 'three';
 import { createConstructionController } from '../src/features/construction/construction-controller';
 import {
   brandReveal,
+  cameraPose,
   modelProgress,
   phaseIndex,
 } from '../src/features/construction/progress';
 import {
   sampleWorkerRoute,
+  createProgressSmoother,
+  workerPose,
   type RouteSegment,
 } from '../src/features/construction/worker-routes';
 
 describe('construction progress', () => {
+  it('settles at the same rate on slow and fast renderers and follows reversals', () => {
+    const slow = createProgressSmoother();
+    const fast = createProgressSmoother();
+    for (let i = 0; i < 6; i++) slow.step(1, 1 / 10);
+    for (let i = 0; i < 36; i++) fast.step(1, 1 / 60);
+    assert.ok(Math.abs(slow.value - fast.value) < 0.00001);
+    assert.ok(slow.value > 0.99);
+    for (let i = 0; i < 10; i++) slow.step(0, 0.1);
+    assert.ok(slow.value < 0.0001);
+    assert.equal(slow.step(0.7, 0.01, true), 0.7);
+    assert.ok(Number.isFinite(slow.step(NaN, NaN)));
+  });
+
+  it('animates different work tasks at fixed construction progress', () => {
+    const state = {
+      position: [0, 0, 0],
+      heading: 0,
+      weight: 1,
+      phase: 0,
+      visibility: 1,
+      segment: 0,
+      activity: 'hammer',
+    };
+    const first = workerPose('Worker_09_Shoulder_R', state, 0, true);
+    assert.notEqual(
+      workerPose('Worker_09_Shoulder_R', state, 0.5, true),
+      first,
+    );
+    assert.notEqual(
+      workerPose(
+        'Worker_09_Shoulder_R',
+        { ...state, activity: 'drill' },
+        0,
+        true,
+      ),
+      first,
+    );
+    assert.equal(
+      workerPose('Worker_09_Shoulder_R', state, 0, false),
+      workerPose('Worker_09_Shoulder_R', state, 0.5, false),
+    );
+  });
+  it('moves the camera smoothly and reversibly from overhead to the facade', () => {
+    const start = cameraPose(0);
+    const finish = cameraPose(1);
+    const middle = cameraPose(0.5);
+    assert.ok(
+      start.elevation > middle.elevation && middle.elevation > finish.elevation,
+    );
+    assert.ok(
+      start.azimuth < middle.azimuth && middle.azimuth < finish.azimuth,
+    );
+    assert.deepEqual(cameraPose(0.5), middle);
+    assert.deepEqual(cameraPose(NaN), start);
+    assert.deepEqual(cameraPose(2), finish);
+  });
   it('reveals the brand only near completion and reverses with progress', () => {
     assert.equal(brandReveal(0), 0);
     assert.equal(brandReveal(0.78), 0);
