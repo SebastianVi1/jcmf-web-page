@@ -1,6 +1,6 @@
 # JCMF Constructora
 
-Ramas de diseño: modern_design conserva la propuesta original azul/isométrica; design_minimal contiene la evolución azul técnico/concreto y azul noche con portada fotográfica, Oswald y animaciones finitas. Ambas comparten funcionalidad e idiomas. Cambiar de rama con Git permite comparar las propuestas; esta rama no publica cambios.
+Ramas de diseño: modern_design conserva la propuesta original azul/isométrica; design_minimal contiene la evolución azul técnico/concreto y azul noche con portada fotográfica. La rama 3d-animation sustituye esa portada por una construcción vinculada al scroll con Three.js, React Three Fiber y GSAP. Conserva Oswald, los dos idiomas y las funciones del sitio. Cambiar de rama con Git permite comparar las propuestas; esta rama no publica cambios.
 
 Sitio corporativo en Astro + React + TypeScript con placeholders. Incluye inicio, nosotros, catálogo, fichas de proyecto, contacto y privacidad en español e inglés. La identidad y sus reglas están en [DESIGN.md](DESIGN.md); el plan detallado y los pendientes de lanzamiento en [PLAN.md](PLAN.md).
 
@@ -77,12 +77,34 @@ El plan registra los resultados de compilación, tipos y revisión del navegador
 ## Personalizar el diseño actual
 
 - Paletas y escalas: editar `src/styles/tokens.css` y reflejar las decisiones en `DESIGN.md`.
-- Portada: `src/views/Home.astro` reutiliza el adaptador WebP y muestra texto de `home` en los dos diccionarios.
+- Portada: `ConstructionHero.astro` se integra en `src/views/Home.astro`; los textos viven en `home.construction` de ambos diccionarios. `src/features/construction` contiene la carga condicional, escena y controlador reversible.
 - Galería inferior: `HomeShowcase.astro` selecciona slugs existentes; la procedencia sigue en `PORTFOLIO.md`.
 - Cifras de diseño: `home.metrics` contiene ejemplos ficticios con etiquetas explícitas. Reemplazarlos por cifras aprobadas o retirar `HomeMetrics` antes de publicar.
 - Equipo: cada registro de `about.team` tiene `role` y `name`. Sustituir los nombres por confirmar en ambos idiomas cuando estén aprobados.
 - Animación: duraciones `--motion-*` en tokens; reglas en `global.css`. Movimiento reducido elimina los efectos.
 - Capturas y tarjeta social: `node scripts/capture.mjs`; pruebas de la nueva portada en `tests/browser/home-design.spec.ts`.
+
+## Construcción 3D
+
+La portada usa `public/models/building.glb`, proporcionado en
+`3d_models/construction_complete`. Se distribuye como visualización conceptual,
+sin atribuirla a una obra real de JCMF. El modelo conserva sus materiales, etapas,
+trabajadores y maquinaria; el terreno es visible antes de empezar el scroll.
+
+El recorrido usa scroll nativo y tres alturas de pantalla. El último 10% mantiene
+el edificio terminado. Con movimiento reducido, sin WebGL2, sin JavaScript o en
+ventanas de menos de 660px de alto se muestra un poster estático. Los enlaces
+permanecen disponibles durante la carga y ante errores. La escena solo se carga
+en las portadas ES/EN y no renderiza continuamente en reposo.
+
+- `node scripts/capture-construction.mjs`: regenera los dos posters WebP y captura
+  etapas de escritorio; requiere el servidor en http://localhost:4321.
+- `bunx playwright test tests/browser/construction.spec.ts`: verifica la escena,
+  reversibilidad, carga lenta, fallback, teclado y movimiento reducido.
+- `plan-3d.md`: plan acordado y registro de implementación/verificación.
+
+No ejecutar capturas/E2E al mismo tiempo que `astro check`, builds o cambios de
+dependencias: la reoptimización de Vite puede recargar páginas durante la prueba.
 
 Si Vite muestra `504 Outdated Optimize Dep` después de instalar fuentes o ejecutar comprobaciones,
 reiniciar con `bun run astro dev stop` y `bun run dev -- --background` antes de probar el navegador.

@@ -16,10 +16,10 @@ test('home remains readable and navigable across locales, themes and narrow scre
         await page.goto(locale === 'es' ? '/' : '/en/');
         await page.evaluate(() => document.fonts.ready);
         await page
-          .locator('.masthead-image')
+          .locator('.construction-poster-complete')
           .evaluate((el) => (el as HTMLImageElement).decode());
         await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
-        await expect(page.locator('.masthead-actions a')).toHaveCount(2);
+        await expect(page.locator('.construction-actions a')).toHaveCount(2);
         await expect(page.locator('.metrics-grid > div')).toHaveCount(3);
         await expect(page.locator('#metrics-note')).toContainText(
           locale === 'es' ? 'Datos ficticios' : 'Fictional figures',
@@ -54,7 +54,7 @@ test('home remains readable and navigable across locales, themes and narrow scre
             'test-results/home-' + locale + '-' + theme + '-' + width + '.png',
           fullPage: true,
         });
-        const primary = page.locator('.masthead-actions a').first();
+        const primary = page.locator('.construction-actions a').first();
         await primary.focus();
         await page.keyboard.press('Enter');
         await expect(page).toHaveURL(
@@ -65,10 +65,9 @@ test('home remains readable and navigable across locales, themes and narrow scre
   }
 });
 
-test('hero survives failed photography and settles without perpetual motion', async ({
+test('hero remains usable when its static poster cannot load', async ({
   page,
 }) => {
-  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.route('**/*', (route) =>
     route.request().resourceType() === 'image'
       ? route.abort()
@@ -79,20 +78,20 @@ test('hero survives failed photography and settles without perpetual motion', as
   await expect
     .poll(() =>
       page
-        .locator('.masthead-image')
+        .locator('.construction-poster-complete')
         .evaluate(
           (el) =>
             el.getAnimations().filter((a) => a.playState === 'running').length,
         ),
     )
     .toBe(0);
-  await expect(page.locator('.masthead-actions a').first()).toBeVisible();
+  await expect(page.locator('.construction-actions a').first()).toBeVisible();
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(page.locator('.masthead-image')).toHaveCSS(
+  await expect(page.locator('.construction-poster-complete')).toHaveCSS(
     'animation-name',
     'none',
   );
-  const link = page.locator('.masthead-actions a').first();
+  const link = page.locator('.construction-actions a').first();
   await link.focus();
   await expect(link.locator('svg')).toHaveCSS('transform', 'none');
   await page.keyboard.press('Enter');

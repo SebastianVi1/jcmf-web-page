@@ -2669,6 +2669,9 @@ svg {
     stroke-dashoffset: 0;
   }
   .masthead-image,
+  .construction-actions a,
+  .construction-actions a > svg,
+  .construction-skip > svg,
   .masthead-actions a,
   .masthead-actions a > svg,
   .visual-link,

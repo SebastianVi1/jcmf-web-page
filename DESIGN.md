@@ -82,7 +82,7 @@ en la segunda línea; tamaños 112/58px, 88/46px hasta 1100px, 64/36px hasta 900
 y 56/32px hasta 600px. Letter-spacing 0. En móvil el texto precede al lienzo,
 con acciones visibles y pie de etapa fuera de la geometría 3D.
 
-Tokens `--construction-*`: cabecera 89px (73px en móvil), margen inferior 24px
+Tokens `--construction-*`: cabecera 89px (77px en móvil), margen inferior 24px
 (12px en móvil), altura `100svh - cabecera - margen`, recorrido 300svh,
 separación 28px (16px hasta 900px) y pie 96px (80px hasta 900px).
 La vista estática tiene altura mínima 660px, o 690px hasta 900px.

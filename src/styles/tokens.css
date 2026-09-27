@@ -127,7 +127,7 @@
 }
 @media (max-width: 600px) {
   :root {
-    --construction-header: 73px;
+    --construction-header: 77px;
     --construction-title: 56px;
     --construction-name: 32px;
     --construction-peek: 12px;

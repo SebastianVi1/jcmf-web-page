@@ -1,40 +1,20 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test('minimal hero linework and scroll reveals complete without continuous motion', async ({
+test('home content and interior linework remain readable with motion enabled', async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  await expect(page.locator('.hero-title .line-mask')).toHaveCount(2);
-  await expect
-    .poll(() =>
-      page
-        .locator('.hero-title .line-mask > span')
-        .first()
-        .evaluate((el) => getComputedStyle(el).opacity),
-    )
-    .toBe('1');
-  await expect
-    .poll(() =>
-      page
-        .locator('.architecture-hero .drawing-lines path')
-        .first()
-        .evaluate((el) => getComputedStyle(el).strokeDashoffset),
-    )
-    .toBe('0px');
+  await expect(page.locator('.construction-title')).toHaveText(
+    'JCMF Constructora',
+  );
   const service = page.locator('.service-card').first();
   await service.scrollIntoViewIfNeeded();
   await expect(service).not.toHaveClass(/reveal-pending/);
   await expect
     .poll(() => service.evaluate((el) => getComputedStyle(el).opacity))
     .toBe('1');
-  expect(
-    await page
-      .locator('.scene-mass')
-      .first()
-      .evaluate((el) => getComputedStyle(el).animationIterationCount),
-  ).toBe('1');
   await page
     .locator('.desktop-nav')
     .getByRole('link', { name: 'Nosotros' })
@@ -54,9 +34,8 @@ test('minimal decorative motion is fully disabled on request', async ({
 }) => {
   await page.goto('/');
   for (const selector of [
-    '.hero-title .line-mask > span',
-    '.architecture-hero .scene-mass',
-    '.architecture-hero .drawing-lines path',
+    '.construction-title',
+    '.construction-poster-complete',
   ]) {
     expect(
       await page
@@ -250,6 +229,13 @@ test('content and navigation are available without JavaScript', async ({
   const page = await context.newPage();
   await page.goto('http://localhost:4321/');
   await expect(page.locator('h1')).toBeVisible();
+  await expect(page.locator('.construction-poster-complete')).toBeVisible();
+  expect(
+    await page
+      .locator('.construction-poster-complete')
+      .evaluate((image: HTMLImageElement) => image.naturalWidth),
+  ).toBeGreaterThan(0);
+  await expect(page.locator('canvas')).toHaveCount(0);
   await expect(page.locator('.desktop-nav')).toBeVisible();
   await page.goto('http://localhost:4321/proyectos/');
   await expect(page.locator('.project-card:visible')).toHaveCount(7);
@@ -298,7 +284,7 @@ test('reduced motion disables animations and keyboard skip works', async ({
   await page.goto('/');
   expect(
     await page
-      .locator('.hero-title')
+      .locator('.construction-title')
       .evaluate((el) => getComputedStyle(el).animationName),
   ).toBe('none');
   await page.keyboard.press('Tab');
