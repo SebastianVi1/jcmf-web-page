@@ -37,7 +37,7 @@ Las pruebas E2E esperan el servidor local en http://localhost:4321. Instalar Chr
 - `src/layouts/SiteLayout.astro`: HTML, metadatos, tema y transiciones.
 - `src/views/`: composición semántica de cada página.
 - `src/pages/`: inicio, generación de rutas estáticas, 404, robots y sitemap.
-- `src/styles/`: tokens canónicos y estilos compartidos.
+- `src/styles/`: tokens canónicos y parciales de estilo por área; `global.css` los agrega en orden.
 - `src/scripts/site.ts`: menú, tema, filtros y revelados con limpieza de eventos.
 - `tests/`: validación y pruebas de navegación/accesibilidad.
 
@@ -81,7 +81,7 @@ El plan registra los resultados de compilación, tipos y revisión del navegador
 - Galería inferior: `HomeShowcase.astro` selecciona slugs existentes; la procedencia sigue en `PORTFOLIO.md`.
 - Cifras de diseño: `home.metrics` contiene ejemplos ficticios con etiquetas explícitas. Reemplazarlos por cifras aprobadas o retirar `HomeMetrics` antes de publicar.
 - Equipo: cada registro de `about.team` tiene `role` y `name`. Sustituir los nombres por confirmar en ambos idiomas cuando estén aprobados.
-- Animación: duraciones `--motion-*` en tokens; reglas en `global.css`. Movimiento reducido elimina los efectos.
+- Animación: duraciones `--motion-*` en tokens; reglas en `src/styles/motion.css`. Movimiento reducido elimina los efectos.
 - Capturas y tarjeta social: `node scripts/capture.mjs`; pruebas de la nueva portada en `tests/browser/home-design.spec.ts`.
 
 ## Construcción 3D

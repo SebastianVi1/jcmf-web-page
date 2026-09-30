@@ -173,7 +173,7 @@ Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las
 - Tratar el espacio en blanco como separación útil, no como ausencia de contenido.
 - Cambiar valores únicamente desde tokens y reflejarlos aquí.
 - Modo oscuro azul noche/acero solicitado por el usuario; modo claro concreto/azul técnico. No importar la composición de modern_design.
-- No añadir una segunda hoja de overrides: global.css es la implementación compartida.
+- No añadir una segunda hoja de overrides: los parciales de `src/styles/` (agregados por `global.css`) son la implementación compartida.
 - Verificar ambos idiomas, paletas, móvil, teclado y reducción de movimiento.
 
 ## Evolución de portada — septiembre 2026

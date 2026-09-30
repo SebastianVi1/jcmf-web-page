@@ -1,0 +1,226 @@
+/* Construction hero: 3D scroll scene, posters and controls. */
+
+/* Shared photo surface: stable contrast in both themes, natural content height. */
+.construction-hero {
+  position: relative;
+  background: var(--bg);
+}
+
+.construction-stage {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--construction-footer);
+  min-height: 660px;
+  height: var(--construction-height);
+  isolation: isolate;
+}
+
+.construction-brand {
+  grid-area: 1 / 1;
+  z-index: 0;
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  padding-block: var(--construction-brand-top) var(--construction-gap);
+  padding-inline: var(--construction-brand-inset);
+  pointer-events: none;
+}
+
+.construction-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0 16px;
+  font-family: var(--font-construction);
+  font-size: var(--construction-title);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.construction-title span + span {
+  font-size: var(--construction-name);
+}
+
+.construction-visual {
+  grid-area: 1 / 1;
+  z-index: 1;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+}
+
+.construction-poster,
+.construction-island,
+.construction-visual astro-island {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.construction-poster {
+  object-fit: contain;
+}
+
+.construction-poster-start {
+  display: none;
+}
+
+.construction-island canvas {
+  touch-action: auto;
+}
+
+.construction-hero[data-mode='ready'] .construction-poster {
+  visibility: hidden;
+}
+
+.construction-footer {
+  grid-area: 2 / 1;
+  z-index: 2;
+  position: relative;
+  margin-inline: var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--construction-gap);
+  border-top: 1px solid var(--line);
+}
+
+.construction-caption {
+  min-width: 0;
+}
+
+.construction-caption > p:first-child {
+  font-size: 11px;
+}
+
+.construction-phase {
+  font-size: 12px;
+  color: var(--ink);
+}
+
+.construction-progress {
+  width: 140px;
+  height: 2px;
+  background: var(--line);
+  margin-top: 6px;
+}
+
+.construction-progress > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.construction-phase,
+.construction-progress {
+  display: none;
+}
+
+.construction-hero[data-mode='ready'] .construction-phase,
+.construction-hero[data-mode='ready'] .construction-progress {
+  display: block;
+}
+
+.construction-motion {
+  position: absolute;
+  z-index: 2;
+  bottom: var(--construction-motion-bottom);
+  right: var(--gutter);
+}
+
+.construction-steer {
+  position: absolute;
+  z-index: 2;
+  bottom: var(--construction-motion-bottom);
+  right: calc(var(--gutter) + 56px);
+  display: grid;
+  grid-template-columns: repeat(3, 44px);
+  grid-template-rows: repeat(2, 44px);
+}
+
+.construction-steer .icon-button {
+  position: relative;
+  touch-action: none;
+}
+
+.construction-steer-up {
+  grid-area: 1 / 2;
+}
+
+.construction-steer-left {
+  grid-area: 2 / 1;
+}
+
+.construction-steer-down {
+  grid-area: 2 / 2;
+}
+
+.construction-steer-right {
+  grid-area: 2 / 3;
+}
+
+@media (max-width: 600px) {
+  .construction-steer {
+    right: auto;
+    left: var(--gutter);
+  }
+}
+
+.construction-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: max-content;
+  max-width: 220px;
+  padding: 6px 10px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 12px;
+  line-height: 1.5;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.construction-motion:is(:hover, :focus-visible) .construction-tooltip,
+.construction-steer
+  .icon-button:is(:hover, :focus-visible)
+  .construction-tooltip {
+  opacity: 1;
+}
+
+.construction-loading,
+.construction-error {
+  position: absolute;
+  inset: auto var(--gutter) 12px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.construction-error {
+  background: var(--bg);
+  padding: 12px;
+}
+
+.construction-error button {
+  background: none;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+@media (max-width: 600px) {
+  .construction-title {
+    height: 100%;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

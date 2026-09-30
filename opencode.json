@@ -2,10 +2,7 @@
   "mcp": {
     "blender-mcp": {
       "type": "local",
-      "command": [
-        "uvx",
-        "mcp-for-blender"
-      ],
+      "command": ["uvx", "mcp-for-blender"],
       "enabled": true,
       "environment": {
         "BLENDER_HOST": "localhost",

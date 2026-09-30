@@ -1,0 +1,213 @@
+/* Contact page: aside, demo notice and form. */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 85px;
+}
+
+.contact-aside h2 {
+  font-size: 28px;
+  max-width: 290px;
+}
+
+.contact-aside > p {
+  font-size: 14px;
+  margin-top: 20px;
+  max-width: 300px;
+}
+
+.contact-aside dl {
+  margin: 35px 0;
+}
+
+.contact-aside dl div {
+  border-top: 1px solid var(--line);
+  padding: 17px 0;
+}
+
+.contact-aside dt {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.contact-aside dd {
+  margin: 0;
+  font-size: 13px;
+}
+
+.demo-notice {
+  display: flex;
+  gap: 13px;
+  background: var(--surface);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.demo-notice .status-dot {
+  margin-top: 6px;
+}
+
+.demo-notice h2 {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  margin-bottom: 6px;
+}
+
+.demo-notice p {
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 12px;
+}
+
+.field label span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  min-height: 50px;
+  padding: 12px 14px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.field textarea {
+  resize: none;
+  min-height: 150px;
+  overflow-y: auto;
+}
+
+.resize-none {
+  resize: none;
+}
+
+.field input:hover,
+.field select:hover,
+.field textarea:hover {
+  border-color: var(--muted);
+}
+
+.field input[aria-invalid='true'],
+.field select[aria-invalid='true'],
+.field textarea[aria-invalid='true'] {
+  border-color: var(--error);
+}
+
+::placeholder {
+  color: var(--muted);
+  opacity: 0.9;
+}
+
+.field-error {
+  display: block;
+  color: var(--error);
+  min-height: 25px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.checkbox-label input {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin: 1px 0 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.consent-field .field-error {
+  margin-left: 30px;
+  padding-top: 5px;
+  min-height: 34px;
+}
+
+.form-submit {
+  min-width: 228px;
+}
+
+.form-status {
+  min-height: 70px;
+  padding-top: 18px;
+  font-size: 13px;
+  color: var(--error);
+}
+
+.form-status.is-success {
+  color: var(--success);
+}
+
+@media (max-width: 1100px) {
+  .contact-grid {
+    gap: 50px;
+  }
+}
+
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: 1fr 1.5fr;
+    gap: 35px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 38px;
+  }
+
+  .contact-aside h2 {
+    max-width: 100%;
+  }
+
+  .contact-aside dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-block: 25px;
+  }
+
+  .form-submit {
+    width: 100%;
+  }
+}

@@ -25,7 +25,7 @@ Astro 7 static site (ES/EN) for JCMF Constructora. Single package, Bun + Node >=
 - `public/models/building.glb` is exported from the Blender workspace `3d_models/` (gitignored); `opencode.json` wires blender-mcp to Blender at localhost:9876. The model is a conceptual visualization only — never present it as a JCMF-built work.
 - Images: import from `src/assets/images` in `projects.ts`; `getProjectPhoto()` in `src/lib/project-media.ts` runs `astro:assets` `getImage` at build time (WebP 480/800/1200/1600, per-image `position` crop) and passes only serializable props to the React islands — never pass `ImageMetadata` into `.tsx`.
 - `src/scripts/site.ts` is vanilla JS (menu, theme, filters, scroll reveals) with listener cleanup; theme in localStorage is the only persisted preference.
-- `src/styles/tokens.css` is the single source of theme values; `global.css` is the only stylesheet. Do not add a second override sheet or duplicate theme values in React components.
+- `src/styles/tokens.css` is the single source of theme values. `src/styles/global.css` is only the entry-point aggregator: it `@import`s the concern-based partials (`base`, `controls`, `header`, `footer`, `construction`, `hero`, `home`, `projects`, `project-detail`, `about`, `contact`, `motion`) in cascade order — `SiteLayout.astro` imports just `global.css`. Put styles in the matching partial (including their breakpoint overrides, in the same cascade position they had in the old monolithic sheet); never add a second override sheet or duplicate theme values in React components.
 
 ## Content constraints (easy to violate)
 

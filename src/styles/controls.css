@@ -1,0 +1,109 @@
+/* Controls: buttons and text links. */
+
+.button {
+  min-height: 50px;
+  padding: 13px 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background: var(--accent);
+  color: var(--on-accent);
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: 13px;
+  transition: background 0.35s var(--ease);
+}
+
+.button:hover {
+  background: var(--accent-hover);
+}
+
+.button svg {
+  transition: transform 0.5s var(--ease);
+}
+
+.button:hover svg {
+  transform: translate(2px, -2px);
+}
+
+.button:active {
+  filter: brightness(0.95);
+}
+
+.button-small {
+  min-height: 43px;
+  padding: 9px 18px;
+  gap: 24px;
+}
+
+.text-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+  min-height: 45px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--line);
+  transition: color 0.35s;
+}
+
+.text-link::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  height: 1px;
+  left: 0;
+  right: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease);
+}
+
+.text-link:hover {
+  color: var(--accent);
+}
+
+.text-link:hover::after {
+  transform: scaleX(1);
+}
+
+.text-link svg {
+  transition: transform 0.6s var(--ease);
+}
+
+.text-link:hover svg {
+  transform: translate(3px, -3px);
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 12px;
+  left: 16px;
+  padding: 12px 18px;
+  background: var(--ink);
+  color: var(--bg);
+  transform: translateY(-160%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.icon-button {
+  background: transparent;
+  border: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.icon-button:hover {
+  background: var(--surface);
+}
