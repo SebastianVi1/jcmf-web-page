@@ -16,7 +16,9 @@ await page.addInitScript(() => {
 await mkdir('test-results/construction', { recursive: true });
 await mkdir('public/images/construction', { recursive: true });
 try {
-  await page.goto(process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:4321/');
+  const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:4321';
+  await page.goto(baseURL.replace(/\/$/, '') + '/proyectos/');
+  await page.locator('.construction-intro').scrollIntoViewIfNeeded();
   await page
     .locator('[data-construction][data-mode="ready"]')
     .waitFor({ timeout: 60000 });
@@ -29,10 +31,14 @@ try {
         host.getBoundingClientRect().top +
         scrollY -
         parseFloat(getComputedStyle(stage).top);
+      const range =
+        host.offsetHeight -
+        stage.offsetHeight -
+        parseFloat(
+          getComputedStyle(host).getPropertyValue('--construction-finale'),
+        );
       scrollTo({
-        top:
-          top +
-          (p === 1 ? 0.96 : p * 0.9) * (host.offsetHeight - stage.offsetHeight),
+        top: top + (p === 1 ? 1.02 : p * 0.9) * range,
         behavior: 'instant',
       });
     }, value);
@@ -63,9 +69,9 @@ try {
   await page.addStyleTag({
     content: `
     html, body, .construction-hero { background: transparent !important; }
-    .construction-stage { height: 1200px !important; }
+    .construction-stage { height: 1200px !important; top: 89px !important; }
     .construction-visual { position: absolute !important; inset: 0 !important; margin: 0 !important; }
-    .construction-brand, .construction-footer, .construction-poster, .construction-motion { visibility: hidden !important; }
+    .construction-footer, .construction-poster, .construction-motion { visibility: hidden !important; }
   `,
   });
   for (const [name, progress] of [

@@ -1,6 +1,6 @@
 # JCMF Constructora
 
-Ramas de diseño: modern_design conserva la propuesta original azul/isométrica; design_minimal contiene la evolución azul técnico/concreto y azul noche con portada fotográfica. La rama 3d-animation sustituye esa portada por una construcción vinculada al scroll con Three.js, React Three Fiber y GSAP. Conserva Oswald, los dos idiomas y las funciones del sitio. Cambiar de rama con Git permite comparar las propuestas; esta rama no publica cambios.
+Ramas de diseño: modern_design conserva la propuesta original azul/isométrica; design_minimal contiene la evolución azul técnico/concreto y azul noche con portada fotográfica. Esta rama recupera esa portada y coloca la construcción 3D vinculada al scroll en Proyectos. Conserva Oswald, los dos idiomas y las funciones del sitio. Cambiar de rama con Git permite comparar las propuestas; esta rama no publica cambios.
 
 Sitio corporativo en Astro + React + TypeScript con placeholders. Incluye inicio, nosotros, catálogo, fichas de proyecto, contacto y privacidad en español e inglés. La identidad y sus reglas están en [DESIGN.md](DESIGN.md); el plan detallado y los pendientes de lanzamiento en [PLAN.md](PLAN.md).
 
@@ -77,7 +77,7 @@ El plan registra los resultados de compilación, tipos y revisión del navegador
 ## Personalizar el diseño actual
 
 - Paletas y escalas: editar `src/styles/tokens.css` y reflejar las decisiones en `DESIGN.md`.
-- Portada: `ConstructionHero.astro` se integra en `src/views/Home.astro`; los textos viven en `home.construction` de ambos diccionarios. `src/features/construction` contiene la carga condicional, escena y controlador reversible.
+- Portada: `src/views/Home.astro` usa la fotografía de referencia del portafolio y mantiene su identificación visible. `ConstructionHero.astro` se integra en `src/views/Projects.astro`; `src/features/construction` contiene la carga condicional, escena y controlador reversible.
 - Galería inferior: `HomeShowcase.astro` selecciona slugs existentes; la procedencia sigue en `PORTFOLIO.md`.
 - Cifras de diseño: `home.metrics` contiene ejemplos ficticios con etiquetas explícitas. Reemplazarlos por cifras aprobadas o retirar `HomeMetrics` antes de publicar.
 - Equipo: cada registro de `about.team` tiene `role` y `name`. Sustituir los nombres por confirmar en ambos idiomas cuando estén aprobados.
@@ -86,16 +86,17 @@ El plan registra los resultados de compilación, tipos y revisión del navegador
 
 ## Construcción 3D
 
-La portada usa `public/models/building.glb`, proporcionado en
+La sección de Proyectos usa `public/models/building.glb`, proporcionado en
 `3d_models/construction_complete`. Se distribuye como visualización conceptual,
 sin atribuirla a una obra real de JCMF. El modelo conserva sus materiales, etapas,
 trabajadores y maquinaria; el terreno es visible antes de empezar el scroll.
 
-El recorrido usa scroll nativo y tres alturas de pantalla. El último 10% mantiene
-el edificio terminado. Con movimiento reducido, sin WebGL2, sin JavaScript o en
+El recorrido usa scroll nativo y 110svh adicionales. El último 10% de la
+secuencia y los 320px finales (240px en móvil) mantienen el edificio terminado.
+Con movimiento reducido, sin WebGL2, sin JavaScript o en
 ventanas de menos de 660px de alto se muestra un poster estático. Los enlaces
 permanecen disponibles durante la carga y ante errores. La escena solo se carga
-en las portadas ES/EN. El scroll mueve la rotación del edificio de derecha a
+al acercarse a la sección de Proyectos en ES/EN. El scroll mueve la rotación del edificio de derecha a
 izquierda a lo largo de la secuencia y el último cuadro es exactamente el frente
 del edificio (la fachada de entrada queda de cara a la cámara). El giro
 automático lento solo aparece con el scroll detenido y retoma desde la
@@ -103,9 +104,7 @@ orientación actual; mientras se hace scroll, la rotación la manda el recorrido
 La flotación corre siempre, en paralelo. El control de pausa detiene giro y
 flotación; fuera de pantalla se suspenden automáticamente. El navegador puede
 limitar los fotogramas de pestañas ocultas. La cámara describe un arco suave y
-baja hacia la fachada durante la construcción. Entre el 78% y el 98%, el nombre
-aparece detrás del edificio mediante fade y revelado vertical, sin desplazar el
-contenido.
+baja hacia la fachada durante la construcción.
 
 Un pad de flechas permite girar el edificio (izquierda/derecha) e inclinar la
 vista (arriba/abajo). El control es fluido: mantener presionado gira de forma

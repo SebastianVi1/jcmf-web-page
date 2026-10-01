@@ -50,10 +50,17 @@
   --hero-title-size: clamp(72px, 10.8vw, 156px);
   --construction-header: 89px;
   --construction-peek: 24px;
-  --construction-height: calc(
-    100svh - var(--construction-header) - var(--construction-peek)
+  --construction-height: clamp(480px, 68svh, 640px);
+  --construction-travel: 110svh;
+  --construction-finale: 320px;
+  --construction-intro-height: 180px;
+  --construction-sticky-top: calc(
+    var(--construction-header) +
+      max(
+        0px,
+        (100svh - var(--construction-header) - var(--construction-height)) / 2
+      )
   );
-  --construction-travel: 300svh;
   --construction-title: 210px;
   --construction-name: 210px;
   --construction-brand-inset: 24px;
@@ -147,8 +154,10 @@
 @media (max-width: 600px) {
   :root {
     --construction-header: 77px;
+    --construction-intro-height: 230px;
+    --construction-finale: 240px;
     --construction-brand-top: 20px;
-    --construction-motion-bottom: 112px;
+    --construction-motion-bottom: 12px;
     --construction-title: 256px;
     --construction-name: 88px;
     --construction-peek: 12px;

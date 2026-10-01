@@ -6,8 +6,8 @@ test('home content and interior linework remain readable with motion enabled', a
 }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto('/');
-  await expect(page.locator('.construction-title')).toHaveText(
-    'JCMF Constructora',
+  await expect(page.locator('.masthead .hero-title')).toContainText(
+    'Construimos',
   );
   const service = page.locator('.service-card').first();
   await service.scrollIntoViewIfNeeded();
@@ -33,10 +33,7 @@ test('minimal decorative motion is fully disabled on request', async ({
   page,
 }) => {
   await page.goto('/');
-  for (const selector of [
-    '.construction-title',
-    '.construction-poster-complete',
-  ]) {
+  for (const selector of ['.masthead .hero-title', '.masthead-image']) {
     expect(
       await page
         .locator(selector)
@@ -227,19 +224,21 @@ test('content and navigation are available without JavaScript', async ({
     viewport: { width: 375, height: 812 },
   });
   const page = await context.newPage();
-  await page.goto('http://localhost:4321/');
+  const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:4321';
+  await page.goto(baseURL + '/');
   await expect(page.locator('h1')).toBeVisible();
-  await expect(page.locator('.construction-poster-complete')).toBeVisible();
+  await expect(page.locator('.masthead-image')).toBeVisible();
   expect(
     await page
-      .locator('.construction-poster-complete')
+      .locator('.masthead-image')
       .evaluate((image: HTMLImageElement) => image.naturalWidth),
   ).toBeGreaterThan(0);
   await expect(page.locator('canvas')).toHaveCount(0);
   await expect(page.locator('.desktop-nav')).toBeVisible();
-  await page.goto('http://localhost:4321/proyectos/');
+  await page.goto(baseURL + '/proyectos/');
   await expect(page.locator('.project-card:visible')).toHaveCount(7);
-  await page.goto('http://localhost:4321/contacto/');
+  await expect(page.locator('.construction-poster-complete')).toBeVisible();
+  await page.goto(baseURL + '/contacto/');
   await expect(page.locator('noscript p')).toContainText('Activa JavaScript');
   await context.close();
 });
@@ -284,7 +283,7 @@ test('reduced motion disables animations and keyboard skip works', async ({
   await page.goto('/');
   expect(
     await page
-      .locator('.construction-title')
+      .locator('.masthead .hero-title')
       .evaluate((el) => getComputedStyle(el).animationName),
   ).toBe('none');
   await page.keyboard.press('Tab');

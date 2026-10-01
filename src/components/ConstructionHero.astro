@@ -1,5 +1,4 @@
 ---
-import '@fontsource/bebas-neue/latin-400.css';
 import { t } from '../i18n';
 import type { Locale } from '../i18n/routes';
 import Icon from './Icon.astro';
@@ -13,10 +12,16 @@ const copy = t(locale);
 ---
 
 <section
-  class="construction-hero"
-  aria-labelledby="hero-title"
+  class="construction-hero construction-projects"
+  aria-labelledby="construction-title"
   data-construction
 >
+  <div class="container construction-intro">
+    <div>
+      <h2 id="construction-title">{copy.projects.constructionTitle}</h2>
+      <p>{copy.projects.constructionIntro}</p>
+    </div>
+  </div>
   <div class="construction-stage">
     <div class="construction-visual">
       <img
@@ -36,12 +41,6 @@ const copy = t(locale);
       />
       <ConstructionIsland client:load copy={copy.home.construction} />
     </div>
-    <div class="construction-brand">
-      <h1 id="hero-title" class="construction-title">
-        <span>{copy.home.construction.brand}</span>{' '}
-        <span>{copy.home.construction.name}</span>
-      </h1>
-    </div>
     <div class="construction-footer">
       <div class="construction-caption">
         <p>{copy.home.construction.caption}</p>
@@ -54,9 +53,9 @@ const copy = t(locale);
       </div>
       <a
         class="construction-skip icon-button"
-        href="#capacidades"
-        aria-label={copy.ui.scroll}
-        title={copy.ui.scroll}
+        href="#cta-title"
+        aria-label={copy.projects.skipConstruction}
+        title={copy.projects.skipConstruction}
         data-construction-skip
       >
         <Icon name="down" size={18} />

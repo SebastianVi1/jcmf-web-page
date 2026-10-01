@@ -198,6 +198,10 @@ export const es = {
     title: 'Cada espacio,\nuna nueva posibilidad.',
     intro:
       'Arquitectura, escala y detalle. Explora una selección de obras y referencias, con el contexto y alcance de cada intervención.',
+    constructionTitle: 'Del terreno a la estructura.',
+    constructionIntro:
+      'Explora una visualización conceptual del proceso constructivo. Desplázate para ver sus etapas y utiliza los controles para observar el modelo.',
+    skipConstruction: 'Saltar visualización',
     categories: {
       all: 'Todos',
       building: 'Edificación',

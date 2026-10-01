@@ -196,6 +196,10 @@ export const en: Dictionary = {
     title: 'Every space,\na new possibility.',
     intro:
       'Architecture, scale and detail. Explore a selection of projects and references, with context and scope for each intervention.',
+    constructionTitle: 'From ground to structure.',
+    constructionIntro:
+      'Explore a concept visualization of the construction process. Scroll through its stages and use the controls to view the model.',
+    skipConstruction: 'Skip visualization',
     categories: {
       all: 'All',
       building: 'Buildings',

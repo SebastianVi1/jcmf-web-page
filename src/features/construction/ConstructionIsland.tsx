@@ -6,6 +6,7 @@ import {
   useState,
   type ComponentType,
   type KeyboardEvent,
+  type MouseEvent,
 } from 'react';
 import type { Dictionary } from '../../i18n';
 import {
@@ -111,7 +112,18 @@ export default function ConstructionIsland({
           ? window.requestIdleCallback(callback, { timeout: 2000 })
           : window.setTimeout(callback, 200);
       const defer = () => {
-        if (!cancelled) idle(start);
+        if (cancelled) return;
+        const observer = new IntersectionObserver(
+          ([entry]) => {
+            if (!entry.isIntersecting) return;
+            observer.disconnect();
+            pending = null;
+            idle(start);
+          },
+          { rootMargin: '500px 0px' },
+        );
+        observer.observe(section);
+        pending = () => observer.disconnect();
       };
       if (document.readyState === 'complete') defer();
       else {
@@ -123,7 +135,9 @@ export default function ConstructionIsland({
       '[data-construction-skip]',
     )!;
     const focusTarget = () =>
-      document.getElementById('capacidades')?.focus({ preventScroll: true });
+      document
+        .getElementById(skip.hash.slice(1))
+        ?.focus({ preventScroll: true });
     skip.addEventListener('click', focusTarget);
     const releaseSteering = () => {
       steering.releaseAll();
@@ -205,6 +219,15 @@ export default function ConstructionIsland({
       if (event.key === 'Enter' || event.key === ' ') release(direction);
     },
   });
+  const activate = (
+    event: MouseEvent<HTMLButtonElement>,
+    direction: SteerDirection,
+  ) => {
+    // Assistive technology may activate a button without pointer/key events.
+    if (event.detail !== 0) return;
+    press(direction);
+    release(direction);
+  };
 
   const motionLabel = paused
     ? copy.resume
@@ -241,6 +264,7 @@ export default function ConstructionIsland({
               className="construction-steer-up icon-button"
               aria-label={copy.steerUp}
               title={copy.steerUp}
+              onClick={(event) => activate(event, 'up')}
               {...controls('up')}
             >
               <ArrowUp size={18} aria-hidden="true" />
@@ -253,6 +277,7 @@ export default function ConstructionIsland({
               className="construction-steer-left icon-button"
               aria-label={copy.steerLeft}
               title={copy.steerLeft}
+              onClick={(event) => activate(event, 'left')}
               {...controls('left')}
             >
               <ArrowLeft size={18} aria-hidden="true" />
@@ -265,6 +290,7 @@ export default function ConstructionIsland({
               className="construction-steer-down icon-button"
               aria-label={copy.steerDown}
               title={copy.steerDown}
+              onClick={(event) => activate(event, 'down')}
               {...controls('down')}
             >
               <ArrowDown size={18} aria-hidden="true" />
@@ -277,6 +303,7 @@ export default function ConstructionIsland({
               className="construction-steer-right icon-button"
               aria-label={copy.steerRight}
               title={copy.steerRight}
+              onClick={(event) => activate(event, 'right')}
               {...controls('right')}
             >
               <ArrowRight size={18} aria-hidden="true" />

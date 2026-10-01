@@ -6,11 +6,38 @@
   background: var(--bg);
 }
 
+.construction-projects {
+  border-top: 1px solid var(--line);
+}
+
+.construction-intro {
+  min-height: var(--construction-intro-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding-block: 32px;
+}
+
+.construction-intro h2 {
+  font-size: clamp(32px, 4vw, 54px);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.construction-intro p:not(.caption) {
+  max-width: 54ch;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
 .construction-stage {
   position: relative;
   display: grid;
   grid-template-rows: minmax(0, 1fr) var(--construction-footer);
-  min-height: 660px;
+  min-height: 480px;
   height: var(--construction-height);
   isolation: isolate;
 }
@@ -216,6 +243,10 @@
 }
 
 @media (max-width: 600px) {
+  .construction-intro {
+    display: block;
+  }
+
   .construction-title {
     height: 100%;
     flex-direction: column;

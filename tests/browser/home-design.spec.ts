@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test('large uppercase brand fits at responsive breakpoints', async ({
+test('photographic home title fits at responsive breakpoints', async ({
   page,
 }) => {
   await page.goto('/');
@@ -11,9 +11,9 @@ test('large uppercase brand fits at responsive breakpoints', async ({
     1400, 1401, 1799, 1800, 1920,
   ]) {
     await page.setViewportSize({ width, height: 1000 });
-    const title = page.locator('.construction-title');
+    const title = page.locator('.masthead .hero-title');
     await expect(title).toHaveCSS('text-transform', 'uppercase');
-    await expect(title).toHaveCSS('font-family', /Bebas Neue/);
+    await expect(title).toHaveCSS('font-family', /Oswald/);
     const fits = await title.evaluate((element) => {
       const box = element.getBoundingClientRect();
       const parent = element.parentElement!.getBoundingClientRect();
@@ -25,7 +25,7 @@ test('large uppercase brand fits at responsive breakpoints', async ({
         document.documentElement.scrollWidth <= innerWidth
       );
     });
-    expect(fits, `Brand must fit at ${width}px`).toBe(true);
+    expect(fits, `Title must fit at ${width}px`).toBe(true);
   }
 });
 
@@ -44,13 +44,10 @@ test('home remains readable and navigable across locales, themes and narrow scre
         await page.goto(locale === 'es' ? '/' : '/en/');
         await page.evaluate(() => document.fonts.ready);
         await page
-          .locator('.construction-poster-complete')
+          .locator('.masthead-image')
           .evaluate((el) => (el as HTMLImageElement).decode());
         await expect(page.locator('html')).toHaveAttribute('data-theme', theme);
-        await expect(page.locator('.construction-brand')).toHaveCSS(
-          'opacity',
-          '1',
-        );
+        await expect(page.locator('.masthead .hero-title')).toBeVisible();
         await expect(page.locator('.metrics-grid > div')).toHaveCount(3);
         await expect(page.locator('#metrics-note')).toContainText(
           locale === 'es' ? 'Datos ficticios' : 'Fictional figures',
@@ -100,7 +97,7 @@ test('home remains readable and navigable across locales, themes and narrow scre
   }
 });
 
-test('hero remains usable when its static poster cannot load', async ({
+test('home remains usable when its photograph cannot load', async ({
   page,
 }) => {
   await page.route('**/*', (route) =>
@@ -113,24 +110,24 @@ test('hero remains usable when its static poster cannot load', async ({
   await expect
     .poll(() =>
       page
-        .locator('.construction-poster-complete')
+        .locator('.masthead-image')
         .evaluate(
           (el) =>
             el.getAnimations().filter((a) => a.playState === 'running').length,
         ),
     )
     .toBe(0);
-  await expect(page.locator('.construction-skip')).toBeVisible();
+  await expect(page.locator('.scroll-link')).toBeVisible();
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await expect(page.locator('.construction-poster-complete')).toHaveCSS(
+  await expect(page.locator('.masthead-image')).toHaveCSS(
     'animation-name',
     'none',
   );
-  const link = page.locator('.construction-skip');
+  const link = page.locator('.scroll-link');
   await link.focus();
   await expect(link.locator('svg')).toHaveCSS('transform', 'none');
   await page.keyboard.press('Enter');
-  await expect(page.locator('#capacidades')).toBeFocused();
+  await expect(page.locator('#capacidades')).toBeInViewport();
 });
 
 test('team roles have editable name placeholders in both languages', async ({

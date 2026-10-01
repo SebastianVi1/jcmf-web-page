@@ -72,7 +72,7 @@ test('portfolio composition and dark case study are accessible', async ({
   });
   await page.goto('/');
   await page
-    .locator('.construction-poster-complete')
+    .locator('.masthead-image')
     .evaluate((el) => (el as HTMLImageElement).decode());
   await page.screenshot({ path: 'test-results/portfolio-home.png' });
   await page.getByRole('button', { name: 'Activar tema oscuro' }).click();

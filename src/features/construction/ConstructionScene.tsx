@@ -283,7 +283,16 @@ function Building({
             start: () =>
               `top ${parseFloat(getComputedStyle(stage).top) || 0}px`,
             end: () =>
-              `+=${Math.max(1, host.offsetHeight - stage.offsetHeight)}`,
+              `+=${Math.max(
+                1,
+                host.offsetHeight -
+                  stage.offsetHeight -
+                  parseFloat(
+                    getComputedStyle(host).getPropertyValue(
+                      '--construction-finale',
+                    ),
+                  ),
+              )}`,
             scrub: true,
             invalidateOnRefresh: true,
             onRefresh: update,
@@ -351,7 +360,11 @@ function Building({
     // what a frame costs; outliers (tab switches) are ignored.
     const task = Math.max(0, dt * 1000 - lastDelay.current);
     if (task < 250) frameCost.current += (task - frameCost.current) * 0.25;
-    const displayed = smoothing.step(progress.current.value, dt);
+    const displayed = smoothing.step(
+      progress.current.value,
+      dt,
+      progress.current.value >= 0.9999,
+    );
     if (displayed !== progress.current.value && visible.current) pump();
     const p = modelProgress(displayed);
     publishProgress.current(p);

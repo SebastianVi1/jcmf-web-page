@@ -5,6 +5,7 @@ import type { Locale } from '../i18n/routes';
 import { portfolioProjects as projects } from '../data/projects';
 import ProjectCard from '../components/ProjectCard.astro';
 import CallToAction from '../components/CallToAction.astro';
+import ConstructionHero from '../components/ConstructionHero.astro';
 interface Props {
   locale: Locale;
 }
@@ -52,4 +53,5 @@ const copy = t(locale);
     ))}
   </div>
 </section>
+<ConstructionHero locale={locale} />
 <CallToAction locale={locale} />

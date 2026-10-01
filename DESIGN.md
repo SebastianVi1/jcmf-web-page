@@ -38,11 +38,10 @@ components:
 
 ## Overview
 
-Portada 3D, septiembre 2026: la secuencia de construcción sustituye la fotografía
-inicial y el pabellón de la introducción, según `plan-3d.md`. Esta decisión
-actualiza las descripciones históricas del hero fotográfico que siguen abajo.
-La identidad azul y las fuentes existentes se conservan; el cierre de la escena
-usa Bebas Neue para dar protagonismo al nombre solicitado en mayúsculas.
+Inicio fotográfico y secuencia 3D en Proyectos, septiembre 2026: la portada
+recupera el masthead y el estudio conceptual de `design_minimal`. La secuencia
+de construcción aparece después del portafolio como una visualización conceptual
+complementaria. Conserva la identidad azul, Oswald y DM Sans.
 
 Variante solicitada en una rama independiente de `modern_design`. Público: clientes y responsables de obra que necesitan entender capacidades, ver referencias y contactar. Registro corporativo de marca; español/inglés; contexto mexicano según el CV, con proyectos y contactos explícitamente provisionales.
 
@@ -72,9 +71,8 @@ Materiales SVG se gestionan también con tokens --model-top/front/side/glass/sla
 
 ## Typography
 
-Bebas Neue 400, autoalojada y cargada desde el componente de portada, es la fuente
-del cierre JCMF CONSTRUCTORA. Token `--font-construction`; mayúsculas, espaciado 0
-y altura de línea 0.95. El resto de los titulares conserva Oswald.
+El masthead de Inicio y los titulares de Proyectos usan Oswald. La fuente
+Bebas Neue permanece en dependencias como legado de la composición 3D inicial.
 
 Oswald Variable peso 500 para titulares, de proporción condensada y carácter estructural; DM Sans Variable para lectura. Autoalojadas, español e inglés completos, fallback Arial. Titular inicial Oswald en mayúsculas, 72–156 px en escritorio y 48–76 px móvil; interior 36–76 px. Cuerpo 16–22 px, controles 12–14 px y etiquetas técnicas 9–11 px.
 
@@ -82,27 +80,13 @@ Los renglones de hero están agrupados para entradas suaves, sin dividir caracte
 
 ## Layout
 
-La portada usa un único escenario abierto y centrado a todo el ancho. Siguiendo
-la referencia visual del usuario, JCMF Constructora ocupa el fondo de la escena:
-el edificio pasa por delante de las letras, creando profundidad real con la
-transparencia del canvas. El H1 permanece semántico en HTML. Aparece con fade,
-revelado vertical y desplazamiento de 64px entre el 78% y el 98% de la construcción. Firma casi
-de borde a borde, con margen propio de 24px. Tamaños JCMF/Constructora por banda:
-272/272px desde 1800px, 210/210px en escritorio, 160/160px hasta 1400px,
-128/128px hasta 1100px, 100/100px hasta 900px y 84/84px hasta 700px.
-Hasta 600px se compone en dos líneas: 256/88px, 184/64px hasta 479px y
-160/56px hasta 360px. Son escalas fijas, sin tipografía dependiente de vw.
-Texto y modelo comparten una misma fila, sin saltos al aparecer. En móvil JCMF
-ocupa la parte superior y CONSTRUCTORA cierra la inferior; el edificio queda entre
-ambos. En la versión estática
-el nombre siempre es visible. Pausa y salto a capacidades son controles compactos.
-
-Tokens `--construction-*`: cabecera 89px (77px en móvil), margen inferior 24px
-(12px en móvil), altura `100svh - cabecera - margen`, recorrido 300svh,
-separación 28px (16px hasta 900px), texto a 100px del borde superior (20px en móvil)
-y pie 76px (72px hasta 900px). Pausa en la esquina inferior derecha del lienzo,
-a 28px del borde (112px en móvil, para dejar libre el nombre).
-La vista estática tiene altura mínima 660px.
+En Proyectos, la escena sigue a la galería y precede al llamado a contacto. Su
+título HTML describe el proceso y la nota visible aclara que es conceptual. El
+lienzo mide entre 480 y 640px, el recorrido ocupa 110svh y la introducción
+reserva 180px (230px en móvil). El lienzo queda centrado en el alto disponible;
+los últimos 320px del recorrido (240px en móvil) mantienen el edificio terminado.
+La escena espera a estar cerca de la pantalla antes de cargar el motor. La
+opción de salto lleva al llamado a contacto.
 
 Máximo 1280 px, márgenes fluidos 24–96 px y 23 px móvil. Secciones 80–130 px. Hero: fotografía de fondo a todo el ancho, titular monumental alineado a izquierda, resumen y dos acciones debajo. Estudio conceptual junto a la introducción corporativa. Portafolio: índice de obras en tres columnas con fotografía 4:3, número de catálogo y regla inferior; dos columnas entre 600 y 1100 px y una sola columna en móvil. No hay tarjeta destacada: todas las obras comparten escala y la jerarquía se resuelve con espacio, reglas y numeración, sin depender de first-child dentro de las islas React.
 
@@ -120,18 +104,20 @@ Controles casi rectos, radio 2 px. Círculos para acciones compactas y CTA. Icon
 
 ## Components
 
-ConstructionHero entrega HTML estático, imágenes WebP transparentes y enlaces.
+ConstructionHero entrega HTML estático, imágenes WebP transparentes y un enlace
+de salto en la página de Proyectos.
 ConstructionIsland carga React Three Fiber y GSAP solo con movimiento permitido,
 WebGL2 disponible y viewport de al menos 660px de alto. ConstructionScene es dueña
 del GLB, entorno y controlador. Los recursos se liberan al navegar, fallar o
 cambiar las preferencias. No se instala un segundo package.json de la entrega 3D.
 
 La animación sigue el scroll nativo mediante ScrollTrigger y suavizado de progreso; el último
-10% del recorrido mantiene el edificio completo. Cámara ortográfica con arco de
+10% de la secuencia y el tramo final reservado muestran el edificio completo.
+Cámara ortográfica con arco de
 25 grados y descenso de elevación de 37 a 24 grados durante la construcción,
 interpolados suavemente y reversibles. Encuadre calculado para toda la rotación,
 incluyendo grúa y andamios; margen 12% y desplazamiento vertical -2% en escritorio
-para componer edificio y letras. Construcción,
+para componer el edificio. Construcción,
 etapas y recorridos son reversibles y dependen del scroll; la actividad local de
 los trabajadores usa un reloj independiente y finito. El conjunto
 gira continuamente una vuelta cada 120s y flota con amplitud 0.9 y período 7.5s,
@@ -145,7 +131,7 @@ Los posters provienen de la misma escena. Sin JavaScript, movimiento reducido,
 WebGL o en ventanas bajas se muestra el edificio terminado sin recorrido largo.
 El respaldo de carga muestra el terreno; errores mantienen enlaces y permiten
 reintentar. La preferencia de movimiento reducido evita descargar el motor 3D
-y el modelo. El enlace a capacidades permite omitir la secuencia con teclado.
+y el modelo. El enlace al llamado a contacto permite omitir la secuencia con teclado.
 El terreno existe desde el progreso cero; se omite su aparición desde vacío
 en la entrega original, conservando la excavación y las siguientes etapas.
 
@@ -165,7 +151,7 @@ Movimiento finito:
 - Hover: subrayado progresivo 600 ms, zoom de imagen 1.025 en 1000 ms, giro leve de flechas/CTA.
 - Easing compartido cubic-bezier(.22,1,.36,1). Transiciones de página Astro, con lectura sin saltos.
 
-Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las ilustraciones son decorativas y los títulos permanecen semánticos. La única excepción al movimiento finito es el giro y flotación pausables de la escena 3D, solicitado para la portada; reduced motion lo elimina por completo. No hay paralaje agresivo ni dependencia de movimiento para operar.
+Reduced motion elimina animaciones, transiciones, clip y scroll suave. Todas las ilustraciones son decorativas y los títulos permanecen semánticos. La única excepción al movimiento finito es el giro y flotación pausables de la escena 3D en Proyectos; reduced motion lo elimina por completo. No hay paralaje agresivo ni dependencia de movimiento para operar.
 
 ## Do's and Don'ts
 

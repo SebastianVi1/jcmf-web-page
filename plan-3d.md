@@ -1,5 +1,9 @@
 # Portada 3D: construcción vinculada al scroll
 
+> Nota de actualización (septiembre 2026): este plan documenta la primera
+> integración en Inicio. La implementación actual recupera la portada
+> fotográfica y ubica la escena después de la galería de Proyectos.
+
 ## Propuesta
 
 Sustituir la fotografía inicial por una escena de construcción a todo el ancho, integrada con la identidad actual de JCMF. Al desplazarse, el visitante verá el terreno transformarse en el edificio terminado; al subir, la secuencia retrocederá.

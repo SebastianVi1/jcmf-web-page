@@ -203,12 +203,15 @@ svg {
 
 @media (prefers-reduced-motion: no-preference) and (min-height: 660px) {
   .js .construction-hero:not([data-mode='static']) {
-    height: calc(var(--construction-height) + var(--construction-travel));
+    height: calc(
+      var(--construction-intro-height) + var(--construction-height) +
+        var(--construction-travel)
+    );
   }
 
   .js .construction-hero:not([data-mode='static']) .construction-stage {
     position: sticky;
-    top: var(--construction-header);
+    top: var(--construction-sticky-top);
     min-height: 0;
   }
 
